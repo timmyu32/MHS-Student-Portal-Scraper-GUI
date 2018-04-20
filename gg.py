@@ -24,7 +24,7 @@ Large_Font = ("Times New Roman", "12")
 smaller_font = ("Times New Roman", "9")
 smallest_font = ("Times New Roman", "7")
 style.use("ggplot")
-average = open("C:\\Users\\click\\Downloads\\T\\avg.txt", "r").read().split(',')[-3].split('@')[0]
+average = open("avg.txt", "r").read().split(',')[-3].split('@')[0]
 title = "Tim Uzoegbu GRADES Graph\n Avg= "+str(average)
 
 global a
@@ -132,8 +132,8 @@ class Login(tk.Frame):
             login_btn = driver.find_element_by_name('LoginControl1$btnLogin')
 
 
-            uname.send_keys("Tuzoegbu")
-            password.send_keys("Cheeze10")
+            uname.send_keys(u)
+            password.send_keys(p)
             login_btn.click()
 
 
@@ -292,7 +292,7 @@ class Login(tk.Frame):
                 denominator.append(class1_grade)
                 pie_chart_indicator.append(str(class1_name) + str(class1_grade))
                 if timnoget == False:
-                    data_file = open("C:\\Users\\click\\Downloads\\T\\one.txt", "a")
+                    data_file = open("one.txt", "a")
                     data_file.write(str(class1_grade) +'@'+today +',')    
                     data_file.close()    
             except:
@@ -304,7 +304,7 @@ class Login(tk.Frame):
                 denominator.append(class2_grade)
                 pie_chart_indicator.append(str(class2_name) + str(class2_grade))
                 if timnoget == False:
-                    data_file = open("C:\\Users\\click\\Downloads\\T\\two.txt", "a")
+                    data_file = open("two.txt", "a")
                     data_file.write(str(class2_grade) +'@'+today +',')
                     data_file.close()          
             except:
@@ -316,7 +316,7 @@ class Login(tk.Frame):
                 denominator.append(class3_grade) 
                 pie_chart_indicator.append(str(class3_name) + str(class3_grade))
                 if timnoget == False:
-                    data_file = open("C:\\Users\\click\\Downloads\\T\\three.txt", "a")
+                    data_file = open("three.txt", "a")
                     data_file.write(str(class3_grade) +'@'+today +',')
                     data_file.close()  
             except:
@@ -328,7 +328,7 @@ class Login(tk.Frame):
                 denominator.append(class4_grade) 
                 pie_chart_indicator.append(str(class4_name) + str(class4_grade))
                 if timnoget == False:
-                    data_file = open("C:\\Users\\click\\Downloads\\T\\four.txt", "a")
+                    data_file = open("four.txt", "a")
                     data_file.write(str(class4_grade) +'@'+today +',')
                     data_file.close()  
             except:
@@ -340,7 +340,7 @@ class Login(tk.Frame):
                 denominator.append(class5_grade)
                 pie_chart_indicator.append(str(class5_name) + str(class5_grade))  
                 if timnoget == False:
-                    data_file = open("C:\\Users\\click\\Downloads\\T\\five.txt", "a")
+                    data_file = open("five.txt", "a")
                     data_file.write(str(class5_grade) +'@'+today +',')
                     data_file.close() 
             except:
@@ -352,7 +352,7 @@ class Login(tk.Frame):
                 denominator.append(class6_grade) 
                 pie_chart_indicator.append(str(class6_name) + str(class6_grade)) 
                 if timnoget == False:
-                    data_file = open("C:\\Users\\click\\Downloads\\T\\six.txt", "a")
+                    data_file = open("six.txt", "a")
                     data_file.write(str(class6_grade) +'@'+today +',')
                     data_file.close() 
             except:
@@ -364,7 +364,7 @@ class Login(tk.Frame):
                 denominator.append(class7_grade)
                 pie_chart_indicator.append(str(class7_name) + str(class7_grade))
                 if timnoget == False:
-                    data_file = open("C:\\Users\\click\\Downloads\\T\\seven.txt", "a")
+                    data_file = open("seven.txt", "a")
                     data_file.write(str(class7_grade) +'@'+today +',')
                     data_file.close() 
             except:
@@ -409,7 +409,7 @@ class Login(tk.Frame):
 
 
             try:
-                data_1 = open("C:\\Users\\click\\Downloads\\T\\one.txt", "r")
+                data_1 = open("one.txt", "r")
                 data11 = data_1.read().split(',')
                 data_1.close()
 
@@ -428,7 +428,7 @@ class Login(tk.Frame):
                 pass
 
             try:
-                data_2 = open("C:\\Users\\click\\Downloads\\T\\two.txt", "r")
+                data_2 = open("two.txt", "r")
                 data22 = data_2.read().split(',')
                 data_2.close()
 
@@ -447,7 +447,7 @@ class Login(tk.Frame):
                 pass
 
             try:
-                data_3 = open("C:\\Users\\click\\Downloads\\T\\three.txt", "r")
+                data_3 = open("three.txt", "r")
                 data33 = data_3.read().split(',')
                 data_3.close()
 
@@ -466,7 +466,7 @@ class Login(tk.Frame):
                 pass
 
             try:
-                data_4 = open("C:\\Users\\click\\Downloads\\T\\four.txt", "r")
+                data_4 = open("four.txt", "r")
                 data44 = data_4.read().split(',')
                 data_4.close()
 
@@ -484,7 +484,7 @@ class Login(tk.Frame):
             except:
                 pass
             try:    
-                data_5 = open("C:\\Users\\click\\Downloads\\T\\five.txt", "r")
+                data_5 = open("five.txt", "r")
                 data55 = data_5.read().split(',')
                 data_5.close()
 
@@ -504,7 +504,7 @@ class Login(tk.Frame):
                 pass
 
             try:  
-                data_6 = open("C:\\Users\\click\\Downloads\\T\\six.txt", "r")
+                data_6 = open("six.txt", "r")
                 data66 = data_6.read().split(',')
                 data_6.close()
 
@@ -523,7 +523,7 @@ class Login(tk.Frame):
                 pass
 
             try:
-                data_7 = open("C:\\Users\\click\\Downloads\\T\\seven.txt", "r")
+                data_7 = open("seven.txt", "r")
                 data77 = data_7.read().split(',')
                 data_7.close()
 
@@ -542,10 +542,10 @@ class Login(tk.Frame):
                 pass
 
             if timnoget == False:
-                data_file = open("C:\\Users\\click\\Downloads\\T\\avg.txt", "a")
+                data_file = open("avg.txt", "a")
                 data_file.write(str(average)+ '@'+ today + ',')
                 data_file.close()
-            avg_data = open("C:\\Users\\click\\Downloads\\T\\avg.txt", "r")
+            avg_data = open("avg.txt", "r")
             avg_data1 = avg_data.read().split(',')
             avg_data1y = []
             avg_data1x = []
