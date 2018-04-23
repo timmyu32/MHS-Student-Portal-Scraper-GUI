@@ -559,8 +559,7 @@ class Login(tk.Frame):
 
             if timnoget == False:
                 data_file = open("avg.txt", "a")
-                if (str(average) +'@'+today +',') not in data_file:
-                    data_file.write(str(average)+ '@'+ today + ',')
+                data_file.write(str(average)+ '@'+ today + ',')
                 data_file.close()
             avg_data = open("avg.txt", "r")
             avg_data1 = avg_data.read().split(',')
