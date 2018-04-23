@@ -1,8 +1,10 @@
+from individual_class_data import alternate as alter
 import matplotlib
 matplotlib.use("TkAgg")
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2TkAgg
 from matplotlib.figure import Figure
 from matplotlib import style
+from matplotlib import pyplot
 
 import tkinter as tk
 from tkinter import ttk
@@ -19,6 +21,7 @@ from PIL import Image, ImageTk
 import time
 
 
+
 Largest_Font = ("Times New Roman", "16")
 Large_Font = ("Times New Roman", "12")
 smaller_font = ("Times New Roman", "9")
@@ -30,9 +33,17 @@ title = "Tim Uzoegbu GRADES Graph\n Avg= "+str(average)
 global a
 global f
 global g
+global zed
+global una
+global bary
+una = Figure(figsize = (10,5), dpi=100)
 f = Figure(figsize = (10,5), dpi=100)
 g = Figure(figsize = (5,5), dpi=100)
+zed = Figure(figsize= (10,5), dpi=100)
+bary = Figure(figsize= (5,5), dpi=100)
+unatated = una.add_subplot(111)
 a = f.add_subplot(111)
+baro = bary.add_subplot(111)
 
 class GradeGetterApp(tk.Tk):
     
@@ -50,7 +61,7 @@ class GradeGetterApp(tk.Tk):
 
         self.frames = {}
         
-        for F in (StartPage, PageOne, PageTwo, Login, AdminPage, DisplayInDepth1):
+        for F in (StartPage, PageOne, PageTwo, Login, AdminPage, DisplayInDepth1, ClassOne, ClassTwo, ClassThree, ClassFour, ClassFive, ClassSix, ClassSeven, UnannotatedGraph, BarGraph):
             frame = F(container, self)
             self.frames[F] = frame
             frame.grid(row=0, column=0, sticky="nsew")
@@ -91,8 +102,6 @@ class AdminPage(tk.Frame):
         else:
             tim = False
            
-         
-
 class Login(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -132,8 +141,8 @@ class Login(tk.Frame):
             login_btn = driver.find_element_by_name('LoginControl1$btnLogin')
 
 
-            uname.send_keys(u)
-            password.send_keys(p)
+            uname.send_keys("Tuzoegbu")
+            password.send_keys("Cheeze10")
             login_btn.click()
 
 
@@ -293,7 +302,8 @@ class Login(tk.Frame):
                 pie_chart_indicator.append(str(class1_name) + str(class1_grade))
                 if timnoget == False:
                     data_file = open("one.txt", "a")
-                    data_file.write(str(class1_grade) +'@'+today +',')    
+                    if (str(class1_grade) +'@'+today +',') not in data_file: 
+                        data_file.write(str(class1_grade) +'@'+today +',')    
                     data_file.close()    
             except:
                 class1_grade = None
@@ -305,7 +315,8 @@ class Login(tk.Frame):
                 pie_chart_indicator.append(str(class2_name) + str(class2_grade))
                 if timnoget == False:
                     data_file = open("two.txt", "a")
-                    data_file.write(str(class2_grade) +'@'+today +',')
+                    if (str(class2_grade) +'@'+today +',') not in data_file:
+                        data_file.write(str(class2_grade) +'@'+today +',')
                     data_file.close()          
             except:
                 class2_grade = None
@@ -317,7 +328,8 @@ class Login(tk.Frame):
                 pie_chart_indicator.append(str(class3_name) + str(class3_grade))
                 if timnoget == False:
                     data_file = open("three.txt", "a")
-                    data_file.write(str(class3_grade) +'@'+today +',')
+                    if (str(class3_grade) +'@'+today +',') not in data_file:
+                        data_file.write(str(class3_grade) +'@'+today +',')
                     data_file.close()  
             except:
                 class3_grade = None
@@ -329,7 +341,8 @@ class Login(tk.Frame):
                 pie_chart_indicator.append(str(class4_name) + str(class4_grade))
                 if timnoget == False:
                     data_file = open("four.txt", "a")
-                    data_file.write(str(class4_grade) +'@'+today +',')
+                    if (str(class4_grade) +'@'+today +',') not in data_file:
+                        data_file.write(str(class4_grade) +'@'+today +',')
                     data_file.close()  
             except:
                 class4_grade = None
@@ -341,7 +354,8 @@ class Login(tk.Frame):
                 pie_chart_indicator.append(str(class5_name) + str(class5_grade))  
                 if timnoget == False:
                     data_file = open("five.txt", "a")
-                    data_file.write(str(class5_grade) +'@'+today +',')
+                    if (str(class5_grade) +'@'+today +',') not in data_file:
+                        data_file.write(str(class5_grade) +'@'+today +',')
                     data_file.close() 
             except:
                 class5_grade = None
@@ -353,7 +367,8 @@ class Login(tk.Frame):
                 pie_chart_indicator.append(str(class6_name) + str(class6_grade)) 
                 if timnoget == False:
                     data_file = open("six.txt", "a")
-                    data_file.write(str(class6_grade) +'@'+today +',')
+                    if (str(class6_grade) +'@'+today +',') not in data_file:
+                        data_file.write(str(class6_grade) +'@'+today +',')
                     data_file.close() 
             except:
                 class6_grade = None
@@ -365,7 +380,8 @@ class Login(tk.Frame):
                 pie_chart_indicator.append(str(class7_name) + str(class7_grade))
                 if timnoget == False:
                     data_file = open("seven.txt", "a")
-                    data_file.write(str(class7_grade) +'@'+today +',')
+                    if (str(class7_grade) +'@'+today +',') not in data_file:
+                        data_file.write(str(class7_grade) +'@'+today +',')
                     data_file.close() 
             except:
                 class7_grade = None
@@ -543,7 +559,8 @@ class Login(tk.Frame):
 
             if timnoget == False:
                 data_file = open("avg.txt", "a")
-                data_file.write(str(average)+ '@'+ today + ',')
+                if (str(avg_data) +'@'+today +',') not in data_file:
+                    data_file.write(str(average)+ '@'+ today + ',')
                 data_file.close()
             avg_data = open("avg.txt", "r")
             avg_data1 = avg_data.read().split(',')
@@ -561,14 +578,52 @@ class Login(tk.Frame):
             a.set_title(title)
 
             a.plot(avg_data1x, avg_data1y, label= 'Average', ls= '--')
+            unatated.plot(avg_data1x, avg_data1y, label= 'Average', ls= '--')
             a.plot(data11x, data11y, "#ED1F11", label= class1_name, data= class1_name, marker= '.')
+            unatated.plot(data11x, data11y, "#ED1F11", label= class1_name, data= class1_name, marker= '.')
             a.plot(data22x, data22y, "#010101", label= class2_name, data= class2_name, marker= '.')
+            unatated.plot(data22x, data22y, "#010101", label= class2_name, data= class2_name, marker= '.')
             a.plot(data33x, data33y, "#7628B4", label= class3_name, data= class3_name, marker= '.')
+            unatated.plot(data33x, data33y, "#7628B4", label= class3_name, data= class3_name, marker= '.')
             a.plot(data44x, data44y, "#29A223", label= class4_name, data= class4_name, marker= '.')
+            unatated.plot(data44x, data44y, "#29A223", label= class4_name, data= class4_name, marker= '.')
             a.plot(data55x, data55y, "#2E3ACA", label= class5_name, data= class5_name, marker= '.')
+            unatated.plot(data55x, data55y, "#2E3ACA", label= class5_name, data= class5_name, marker= '.')
             a.plot(data66x, data66y, "#FF8CEC", label= class6_name, data= class6_name, marker= '.')
+            unatated.plot(data66x, data66y, "#FF8CEC", label= class6_name, data= class6_name, marker= '.')
             a.plot(data77x, data77y, "#F5891C", label= class7_name, data= class7_name, marker= '.')
+            unatated.plot(data77x, data77y, "#F5891C", label= class7_name, data= class7_name, marker= '.')
             a.legend()
+            unatated.legend()
+            try:
+                baro.bar(x=class1_name, height= class1_grade, color= "#ED1F11", lw = 0.35)
+            except:
+                pass
+            try:
+                baro.bar(x=class2_name, height= class2_grade, color= "#010101", lw = 0.35)
+            except:
+                pass
+            try:
+                baro.bar(x=class3_name, height= class3_grade, color= "#7628B4", lw = 0.35)
+            except:
+                pass
+            try:
+                baro.bar(x=class4_name, height= class4_grade, color= "#29A223", lw = 0.35)
+            except:
+                pass
+            try:
+                baro.bar(x=class5_name, height= class5_grade, color= "#2E3ACA", lw = 0.35)
+            except:
+                pass
+            try:
+                baro.bar(x=class6_name, height= class6_grade, color= "#FF8CEC", lw = 0.35)
+            except:
+                pass
+            try:
+                baro.bar(x='Average', height= average, color= "#F5891C", lw = 0.35)
+            except:
+                pass   
+
             for xy in zip(avg_data1x, avg_data1y):
                 a.annotate('(%s, %s)' % xy, xy=xy, textcoords='data')
             for xy in zip(data11x, data11y):
@@ -593,7 +648,7 @@ class Login(tk.Frame):
             nono = True
             timestamps = ['Quarter 1', 'Quarter 2', 'Quarter 3', 'Current']            
             try:
-                from individual_class_data import alternate as alter
+                
                 alter(u,p)
             except:
                 nono = False 
@@ -760,7 +815,7 @@ class Login(tk.Frame):
 
                 g7 = [ s,t ,u ,c7g ]  
 
-                
+                         
 
                 a.plot(timestamps, g1, "#ED1F11", label= n1, data=c1g, marker= '.')
                 for xy in zip(timestamps, g1):
@@ -792,18 +847,7 @@ class Login(tk.Frame):
         
         
             
-            data_file.close()
-            
-
-                
-
-            
-
-
-
-
-            
-            
+            data_file.close()            
 
 class StartPage(tk.Frame):
     
@@ -811,24 +855,23 @@ class StartPage(tk.Frame):
         tk.Frame.__init__(self, parent)
         label1 = tk.Label(self, text= 'Welcome to the MHS Live Student Portal graph for data visualization created by Tim Uzoegbu.', font= Largest_Font, background= "#95c8f4")
         label1.pack()
-        label2 = tk.Label(self, text= 'This program can be used to plot the course of you courses over a month, semester, or even a year!\nLets geet started...', font= smaller_font, background= "#95c8f4")
+        label2 = tk.Label(self, text= 'This program can be used to plot the course of your courses over a month, semester, or even a year!\nLets get started...', font= smaller_font, background= "#95c8f4")
         label2.pack()
         button1 = ttk.Button(self, text= 'Go to Student Portal Class Data Graph', command= lambda: controller.show_frame(PageOne))
         button1.pack()
         button2 = ttk.Button(self, text= 'Go to Class Data Pie Chart', command= lambda: controller.show_frame(PageTwo))
+        button5 = ttk.Button(self, text= 'Bar Graph Page', command= lambda: controller.show_frame(BarGraph))
         button2.pack()
         button3 = ttk.Button(self, text= "Quit App", command= quit,)
         button4 = ttk.Button(self, text= 'See Avaliable Class Data', command= lambda: controller.show_frame(DisplayInDepth1))
         button4.pack()
         button3.pack()
         self.showImg()
+        button6 = ttk.Button(self, text= 'Log Out',  command= lambda: controller.show_frame(AdminPage))
         
-    
         
-        
-
-
     def showImg(self):
+            
         load = Image.open("home_img.jpg")
         render = ImageTk.PhotoImage(load)
 
@@ -836,52 +879,399 @@ class StartPage(tk.Frame):
         img.image = render
         img.pack()
 
-    
-
-
-
 class PageOne(tk.Frame):
     
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)  
 
-        label1 = ttk.Label(self, text= "Graph Page", font= Large_Font, background= "#95c8f4")
+        label1 = ttk.Label(self, text= "Annotated Graph Page", font= Large_Font, background= "#95c8f4")
         label1.pack()
         button1 = ttk.Button(self, text= 'Go back to HOME PAGE', command= lambda: controller.show_frame(StartPage))
         button1.pack()
-        button3 = ttk.Button(self, text= 'Update Graph', command= lambda: refresh())
+        button3 = ttk.Button(self, text= 'Update Graph', command= lambda: self.refresh())
         button3.pack()
-        button4 = ttk.Button(self, text = "Display Average", command= lambda: self.refresh1())
-        #button4.place(x=0,y=0)
-
-        def refresh():
+        self.button4 = ttk.Button(self, text = " ", command= lambda: controller.show_frame(ClassOne))
+        self.button5 = ttk.Button(self, text = " ", command= lambda: controller.show_frame(ClassTwo))
+        self.button6 = ttk.Button(self, text = " ", command= lambda: controller.show_frame(ClassThree))
+        self.button7 = ttk.Button(self, text = " ", command= lambda: controller.show_frame(ClassFour))
+        self.button8 = ttk.Button(self, text = " ", command= lambda: controller.show_frame(ClassFive))
+        self.button9 = ttk.Button(self, text = " ", command= lambda: controller.show_frame(ClassSix))
+        self.button10 = ttk.Button(self, text = " ", command= lambda: controller.show_frame(ClassSeven))
+        self.button11 = ttk.Button(self, text= ' ',command= lambda: controller.show_frame(UnannotatedGraph) )
+        self.button12 = ttk.Button(self, text= 'Go to Bar Graph Page', command= lambda: controller.show_frame(BarGraph))
         
-            
-            canvas = FigureCanvasTkAgg(f, self)
-            canvas.draw()
-            canvas.get_tk_widget().pack(side= tk.TOP, fill= tk.BOTH, expand= True)
 
-            toolbar = NavigationToolbar2TkAgg(canvas, self)
-            toolbar.update()
-            canvas._tkcanvas.pack(side= tk.TOP, fill= tk.BOTH, expand= True)
-            
-    def refresh2(self):
-        #unfinished, texting purposes only
-        a.clear()
-        a.plot(["Quarter 1",'Quarter 2', 'Quarter 3', 'Current'],[100,35,56,67], label= 'Average', ls= '--')
+    def refresh(self):
+        if tim:
+            self.button4.config(text= '1')
+            self.button4.place(x=0,y=0)
+            self.button5.config(text='2')
+            self.button5.place(x=60,y=0)
+            self.button6.config(text='3')
+            self.button6.place(x=120,y=0)
+            self.button7.config(text='4')
+            self.button7.place(x=180,y=0)
+            self.button8.config(text='5')
+            self.button8.place(x=240,y=0)
+            self.button9.config(text='6')
+            self.button9.place(x=300,y=0)
+            self.button10.config(text='7')
+            self.button10.place(x=360,y=0)
+            self.button11.place(x=180,y=50)
+            self.button11.config(text='Show Unannotated Graph')
+            self.button12.place(x=390, y=50)
         
-    
+        
+        canvas = FigureCanvasTkAgg(f, self)
+        
+        canvas.draw()
+        canvas.get_tk_widget().pack(side= tk.TOP, fill= tk.BOTH, expand= True)
 
+        toolbar = NavigationToolbar2TkAgg(canvas, self)
+        toolbar.update()
+        canvas._tkcanvas.pack(side= tk.TOP, fill= tk.BOTH, expand= True)
 
-
-
-
-
-class PageTwo(tk.Frame):
-    
+class BarGraph(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)  
-        label1 = ttk.Label(self, text= "Graph Page", font= Large_Font, background= "#95c8f4")
+
+        button1 = ttk.Button(self, text= 'Go back to graph', command= lambda: controller.show_frame(PageOne))
+        button2 = ttk.Button(self,  text= 'Update Graph',  command= lambda: self.refresh2())
+        button1.pack()
+        button2.pack()
+    
+    def refresh2(self):
+        canvas = FigureCanvasTkAgg(bary, self)
+        
+        canvas.draw()
+        canvas.get_tk_widget().pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+
+        toolbar = NavigationToolbar2TkAgg(canvas, self)
+        toolbar.update()
+        canvas._tkcanvas.pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+                  
+class ClassOne(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)  
+
+        button1 = ttk.Button(self, text= 'Go back to graph', command= lambda: controller.show_frame(PageOne))
+        button2 = ttk.Button(self,  text= 'Update Graph',  command= lambda: self.refresh2())
+        button1.pack()
+        button2.pack()
+
+    def refresh2(self):
+        try:    
+            data_1 = open("one.txt", "r")
+            data11 = data_1.read().split(',')
+            data_1.close()
+
+            data11y = []
+            data11x = []
+
+            for items in data11:
+                y_valuer = items.split('@')[0]
+                if len(y_valuer) > 1:
+                    y_value = float(y_valuer)
+                    data11y.append(y_value)
+                x_valuer = items.split('@')[-1]
+                if len(x_valuer) > 1:
+                    data11x.append(x_valuer)         
+        except:
+            pass   
+
+        zed1 = zed.add_subplot(111)
+        zed1.plot(data11x,data11y,"#ED1F11", marker= '.' )
+
+        for xy in zip(data11x, data11y):
+                    zed1.annotate('(%s, %s)' % xy, xy=xy, textcoords='data')
+
+        canvas = FigureCanvasTkAgg(zed, self)
+        
+        canvas.draw()
+        canvas.get_tk_widget().pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+
+        toolbar = NavigationToolbar2TkAgg(canvas, self)
+        toolbar.update()
+        canvas._tkcanvas.pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+
+class ClassTwo(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)  
+
+        button1 = ttk.Button(self, text= 'Go back to graph', command= lambda: controller.show_frame(PageOne))
+        button2 = ttk.Button(self,  text= 'Update Graph',  command= lambda: self.refresh2())
+        button1.pack()
+        button2.pack()
+
+    def refresh2(self):
+        try:    
+            data_2 = open("two.txt", "r")
+            data22 = data_2.read().split(',')
+            data_2.close()
+
+            data22y = []
+            data22x = []
+
+            for items in data22:
+                y_valuer = items.split('@')[0]
+                if len(y_valuer) > 1:
+                    y_value = float(y_valuer)
+                    data22y.append(y_value)
+                x_valuer = items.split('@')[-1]
+                if len(x_valuer) > 1:
+                    data22x.append(x_valuer)         
+        except:
+            pass
+        zed22 = Figure(figsize= (10,5), dpi=100)
+
+        zed2 = zed22.add_subplot(111)
+        zed2.plot(data22x,data22y,"#010101", marker='.' )
+
+        for xy in zip(data22x, data22y):
+                    zed2.annotate('(%s, %s)' % xy, xy=xy, textcoords='data')
+
+        canvas = FigureCanvasTkAgg(zed22, self)
+        
+        canvas.draw()
+        canvas.get_tk_widget().pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+
+        toolbar = NavigationToolbar2TkAgg(canvas, self)
+        toolbar.update()
+        canvas._tkcanvas.pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+
+class ClassThree(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)  
+
+        button1 = ttk.Button(self, text= 'Go back to graph', command= lambda: controller.show_frame(PageOne))
+        button2 = ttk.Button(self,  text= 'Update Graph',  command= lambda: self.refresh2())
+        button1.pack()
+        button2.pack()
+
+    def refresh2(self):
+        try:    
+            data_3 = open("three.txt", "r")
+            data33 = data_3.read().split(',')
+            data_3.close()
+
+            data33y = []
+            data33x = []
+
+            for items in data33:
+                y_valuer = items.split('@')[0]
+                if len(y_valuer) > 1:
+                    y_value = float(y_valuer)
+                    data33y.append(y_value)
+                x_valuer = items.split('@')[-1]
+                if len(x_valuer) > 1:
+                    data33x.append(x_valuer)         
+        except:
+            pass   
+        zed33 = Figure(figsize= (10,5), dpi=100)
+
+
+        zed3 = zed33.add_subplot(111)
+        zed3.plot(data33x,data33y, "#7628B4", marker='.' )
+
+        for xy in zip(data33x, data33y):
+                    zed3.annotate('(%s, %s)' % xy, xy=xy, textcoords='data')
+
+        canvas = FigureCanvasTkAgg(zed33, self)
+        
+        canvas.draw()
+        canvas.get_tk_widget().pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+
+        toolbar = NavigationToolbar2TkAgg(canvas, self)
+        toolbar.update()
+        canvas._tkcanvas.pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+
+class ClassFour(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)  
+
+        button1 = ttk.Button(self, text= 'Go back to graph', command= lambda: controller.show_frame(PageOne))
+        button2 = ttk.Button(self,  text= 'Update Graph',  command= lambda: self.refresh2())
+        button1.pack()
+        button2.pack()
+
+    def refresh2(self):
+        try:    
+            data_4 = open("four.txt", "r")
+            data44 = data_4.read().split(',')
+            data_4.close()
+
+            data44y = []
+            data44x = []
+
+            for items in data44:
+                y_valuer = items.split('@')[0]
+                if len(y_valuer) > 1:
+                    y_value = float(y_valuer)
+                    data44y.append(y_value)
+                x_valuer = items.split('@')[-1]
+                if len(x_valuer) > 1:
+                    data44x.append(x_valuer)         
+        except:
+            pass   
+        zed44 = Figure(figsize= (10,5), dpi=100)
+
+
+        zed4 = zed44.add_subplot(111)
+        zed4.plot(data44x,data44y,"#29A223", marker='.')
+
+        for xy in zip(data44x, data44y):
+                    zed4.annotate('(%s, %s)' % xy, xy=xy, textcoords='data')
+
+        canvas = FigureCanvasTkAgg(zed44, self)
+        
+        canvas.draw()
+        canvas.get_tk_widget().pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+
+        toolbar = NavigationToolbar2TkAgg(canvas, self)
+        toolbar.update()
+        canvas._tkcanvas.pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+
+class ClassFive(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)  
+
+        button1 = ttk.Button(self, text= 'Go back to graph', command= lambda: controller.show_frame(PageOne))
+        button2 = ttk.Button(self,  text= 'Update Graph',  command= lambda: self.refresh2())
+        button1.pack()
+        button2.pack()
+
+    def refresh2(self):
+        try:    
+            data_5 = open("five.txt", "r")
+            data55 = data_5.read().split(',')
+            data_5.close()
+
+            data55y = []
+            data55x = []
+
+            for items in data55:
+                y_valuer = items.split('@')[0]
+                if len(y_valuer) > 1:
+                    y_value = float(y_valuer)
+                    data55y.append(y_value)
+                x_valuer = items.split('@')[-1]
+                if len(x_valuer) > 1:
+                    data55x.append(x_valuer)         
+        except:
+            pass   
+        zed55 = Figure(figsize= (10,5), dpi=100)
+
+        zed5 = zed55.add_subplot(111)
+        zed5.plot(data55x,data55y,"#2E3ACA", marker='.')
+
+        for xy in zip(data55x, data55y):
+                    zed5.annotate('(%s, %s)' % xy, xy=xy, textcoords='data')
+
+        canvas = FigureCanvasTkAgg(zed55, self)
+        
+        canvas.draw()
+        canvas.get_tk_widget().pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+
+        toolbar = NavigationToolbar2TkAgg(canvas, self)
+        toolbar.update()
+        canvas._tkcanvas.pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+
+class ClassSix(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)  
+
+        button1 = ttk.Button(self, text= 'Go back to graph', command= lambda: controller.show_frame(PageOne))
+        button2 = ttk.Button(self,  text= 'Update Graph',  command= lambda: self.refresh2())
+        button1.pack()
+        button2.pack()
+
+    def refresh2(self):
+        try:    
+            data_6 = open("six.txt", "r")
+            data66 = data_6.read().split(',')
+            data_6.close()
+
+            data66y = []
+            data66x = []
+
+            for items in data66:
+                y_valuer = items.split('@')[0]
+                if len(y_valuer) > 1:
+                    y_value = float(y_valuer)
+                    data66y.append(y_value)
+                x_valuer = items.split('@')[-1]
+                if len(x_valuer) > 1:
+                    data66x.append(x_valuer)         
+        except:
+            pass   
+        zed66 = Figure(figsize= (10,5), dpi=100)
+
+
+        zed6 = zed66.add_subplot(111)
+        zed6.plot(data66x,data66y,"#FF8CEC", marker='.')
+
+        for xy in zip(data66x, data66y):
+                    zed6.annotate('(%s, %s)' % xy, xy=xy, textcoords='data')
+
+        canvas = FigureCanvasTkAgg(zed66, self)
+        
+        canvas.draw()
+        canvas.get_tk_widget().pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+
+        toolbar = NavigationToolbar2TkAgg(canvas, self)
+        toolbar.update()
+        canvas._tkcanvas.pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+
+class ClassSeven(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)  
+
+        button1 = ttk.Button(self, text= 'Go back to graph', command= lambda: controller.show_frame(PageOne))
+        button2 = ttk.Button(self,  text= 'Update Graph',  command= lambda: self.refresh2())
+        button1.pack()
+        button2.pack()
+
+    def refresh2(self):
+        try:    
+            data_7 = open("seven.txt", "r")
+            data77 = data_7.read().split(',')
+            data_7.close()
+
+            data77y = []
+            data77x = []
+
+            for items in data77:
+                y_valuer = items.split('@')[0]
+                if len(y_valuer) > 1:
+                    y_value = float(y_valuer)
+                    data77y.append(y_value)
+                x_valuer = items.split('@')[-1]
+                if len(x_valuer) > 1:
+                    data77x.append(x_valuer)         
+        except:
+            pass   
+        zed77 = Figure(figsize= (10,5), dpi=100)
+
+
+        zed7 = zed77.add_subplot(111)
+        zed7.plot(data77x,data77y,"#F5891C", marker='.')
+
+        for xy in zip(data77x, data77y):
+                    zed7.annotate('(%s, %s)' % xy, xy=xy, textcoords='data')
+
+        canvas = FigureCanvasTkAgg(zed77, self)
+        
+        canvas.draw()
+        canvas.get_tk_widget().pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+
+        toolbar = NavigationToolbar2TkAgg(canvas, self)
+        toolbar.update()
+        canvas._tkcanvas.pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+
+class PageTwo(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)  
+        label1 = ttk.Label(self, text= "PIE CHART Page", font= Large_Font, background= "#95c8f4")
         label1.pack()
         button1 = ttk.Button(self, text= 'Go back to HOME PAGE', command= lambda: controller.show_frame(StartPage))
         button1.pack()
@@ -893,6 +1283,7 @@ class PageTwo(tk.Frame):
         
         def refresh():
             canvas = FigureCanvasTkAgg(g, self)
+            
             canvas.draw()
             canvas.get_tk_widget().pack(side= tk.TOP, fill= tk.BOTH, expand= True)
 
@@ -901,13 +1292,14 @@ class PageTwo(tk.Frame):
             canvas._tkcanvas.pack(side= tk.TOP, fill= tk.BOTH, expand= True)
             g.add_subplot(111).pie(denominator, shadow=True, labels=pie_chart_indicator, autopct='%1.1f%%', startangle=90)
             g.legend()
-
+            
 class DisplayInDepth1(ttk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent) 
         button1 = ttk.Button(self, text='Go back to HOME PAGE',  command= lambda: controller.show_frame(StartPage) )
-        button3 = ttk.Button(self, text= 'Show Avaliable Data', command= self.shower())
+        button3 = ttk.Button(self, text= 'Show Avaliable Data', command= lambda: self.shower())
         button1.grid(row= 1, column= 2)
+        button3.grid(row= 1, column= 3)
 
     
 
@@ -930,6 +1322,7 @@ class DisplayInDepth1(ttk.Frame):
             for items in avadat22:
                 if len(items)  > 0:
                     numero += 1
+                    print(items)
                     tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 2, row=numero,  sticky= tk.E + tk.W)
             data_file = open("temp7.txt", 'r')
             avadat3 = data_file.read()
@@ -980,6 +1373,31 @@ class DisplayInDepth1(ttk.Frame):
                 if len(items)  > 0:
                     numero += 1
                     tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 5, row=numero, sticky=   tk.E + tk.W)
+
+class UnannotatedGraph(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.label1 = tk.Label(self, text= 'Unannotated Graph Page',  bg= '#95c8f4', font= Large_Font).pack()
+        button1 = ttk.Button(self, text= 'Go back to HOME PAGE', command= lambda: controller.show_frame(StartPage))
+        button1.pack()
+        button2 = ttk.Button(self, text= 'Go to Student Portal Class Data Graph', command= lambda: controller.show_frame(PageOne))
+        button2.pack()
+        button3 = ttk.Button(self, text= 'Update Graph', command= lambda: self.refresh())
+        button3.pack()
+
+    def refresh(self):
+        canvas = FigureCanvasTkAgg(una, self)
+        
+        canvas.draw()
+        canvas.get_tk_widget().pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+
+        toolbar = NavigationToolbar2TkAgg(canvas, self)
+        toolbar.update()
+        canvas._tkcanvas.pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+
+
+
+
 
 
 app = GradeGetterApp()
