@@ -597,31 +597,31 @@ class Login(tk.Frame):
             try:
                 baro.bar(x=class1_name, height= class1_grade, color= "#ED1F11", lw = 0.35)
             except:
-                pass
+                print("Class {} is not avaliable for bar graph".format(class1_name))
             try:
                 baro.bar(x=class2_name, height= class2_grade, color= "#010101", lw = 0.35)
             except:
-                pass
+                print("Class {} is not avaliable for bar graph".format(class2_name))
             try:
                 baro.bar(x=class3_name, height= class3_grade, color= "#7628B4", lw = 0.35)
             except:
-                pass
+                print("Class {} is not avaliable for bar graph".format(class3_name))
             try:
                 baro.bar(x=class4_name, height= class4_grade, color= "#29A223", lw = 0.35)
             except:
-                pass
-            try:
+                print("Class {} is not avaliable for bar graph".format(class4_name))
+            try:    
                 baro.bar(x=class5_name, height= class5_grade, color= "#2E3ACA", lw = 0.35)
             except:
-                pass
+                print("Class {} is not avaliable for bar graph".format(class5_name))
             try:
                 baro.bar(x=class6_name, height= class6_grade, color= "#FF8CEC", lw = 0.35)
             except:
-                pass
+                print("Class {} is not avaliable for bar graph".format(class6_name))
             try:
                 baro.bar(x='Average', height= average, color= "#F5891C", lw = 0.35)
             except:
-                pass   
+                print("Class {} is not avaliable for bar graph".format("average"))   
 
             for xy in zip(avg_data1x, avg_data1y):
                 a.annotate('(%s, %s)' % xy, xy=xy, textcoords='data')
