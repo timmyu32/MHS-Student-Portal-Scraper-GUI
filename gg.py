@@ -301,10 +301,22 @@ class Login(tk.Frame):
                 denominator.append(class1_grade)
                 pie_chart_indicator.append(str(class1_name) + str(class1_grade))
                 if timnoget == False:
-                    data_file = open("one.txt", "a")
-                    if (str(class1_grade) +'@'+today +',') not in data_file: 
-                        data_file.write(str(class1_grade) +'@'+today +',')    
-                    data_file.close()    
+                    data_file = open("one.txt", "r")
+                    tempy1 = str(class1_grade) +'@'+today+','
+                    
+                    if tempy1 not in data_file.read():
+                        try:
+                            data_file.close()
+                            data_file = open("one.txt", "a")
+                            data_file.write(str(class1_grade) +'@'+today +',')
+                            ('writing has passed')
+                        except:
+                            print('writing has failed')
+                    else:
+                        print("Class {}'s grade of {} is already in one.txt".format(class1_name, class1_grade))
+                    data_file.close() 
+                else:
+                    print('Tim No get is false')   
             except:
                 class1_grade = None
             try:
@@ -314,10 +326,22 @@ class Login(tk.Frame):
                 denominator.append(class2_grade)
                 pie_chart_indicator.append(str(class2_name) + str(class2_grade))
                 if timnoget == False:
-                    data_file = open("two.txt", "a")
-                    if (str(class2_grade) +'@'+today +',') not in data_file:
-                        data_file.write(str(class2_grade) +'@'+today +',')
-                    data_file.close()          
+                    data_file = open("two.txt", "r")
+                    tempy1 = str(class2_grade) +'@'+today+','
+                    
+                    if tempy1 not in data_file.read():
+                        try:
+                            data_file.close()
+                            data_file = open("two.txt", "a")
+                            data_file.write(str(class2_grade) +'@'+today +',')
+                            ('writing has passed')
+                        except:
+                            print('writing has failed')
+                    else:
+                        print("Class {}'s grade of {} is already in two.txt".format(class2_name, class2_grade))
+                    data_file.close() 
+                else:
+                    print('Tim No get is false')          
             except:
                 class2_grade = None
             try:
@@ -327,10 +351,22 @@ class Login(tk.Frame):
                 denominator.append(class3_grade) 
                 pie_chart_indicator.append(str(class3_name) + str(class3_grade))
                 if timnoget == False:
-                    data_file = open("three.txt", "a")
-                    if (str(class3_grade) +'@'+today +',') not in data_file:
-                        data_file.write(str(class3_grade) +'@'+today +',')
-                    data_file.close()  
+                    data_file = open("three.txt", "r")
+                    tempy1 = str(class3_grade) +'@'+today+','
+                    
+                    if tempy1 not in data_file.read():
+                        try:
+                            data_file.close()
+                            data_file = open("three.txt", "a")
+                            data_file.write(str(class3_grade) +'@'+today +',')
+                            ('writing has passed')
+                        except:
+                            print('writing has failed')
+                    else:
+                        print("Class {}'s grade of {} is already in three.txt".format(class3_name, class3_grade))
+                    data_file.close() 
+                else:
+                    print('Tim No get is false')  
             except:
                 class3_grade = None
             try:
@@ -340,10 +376,22 @@ class Login(tk.Frame):
                 denominator.append(class4_grade) 
                 pie_chart_indicator.append(str(class4_name) + str(class4_grade))
                 if timnoget == False:
-                    data_file = open("four.txt", "a")
-                    if (str(class4_grade) +'@'+today +',') not in data_file:
-                        data_file.write(str(class4_grade) +'@'+today +',')
-                    data_file.close()  
+                    data_file = open("four.txt", "r")
+                    tempy1 = str(class4_grade) +'@'+today+','
+                    
+                    if tempy1 not in data_file.read():
+                        try:
+                            data_file.close()
+                            data_file = open("four.txt", "a")
+                            data_file.write(str(class4_grade) +'@'+today +',')
+                            ('writing has passed')
+                        except:
+                            print('writing has failed')
+                    else:
+                        print("Class {}'s grade of {} is already in four.txt".format(class4_name, class4_grade))
+                    data_file.close() 
+                else:
+                    print('Tim No get is false')  
             except:
                 class4_grade = None
             try:
@@ -353,10 +401,22 @@ class Login(tk.Frame):
                 denominator.append(class5_grade)
                 pie_chart_indicator.append(str(class5_name) + str(class5_grade))  
                 if timnoget == False:
-                    data_file = open("five.txt", "a")
-                    if (str(class5_grade) +'@'+today +',') not in data_file:
-                        data_file.write(str(class5_grade) +'@'+today +',')
+                    data_file = open("five.txt", "r")
+                    tempy1 = str(class5_grade) +'@'+today+','
+                    
+                    if tempy1 not in data_file.read():
+                        try:
+                            data_file.close()
+                            data_file = open("five.txt", "a")
+                            data_file.write(str(class5_grade) +'@'+today +',')
+                            ('writing has passed')
+                        except:
+                            print('writing has failed')
+                    else:
+                        print("Class {}'s grade of {} is already in five.txt".format(class5_name, class5_grade))
                     data_file.close() 
+                else:
+                    print('Tim No get is false') 
             except:
                 class5_grade = None
             try:
@@ -366,10 +426,22 @@ class Login(tk.Frame):
                 denominator.append(class6_grade) 
                 pie_chart_indicator.append(str(class6_name) + str(class6_grade)) 
                 if timnoget == False:
-                    data_file = open("six.txt", "a")
-                    if (str(class6_grade) +'@'+today +',') not in data_file:
-                        data_file.write(str(class6_grade) +'@'+today +',')
+                    data_file = open("six.txt", "r")
+                    tempy1 = str(class6_grade) +'@'+today+','
+                    
+                    if tempy1 not in data_file.read():
+                        try:
+                            data_file.close()
+                            data_file = open("six.txt", "a")
+                            data_file.write(str(class6_grade) +'@'+today +',')
+                            ('writing has passed')
+                        except:
+                            print('writing has failed')
+                    else:
+                        print("Class {}'s grade of {} is already in six.txt".format(class6_name, class6_grade))
                     data_file.close() 
+                else:
+                    print('Tim No get is false')
             except:
                 class6_grade = None
             try:
@@ -379,10 +451,22 @@ class Login(tk.Frame):
                 denominator.append(class7_grade)
                 pie_chart_indicator.append(str(class7_name) + str(class7_grade))
                 if timnoget == False:
-                    data_file = open("seven.txt", "a")
-                    if (str(class7_grade) +'@'+today +',') not in data_file:
-                        data_file.write(str(class7_grade) +'@'+today +',')
+                    data_file = open("seven.txt", "r")
+                    tempy1 = str(class7_grade) +'@'+today+','
+                    
+                    if tempy1 not in data_file.read():
+                        try:
+                            data_file.close()
+                            data_file = open("seven.txt", "a")
+                            data_file.write(str(class7_grade) +'@'+today +',')
+                            ('writing has passed')
+                        except:
+                            print('writing has failed')
+                    else:
+                        print("Class {}'s grade of {} is already in seven.txt".format(class7_name, class7_grade))
                     data_file.close() 
+                else:
+                    print('Tim No get is false') 
             except:
                 class7_grade = None
             try:
@@ -558,9 +642,23 @@ class Login(tk.Frame):
                 pass
 
             if timnoget == False:
-                data_file = open("avg.txt", "a")
-                data_file.write(str(average)+ '@'+ today + ',')
-                data_file.close()
+                data_file = open("avg.txt", "r")
+                tempy1 = str(average) +'@'+today+','
+                
+                if tempy1 not in data_file.read():
+                    try:
+                        data_file.close()
+                        data_file = open("avg.txt", "a")
+                        data_file.write(str(average) +'@'+today +',')
+                        ('writing has passed')
+                    except:
+                        print('writing has failed')
+                else:
+                    print(" {} is already in avg.txt".format(average))
+                data_file.close() 
+            else:
+                print('Tim No get is false')
+            
             avg_data = open("avg.txt", "r")
             avg_data1 = avg_data.read().split(',')
             avg_data1y = []
@@ -621,7 +719,8 @@ class Login(tk.Frame):
             try:
                 baro.bar(x='Average', height= average, color= "#F5891C", lw = 0.35)
             except:
-                print("Class {} is not avaliable for bar graph".format("average"))   
+                print("Class {} is not avaliable for bar graph".format("average"))
+          
 
             for xy in zip(avg_data1x, avg_data1y):
                 a.annotate('(%s, %s)' % xy, xy=xy, textcoords='data')
@@ -1307,6 +1406,7 @@ class DisplayInDepth1(ttk.Frame):
         avadat1 = data_file.read()
         avadat11 = avadat1.split(',')
         data_file.close()
+        tk.Label(self, text= '{} Assignment(s)'.format(len(avadat11)), font= Large_Font, bg= '#95c8f4').grid(row=1,column=1)
         if len(avadat11) <= 14:
             numero = 1
             for items in avadat11:
@@ -1321,7 +1421,6 @@ class DisplayInDepth1(ttk.Frame):
             for items in avadat22:
                 if len(items)  > 0:
                     numero += 1
-                    print(items)
                     tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 2, row=numero,  sticky= tk.E + tk.W)
             data_file = open("temp7.txt", 'r')
             avadat3 = data_file.read()
@@ -1393,11 +1492,6 @@ class UnannotatedGraph(tk.Frame):
         toolbar = NavigationToolbar2TkAgg(canvas, self)
         toolbar.update()
         canvas._tkcanvas.pack(side= tk.TOP, fill= tk.BOTH, expand= True)
-
-
-
-
-
 
 app = GradeGetterApp()
 app.mainloop()
