@@ -170,6 +170,7 @@ class Login(tk.Frame):
             id_descriptors = []
             grdr = []
             grdr2 = []
+            grdr3 = []
 
 
             numero = len(driver.find_elements_by_xpath("//td[@style= 'background-color:White;width:145px;']"))
@@ -181,15 +182,16 @@ class Login(tk.Frame):
                     class_identifiers = [x.text for x in driver.find_elements_by_xpath("//div[@class='HtmlTextBox2 s22-']")]
                     if len(class_identifiers) > 0:
                         ids.append(class_identifiers)
-                        descriptor = [x.text for x in driver.find_elements_by_xpath("//div[@class='TextBox41 s28-']") ]
+                        descriptor = [x.text.replace('\n',  ' ') for x in driver.find_elements_by_xpath("//div[@class='TextBox41 s28-']") ]
                         if len(descriptors) > 0:
                             id_descriptors.append(descriptor)
-                        ider = [x.text for x in driver.find_elements_by_xpath("//div[@class= 'TextBox43 s28-']") ]
                         grd1 = [x.text for x in driver.find_elements_by_xpath("//div[@class='TextBox46 s29-']") ]
-                        grd2 = [x.text for x in driver.find_elements_by_xpath("//div[@class='TextBox27 s28-']") ] 
+                        grd2 = [x.text for x in driver.find_elements_by_xpath("//div[@class='TextBox27 s28-']") ]
+                        grd3 = [x.text for x in driver.find_elements_by_xpath("//div[@class= 'TextBox42 s28-']") ] 
                         if len(grdr1) > 0:
                             grdr.append(grd1)
                             grdr2.append(grd2)
+                            grdr3.append(grd3)
                         driver.switch_to.parent_frame()
                         driver.find_elements_by_xpath("//a[@class= 'rmLink rmRootLink']")[4].click()
                         numero += -1
@@ -205,15 +207,16 @@ class Login(tk.Frame):
                     class_identifiers = [x.text for x in driver.find_elements_by_xpath("//div[@class='HtmlTextBox2 s22-']")]
                     if len(class_identifiers) > 0:
                         ids.append(class_identifiers)
-                        descriptor = [x.text for x in driver.find_elements_by_xpath("//div[@class='TextBox41 s28-']") ]
+                        descriptor = [x.text.replace('\n',  ' ') for x in driver.find_elements_by_xpath("//div[@class='TextBox41 s28-']") ]
                         if len(descriptor) >0:
                             id_descriptors.append(descriptor)
-                        ider = [x.text for x in driver.find_elements_by_xpath("//div[@class= 'TextBox43 s28-']") ]
                         grd1 = [x.text for x in driver.find_elements_by_xpath("//div[@class='TextBox46 s29-']") ]
                         grd2 = [x.text for x in driver.find_elements_by_xpath("//div[@class='TextBox27 s28-']") ]
+                        grd3 = [x.text for x in driver.find_elements_by_xpath("//div[@class= 'TextBox42 s28-']") ]
                         if len(grd1) > 0:
                             grdr.append(grd1)
                             grdr2.append(grd2)
+                            grdr3.append(grd3)
                         driver.switch_to.parent_frame()
                         driver.find_elements_by_xpath("//a[@class= 'rmLink rmRootLink']")[4].click()
                         numero += -1
@@ -240,6 +243,11 @@ class Login(tk.Frame):
                 for item in items:
                     data_file.write(str(item)+',')
             data_file.close()
+            data_file = open("temp8.txt", 'w')
+            for items in grdr3:
+                for item in items:
+                    data_file.write(str(item)+',')
+            data_file.close()            
             
             try:
                 class1_code = class_codes[0]
@@ -662,6 +670,7 @@ class Login(tk.Frame):
             avg_data = open("avg.txt", "r")
             avg_data1 = avg_data.read().split(',')
             avg_data1y = []
+            global avg_data1x
             avg_data1x = []
 
             for items in avg_data1:
@@ -717,7 +726,11 @@ class Login(tk.Frame):
             except:
                 print("Class {} is not avaliable for bar graph".format(class6_name))
             try:
-                baro.bar(x='Average', height= average, color= "#F5891C", lw = 0.35)
+                baro.bar(x=class7_name, height= class7_grade, color = "#F5891C")
+            except:
+                print("Class {} is not avaliable for bar graph".format(class7_name))
+            try:
+                baro.bar(x='Average', height= average, lw = 0.35)
             except:
                 print("Class {} is not avaliable for bar graph".format("average"))
           
@@ -997,7 +1010,25 @@ class PageOne(tk.Frame):
         self.button10 = ttk.Button(self, text = " ", command= lambda: controller.show_frame(ClassSeven))
         self.button11 = ttk.Button(self, text= ' ',command= lambda: controller.show_frame(UnannotatedGraph) )
         self.button12 = ttk.Button(self, text= 'Go to Bar Graph Page', command= lambda: controller.show_frame(BarGraph))
+        self.e = ttk.Entry(self)
+        self.button13 = ttk.Button(self, text= 'Plot', command= lambda: self.refer())
+        self.label1 = tk.Label(self, text= 'Plot a referance line', font= smaller_font, bg ='#95c8f4' )
         
+    def refer(self):
+        
+        
+        y = self.e.get()
+        if y == int or y== float:
+            a.plot(avg_data1x, y)
+        else:
+            a.plot(0, 0)
+        
+        canvas = FigureCanvasTkAgg(f, self)
+        
+        canvas.draw()
+
+
+
 
     def refresh(self):
         if tim:
@@ -1018,8 +1049,13 @@ class PageOne(tk.Frame):
             self.button11.place(x=180,y=50)
             self.button11.config(text='Show Unannotated Graph')
             self.button12.place(x=390, y=50)
+            #self.e.place(x=1000,y=30)
+            #self.label1.place(x=1000,y=0)
+            #self.button13.place(x=1150, y= 30)
+
+            
         
-        
+     
         canvas = FigureCanvasTkAgg(f, self)
         
         canvas.draw()
@@ -1406,71 +1442,49 @@ class DisplayInDepth1(ttk.Frame):
         avadat1 = data_file.read()
         avadat11 = avadat1.split(',')
         data_file.close()
-        tk.Label(self, text= '{} Assignment(s)'.format(len(avadat11)), font= Large_Font, bg= '#95c8f4').grid(row=1,column=1)
-        if len(avadat11) <= 14:
-            numero = 1
-            for items in avadat11:
-                if len(items) > 0:
-                    numero += 1
-                    tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 1, row=numero, sticky=  tk.E + tk.W)
-            data_file = open("temp6.txt", 'r')
-            avadat2 = data_file.read()
-            avadat22 = avadat2.split(',')
-            data_file.close() 
-            numero = 1
-            for items in avadat22:
-                if len(items)  > 0:
-                    numero += 1
-                    tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 2, row=numero,  sticky= tk.E + tk.W)
-            data_file = open("temp7.txt", 'r')
-            avadat3 = data_file.read()
-            avadat33 = avadat3.split(',')
-            data_file.close() 
-            numero = 1
-            for items in avadat33:
-                if len(items)  > 0:
-                    numero += 1
-                    tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 3, row=numero, sticky=  tk.E + tk.W)
-        elif len(avadat11) > 14:
-            numero = 1
-            for items in avadat11[0:15]:
-                if len(items) > 0:
-                    numero += 1
-                    tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 1, row=numero, sticky=  tk.E + tk.W)
-            data_file = open("temp6.txt", 'r')
-            avadat2 = data_file.read()
-            avadat22 = avadat2.split(',')
-            data_file.close() 
-            numero = 1
-            for items in avadat22[0:15]:
-                if len(items)  > 0:
-                    numero += 1
-                    tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 2, row=numero, sticky=   tk.E + tk.W)
-            data_file = open("temp7.txt", 'r')
-            avadat3 = data_file.read()
-            avadat33 = avadat3.split(',')
-            data_file.close() 
-            numero = 1
-            for items in avadat33[0:15]:
-                if len(items)  > 0:
-                    numero += 1
-                    tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 3, row=numero, sticky=  tk.E + tk.W)
-            
-            numero = 1
-            for items in avadat11[16:-1]:
-                if len(items) > 0:
-                    numero += 1
-                    tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 3, row=numero, sticky=   tk.E + tk.W)
-            numero = 1
-            for items in avadat22[16:-1]:
-                if len(items)  > 0:
-                    numero += 1
-                    tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 4, row=numero, sticky= tk.E + tk.W)
-            numero = 1
-            for items in avadat33[16:-1]:
-                if len(items)  > 0:
-                    numero += 1
-                    tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 5, row=numero, sticky=   tk.E + tk.W)
+        #for items in avadat11:
+            #print(items+'\n')
+        avadat = []
+        for i in avadat11:
+            if len(i) > 1:
+                avadat.append(i)
+                print(i)
+        tk.Label(self, text= '{} Assignment(s)'.format(len(avadat)), font= Large_Font, bg= '#95c8f4').grid(row=1,column=1)
+        
+        numero = 1
+        for items in avadat11:
+            if len(items) > 0:
+                numero += 1
+                tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 1, row=numero, sticky=  tk.E + tk.W)
+        
+        data_file = open("temp8.txt", 'r')
+        avadat4 = data_file.read()
+        avadat44 = avadat4.split(',')
+        data_file.close() 
+        numero = 1
+        for items in avadat44:
+            numero += 1
+            tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 2, row=numero, sticky=  tk.E + tk.W)
+
+        
+        data_file = open("temp6.txt", 'r')
+        avadat2 = data_file.read()
+        avadat22 = avadat2.split(',')
+        data_file.close() 
+        numero = 1
+        for items in avadat22:
+            if len(items)  > 0:
+                numero += 1
+                tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 3, row=numero,  sticky= tk.E + tk.W)
+        data_file = open("temp7.txt", 'r')
+        avadat3 = data_file.read()
+        avadat33 = avadat3.split(',')
+        data_file.close() 
+        numero = 1
+        for items in avadat33:
+            if len(items)  > 0:
+                numero += 1
+                tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 4, row=numero, sticky=  tk.E + tk.W)                        
 
 class UnannotatedGraph(tk.Frame):
     def __init__(self, parent, controller):
@@ -1492,6 +1506,12 @@ class UnannotatedGraph(tk.Frame):
         toolbar = NavigationToolbar2TkAgg(canvas, self)
         toolbar.update()
         canvas._tkcanvas.pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+
+
+
+
+
+
 
 app = GradeGetterApp()
 app.mainloop()
