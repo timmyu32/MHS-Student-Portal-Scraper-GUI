@@ -63,6 +63,7 @@ def alternate(a,b):
     id_descriptors = []
     grdr = []
     grdr2 = []
+    grdr3 = []
 
     numero = len(driver.find_elements_by_xpath("//td[@style= 'background-color:White;width:145px;']"))
 
@@ -79,13 +80,14 @@ def alternate(a,b):
                     descriptor = [x.text for x in driver.find_elements_by_xpath("//div[@class='TextBox41 s28-']") ]
                     if len(descriptor) > 0:
                         id_descriptors.append(descriptor)
-                    ider = [x.text for x in driver.find_elements_by_xpath("//div[@class= 'TextBox43 s28-']") ]
                     grd1 = [x.text for x in driver.find_elements_by_xpath("//div[@class='TextBox46 s29-']") ]
     #               grd1 = driver.find_elements_by_xpath("//div[@class='TextBox46 s29-']"
-                    grd2 = [x.text for x in driver.find_elements_by_xpath("//div[@class='TextBox27 s28-']") ] 
+                    grd2 = [x.text for x in driver.find_elements_by_xpath("//div[@class='TextBox27 s28-']") ]
+                    grd3 = [x.text for x in driver.find_elements_by_xpath("//div[@class= 'TextBox42 s28-']") ] 
                     if len(grd1) > 0:
                         grdr.append(grd1)
                         grdr2.append(grd2)
+                        grdr3.append(grd3)
                     driver.switch_to.parent_frame()
                     driver.find_elements_by_xpath("//a[@class= 'rmLink rmRootLink']")[4].click()
                     numero += -1
@@ -105,12 +107,13 @@ def alternate(a,b):
                         descriptor = [x.text for x in driver.find_elements_by_xpath("//div[@class='TextBox41 s28-']") ]
                         if len(descriptor) >0:
                             id_descriptors.append(descriptor)
-                        ider = [x.text for x in driver.find_elements_by_xpath("//div[@class= 'TextBox43 s28-']") ]
                         grd1 = [x.text for x in driver.find_elements_by_xpath("//div[@class='TextBox46 s29-']") ]
                         grd2 = [x.text for x in driver.find_elements_by_xpath("//div[@class='TextBox27 s28-']") ]
+                        grd3 = [x.text for x in driver.find_elements_by_xpath("//div[@class= 'TextBox42 s28-']") ]
                         if len(grd1) > 0:
                             grdr.append(grd1)
                             grdr2.append(grd2)
+                            grdr3.append(grd3)
                         driver.switch_to.parent_frame()
                         driver.find_elements_by_xpath("//a[@class= 'rmLink rmRootLink']")[4].click()
                         numero += -1
@@ -173,6 +176,11 @@ def alternate(a,b):
     data_file.close()
     data_file = open("temp7.txt", 'w')
     for items in grdr2:
+        for item in items:
+            data_file.write(str(item)+',')
+    data_file.close()
+    data_file = open("temp8.txt", 'w')
+    for items in grdr3:
         for item in items:
             data_file.write(str(item)+',')
     data_file.close()
