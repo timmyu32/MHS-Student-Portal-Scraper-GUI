@@ -187,7 +187,7 @@ class Login(tk.Frame):
                             id_descriptors.append(descriptor)
                         grd1 = [x.text for x in driver.find_elements_by_xpath("//div[@class='TextBox46 s29-']") ]
                         grd2 = [x.text for x in driver.find_elements_by_xpath("//div[@class='TextBox27 s28-']") ]
-                        grd3 = [x.text for x in driver.find_elements_by_xpath("//div[@class= 'TextBox42 s28-']") ] 
+                        grd3 = [x.text.replace(",", "-") for x in driver.find_elements_by_xpath("//div[@class= 'TextBox42 s28-']") ] 
                         if len(grdr1) > 0:
                             grdr.append(grd1)
                             grdr2.append(grd2)
@@ -212,7 +212,7 @@ class Login(tk.Frame):
                             id_descriptors.append(descriptor)
                         grd1 = [x.text for x in driver.find_elements_by_xpath("//div[@class='TextBox46 s29-']") ]
                         grd2 = [x.text for x in driver.find_elements_by_xpath("//div[@class='TextBox27 s28-']") ]
-                        grd3 = [x.text for x in driver.find_elements_by_xpath("//div[@class= 'TextBox42 s28-']") ]
+                        grd3 = [x.text.replace(",", "-") for x in driver.find_elements_by_xpath("//div[@class= 'TextBox42 s28-']") ]
                         if len(grd1) > 0:
                             grdr.append(grd1)
                             grdr2.append(grd2)
@@ -310,14 +310,15 @@ class Login(tk.Frame):
                 pie_chart_indicator.append(str(class1_name) + str(class1_grade))
                 if timnoget == False:
                     data_file = open("one.txt", "r")
+                    last_grade = data_file.read().split(',')[-2].split('@')[0]
                     tempy1 = str(class1_grade) +'@'+today+','
                     
                     if tempy1 not in data_file.read():
                         try:
                             data_file.close()
-                            data_file = open("one.txt", "a")
-                            data_file.write(str(class1_grade) +'@'+today +',')
-                            ('writing has passed')
+                            if float(last_grade) != float(class1_grade):
+                                data_file = open("one.txt", "a")
+                                data_file.write(str(class1_grade) +'@'+today +',')
                         except:
                             print('writing has failed')
                     else:
@@ -335,14 +336,15 @@ class Login(tk.Frame):
                 pie_chart_indicator.append(str(class2_name) + str(class2_grade))
                 if timnoget == False:
                     data_file = open("two.txt", "r")
+                    last_grade = data_file.read().split(',')[-2].split('@')[0]
                     tempy1 = str(class2_grade) +'@'+today+','
                     
                     if tempy1 not in data_file.read():
                         try:
                             data_file.close()
-                            data_file = open("two.txt", "a")
-                            data_file.write(str(class2_grade) +'@'+today +',')
-                            ('writing has passed')
+                            if float(last_grade) != float(class2_grade):
+                                data_file = open("two.txt", "a")
+                                data_file.write(str(class2_grade) +'@'+today +',')
                         except:
                             print('writing has failed')
                     else:
@@ -360,14 +362,15 @@ class Login(tk.Frame):
                 pie_chart_indicator.append(str(class3_name) + str(class3_grade))
                 if timnoget == False:
                     data_file = open("three.txt", "r")
+                    last_grade = data_file.read().split(',')[-2].split('@')[0]
                     tempy1 = str(class3_grade) +'@'+today+','
                     
                     if tempy1 not in data_file.read():
                         try:
                             data_file.close()
-                            data_file = open("three.txt", "a")
-                            data_file.write(str(class3_grade) +'@'+today +',')
-                            ('writing has passed')
+                            if float(last_grade) != float(class3_grade):
+                                data_file = open("three.txt", "a")
+                                data_file.write(str(class3_grade) +'@'+today +',')
                         except:
                             print('writing has failed')
                     else:
@@ -385,14 +388,15 @@ class Login(tk.Frame):
                 pie_chart_indicator.append(str(class4_name) + str(class4_grade))
                 if timnoget == False:
                     data_file = open("four.txt", "r")
+                    last_grade = data_file.read().split(',')[-2].split('@')[0]
                     tempy1 = str(class4_grade) +'@'+today+','
                     
                     if tempy1 not in data_file.read():
                         try:
                             data_file.close()
-                            data_file = open("four.txt", "a")
-                            data_file.write(str(class4_grade) +'@'+today +',')
-                            ('writing has passed')
+                            if float(last_grade) != float(class4_grade):
+                                data_file = open("four.txt", "a")
+                                data_file.write(str(class4_grade) +'@'+today +',')
                         except:
                             print('writing has failed')
                     else:
@@ -410,14 +414,15 @@ class Login(tk.Frame):
                 pie_chart_indicator.append(str(class5_name) + str(class5_grade))  
                 if timnoget == False:
                     data_file = open("five.txt", "r")
+                    last_grade = data_file.read().split(',')[-2].split('@')[0]
                     tempy1 = str(class5_grade) +'@'+today+','
                     
                     if tempy1 not in data_file.read():
                         try:
                             data_file.close()
-                            data_file = open("five.txt", "a")
-                            data_file.write(str(class5_grade) +'@'+today +',')
-                            ('writing has passed')
+                            if float(last_grade) != float(class5_grade):
+                                data_file = open("five.txt", "a")
+                                data_file.write(str(class5_grade) +'@'+today +',')
                         except:
                             print('writing has failed')
                     else:
@@ -435,14 +440,17 @@ class Login(tk.Frame):
                 pie_chart_indicator.append(str(class6_name) + str(class6_grade)) 
                 if timnoget == False:
                     data_file = open("six.txt", "r")
+                    last_grade = data_file.read().split(',')[-2].split('@')[0]
                     tempy1 = str(class6_grade) +'@'+today+','
                     
                     if tempy1 not in data_file.read():
                         try:
                             data_file.close()
-                            data_file = open("six.txt", "a")
-                            data_file.write(str(class6_grade) +'@'+today +',')
-                            ('writing has passed')
+                            print(last_grade)
+                            print(class6_grade)
+                            if float(last_grade) != float(class6_grade):
+                                data_file = open("six.txt", "a")
+                                data_file.write(str(class6_grade) +'@'+today +',')
                         except:
                             print('writing has failed')
                     else:
@@ -460,14 +468,15 @@ class Login(tk.Frame):
                 pie_chart_indicator.append(str(class7_name) + str(class7_grade))
                 if timnoget == False:
                     data_file = open("seven.txt", "r")
+                    last_grade = data_file.read().split(',')[-2].split('@')[0]
                     tempy1 = str(class7_grade) +'@'+today+','
                     
                     if tempy1 not in data_file.read():
                         try:
                             data_file.close()
-                            data_file = open("seven.txt", "a")
-                            data_file.write(str(class7_grade) +'@'+today +',')
-                            ('writing has passed')
+                            if float(last_grade) != float(class7_grade):
+                                data_file = open("seven.txt", "a")
+                                data_file.write(str(class7_grade) +'@'+today +',')
                         except:
                             print('writing has failed')
                     else:
@@ -657,8 +666,7 @@ class Login(tk.Frame):
                     try:
                         data_file.close()
                         data_file = open("avg.txt", "a")
-                        data_file.write(str(average) +'@'+today +',')
-                        ('writing has passed')
+                        data_file.write(str(average) +'@'+today +',')     
                     except:
                         print('writing has failed')
                 else:
@@ -735,8 +743,8 @@ class Login(tk.Frame):
                 print("Class {} is not avaliable for bar graph".format("average"))
           
 
-            for xy in zip(avg_data1x, avg_data1y):
-                a.annotate('(%s, %s)' % xy, xy=xy, textcoords='data')
+            #for xy in zip(avg_data1x, avg_data1y):
+            #    a.annotate('(%s, %s)' % xy, xy=xy, textcoords='data')
             for xy in zip(data11x, data11y):
                 a.annotate('(%s, %s)' % xy, xy=xy, textcoords='data')
             for xy in zip(data22x, data22y):
@@ -1464,7 +1472,7 @@ class DisplayInDepth1(ttk.Frame):
         numero = 1
         for items in avadat44:
             numero += 1
-            tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 2, row=numero, sticky=  tk.E + tk.W)
+            tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 2, row=numero, sticky=  tk.W)
 
         
         data_file = open("temp6.txt", 'r')
