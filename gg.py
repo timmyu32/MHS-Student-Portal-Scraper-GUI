@@ -61,7 +61,7 @@ class GradeGetterApp(tk.Tk):
 
         self.frames = {}
         
-        for F in (StartPage, PageOne, PageTwo, Login, AdminPage, DisplayInDepth1, ClassOne, ClassTwo, ClassThree, ClassFour, ClassFive, ClassSix, ClassSeven, UnannotatedGraph, BarGraph):
+        for F in (StartPage, PageOne, PageTwo, Login, AdminPage, DisplayInDepth1, ClassOne, ClassTwo, ClassThree, ClassFour, ClassFive, ClassSix, ClassSeven, UnannotatedGraph, BarGraph, Average):
             frame = F(container, self)
             self.frames[F] = frame
             frame.grid(row=0, column=0, sticky="nsew")
@@ -987,7 +987,8 @@ class StartPage(tk.Frame):
         button3.pack()
         self.showImg()
         button6 = ttk.Button(self, text= 'Log Out',  command= lambda: controller.show_frame(AdminPage))
-        
+        button7  = ttk.Button(self, text= 'Go to Student Portal Web Page', command= lambda: self.mms())
+        button7.pack()
         
     def showImg(self):
             
@@ -997,6 +998,13 @@ class StartPage(tk.Frame):
         img = tk.Label(self, image= render)
         img.image = render
         img.pack()
+
+    def mms(self):
+        options = webdriver.ChromeOptions()
+        options.add_argument("-headless")
+        #driver = webdriver.Chrome(chrome_options=options)
+        driver = webdriver.Chrome()
+        driver.get('https://www.mms669.org/MMSGB45/default.aspx?ReturnUrl=%2fMMSGB45%2fstudent')
 
 class PageOne(tk.Frame):
     
@@ -1020,6 +1028,7 @@ class PageOne(tk.Frame):
         self.button12 = ttk.Button(self, text= 'Go to Bar Graph Page', command= lambda: controller.show_frame(BarGraph))
         self.e = ttk.Entry(self)
         self.button13 = ttk.Button(self, text= 'Plot', command= lambda: self.refer())
+        self.button14 = ttk.Button(self, text= 'AVERAGE', command= lambda: controller.show_frame(Average))
         self.label1 = tk.Label(self, text= 'Plot a referance line', font= smaller_font, bg ='#95c8f4' )
         
     def refer(self):
@@ -1054,6 +1063,7 @@ class PageOne(tk.Frame):
             self.button9.place(x=300,y=0)
             self.button10.config(text='7')
             self.button10.place(x=360,y=0)
+            self.button14.place(x=440, y=0)
             self.button11.place(x=180,y=50)
             self.button11.config(text='Show Unannotated Graph')
             self.button12.place(x=390, y=50)
@@ -1410,6 +1420,52 @@ class ClassSeven(tk.Frame):
         toolbar.update()
         canvas._tkcanvas.pack(side= tk.TOP, fill= tk.BOTH, expand= True)
 
+class Average(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)  
+
+        button1 = ttk.Button(self, text= 'Go back to graph', command= lambda: controller.show_frame(PageOne))
+        button2 = ttk.Button(self,  text= 'Update Graph',  command= lambda: self.refresh2())
+        button1.pack()
+        button2.pack()
+
+    def refresh2(self):
+        try:    
+            data_3 = open("avg.txt", "r")
+            data33 = data_3.read().split(',')
+            data_3.close()
+
+            data33y = []
+            data33x = []
+
+            for items in data33:
+                y_valuer = items.split('@')[0]
+                if len(y_valuer) > 1:
+                    y_value = float(y_valuer)
+                    data33y.append(y_value)
+                x_valuer = items.split('@')[-1]
+                if len(x_valuer) > 1:
+                    data33x.append(x_valuer)         
+        except:
+            pass   
+        avg = Figure(figsize= (10,5), dpi=100)
+
+
+        avg1 = avg.add_subplot(111)
+        avg1.plot(data33x,data33y, marker='.', ls='--')
+
+        for xy in zip(data33x, data33y):
+                    avg1.annotate('(%s, %s)' % xy, xy=xy, textcoords='data')
+
+        canvas = FigureCanvasTkAgg(avg, self)
+        
+        canvas.draw()
+        canvas.get_tk_widget().pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+
+        toolbar = NavigationToolbar2TkAgg(canvas, self)
+        toolbar.update()
+        canvas._tkcanvas.pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+
 class PageTwo(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)  
@@ -1514,11 +1570,6 @@ class UnannotatedGraph(tk.Frame):
         toolbar = NavigationToolbar2TkAgg(canvas, self)
         toolbar.update()
         canvas._tkcanvas.pack(side= tk.TOP, fill= tk.BOTH, expand= True)
-
-
-
-
-
 
 
 app = GradeGetterApp()
