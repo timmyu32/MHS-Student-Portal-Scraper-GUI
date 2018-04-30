@@ -6,16 +6,12 @@ from selenium.webdriver.common.action_chains import ActionChains
 import functools
 import time
 
-
-
-
 def alternate(a,b):
     options = webdriver.ChromeOptions()
 
     options.add_argument("-headless")
     driver = webdriver.Chrome(chrome_options=options)
     #driver = webdriver.Chrome()
-
 
     driver.get('https://www.mms669.org/MMSGB45/default.aspx?ReturnUrl=%2fMMSGB45%2fstudent')
     uname = driver.find_element_by_name('LoginControl1$txtUsername')
@@ -34,8 +30,7 @@ def alternate(a,b):
         if type(error_msg) != None:
             data_file = open("temp3.txt", 'w')
             data_file.write(error_msg)
-            data_file.close()
-            
+            data_file.close()        
     except:
         pass
 
@@ -45,7 +40,6 @@ def alternate(a,b):
         WebDriverWait(driver, timeout).until(EC.visibility_of_element_located((By.XPATH, "//table[@class='rgMasterTable rgClipCells']")))
     except:
         driver.close()
-
 
     class_names1 = driver.find_elements_by_xpath("//tr[@class='rgRow']")
     evens = [x.text for x in class_names1]
@@ -67,23 +61,21 @@ def alternate(a,b):
 
     numero = len(driver.find_elements_by_xpath("//td[@style= 'background-color:White;width:145px;']"))
 
-
-    if a.lower() == "tuzoegbu":
-
-        for links in driver.find_elements_by_xpath("//td[@style= 'background-color:White;width:145px;']"):
+    for links in driver.find_elements_by_xpath("//td[@style= 'background-color:White;width:145px;']"):
+        try:
+            links.click()
+            
             try:
-                links.click()
                 driver.switch_to.frame(driver.find_element_by_xpath("//iframe[@id= 'ctl00_ContentPlaceHolder1_ReportViewer1ReportFrame']"))
                 class_identifiers = [x.text for x in driver.find_elements_by_xpath("//div[@class='HtmlTextBox2 s22-']")]
                 if len(class_identifiers) > 0:
                     ids.append(class_identifiers)
-                    descriptor = [x.text for x in driver.find_elements_by_xpath("//div[@class='TextBox41 s28-']") ]
+                    descriptor = [x.text.replace('\n',  ' ') for x in driver.find_elements_by_xpath("//div[@class='TextBox41 s28-']") ]
                     if len(descriptor) > 0:
                         id_descriptors.append(descriptor)
                     grd1 = [x.text for x in driver.find_elements_by_xpath("//div[@class='TextBox46 s29-']") ]
-    #               grd1 = driver.find_elements_by_xpath("//div[@class='TextBox46 s29-']"
                     grd2 = [x.text for x in driver.find_elements_by_xpath("//div[@class='TextBox27 s28-']") ]
-                    grd3 = [x.text for x in driver.find_elements_by_xpath("//div[@class= 'TextBox42 s28-']") ] 
+                    grd3 = [x.text.replace(",", "-") for x in driver.find_elements_by_xpath("//div[@class= 'TextBox42 s28-']") ] 
                     if len(grd1) > 0:
                         grdr.append(grd1)
                         grdr2.append(grd2)
@@ -95,21 +87,26 @@ def alternate(a,b):
                     driver.switch_to.parent_frame()
                     driver.find_elements_by_xpath("//a[@class= 'rmLink rmRootLink']")[4].click()
                     numero += -1
-
             except:
+                numero += -1
+                print("Error, click method imposed on item that is not a class")
+                
+        except:
+            try:
+                links = driver.find_elements_by_xpath("//td[@style= 'background-color:White;width:145px;']")[numero]
+                links.click()
+                                
                 try:
-                    links = driver.find_elements_by_xpath("//td[@style= 'background-color:White;width:145px;']")[numero]
-                    links.click()
                     driver.switch_to.frame(driver.find_element_by_xpath("//iframe[@id= 'ctl00_ContentPlaceHolder1_ReportViewer1ReportFrame']"))
                     class_identifiers = [x.text for x in driver.find_elements_by_xpath("//div[@class='HtmlTextBox2 s22-']")]
                     if len(class_identifiers) > 0:
                         ids.append(class_identifiers)
-                        descriptor = [x.text for x in driver.find_elements_by_xpath("//div[@class='TextBox41 s28-']") ]
+                        descriptor = [x.text.replace('\n',  ' ') for x in driver.find_elements_by_xpath("//div[@class='TextBox41 s28-']") ]
                         if len(descriptor) >0:
                             id_descriptors.append(descriptor)
                         grd1 = [x.text for x in driver.find_elements_by_xpath("//div[@class='TextBox46 s29-']") ]
                         grd2 = [x.text for x in driver.find_elements_by_xpath("//div[@class='TextBox27 s28-']") ]
-                        grd3 = [x.text for x in driver.find_elements_by_xpath("//div[@class= 'TextBox42 s28-']") ]
+                        grd3 = [x.text.replace(",", "-") for x in driver.find_elements_by_xpath("//div[@class= 'TextBox42 s28-']") ]
                         if len(grd1) > 0:
                             grdr.append(grd1)
                             grdr2.append(grd2)
@@ -123,10 +120,10 @@ def alternate(a,b):
                         driver.find_elements_by_xpath("//a[@class= 'rmLink rmRootLink']")[4].click()
                         numero += -1
                 except:
-                    pass
-
-
-   
+                    print('Error, click method imposed on item that is not a class')
+                    numero += -1
+            except:
+                pass
 
 
     tabs = driver.find_elements_by_class_name("rmItem")
@@ -151,7 +148,6 @@ def alternate(a,b):
     time.sleep(1.5)
     driver.switch_to.frame(driver.find_element_by_xpath("//iframe[@id= 'ctl00_ContentPlaceHolder1_ReportViewer3ReportFrame']"))
 
-    #     QUATER 1 GRADES
     class_name_coullumn = driver.find_elements_by_xpath("//div[@class='TextBox87 s8-']")
     class_name_coullumn = [x.text for x in class_name_coullumn]
 
@@ -184,9 +180,6 @@ def alternate(a,b):
         for item in items:
             data_file.write(str(item)+',')
     data_file.close()
-
-
-
 
     try:
         class1 = evens[0]
@@ -425,7 +418,6 @@ def alternate(a,b):
     class4_gradeq3 = grade_collumn3[3]
     class4s.append(class4_gradeq3)
 
-
     class5_gradeq3 = grade_collumn3[4]
     class5s.append(class5_gradeq3)
 
@@ -442,14 +434,6 @@ def alternate(a,b):
     class5s.append(class5_grade)
     class6s.append(class6_grade)
     class7s.append(class7_grade)
-
-    
-
-
-
-    
-
-
 
     timestamps = ['Quatyer 1', 'Quarter 2', 'Quarter 3', 'Current']
 
