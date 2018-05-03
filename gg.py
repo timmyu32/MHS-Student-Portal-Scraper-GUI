@@ -27,8 +27,7 @@ Large_Font = ("Times New Roman", "12")
 smaller_font = ("Times New Roman", "9")
 smallest_font = ("Times New Roman", "7")
 style.use("ggplot")
-average = open("avg.txt", "r").read().split(',')[-3].split('@')[0]
-title = "Tim Uzoegbu GRADES Graph\n Avg= "+str(average)
+
 
 global a
 global f
@@ -61,7 +60,7 @@ class GradeGetterApp(tk.Tk):
 
         self.frames = {}
         
-        for F in (StartPage, PageOne, PageTwo, Login, AdminPage, DisplayInDepth1, ClassOne, ClassTwo, ClassThree, ClassFour, ClassFive, ClassSix, ClassSeven, UnannotatedGraph, BarGraph, Average):
+        for F in (StartPage, PageOne, PageTwo, Login, AdminPage, DisplayInDepth1, ClassOne, ClassTwo, ClassThree, ClassFour, ClassFive, ClassSix, ClassSeven, UnannotatedGraph, BarGraph, Average, DisplayInDepth2):
             frame = F(container, self)
             self.frames[F] = frame
             frame.grid(row=0, column=0, sticky="nsew")
@@ -116,8 +115,8 @@ class Login(tk.Frame):
         self.p1 = ttk.Entry(self, show='*')
         self.u1.place(x=430, y=220)
         self.p1.place(x=430, y=240)
-        button2 = ttk.Button(self, text ='Quit', command= quit)
         button1 = ttk.Button(self, text="Login", command= lambda: self.go_login())
+        button2 = ttk.Button(self, text ='Quit', command= quit)
         self.button3 = ttk.Button(self, text= 'NEXT', command= lambda:  controller.show_frame(StartPage))
         self.button3.configure(state= 'DISABLED')
         button1.place(x=460, y=270)
@@ -446,8 +445,6 @@ class Login(tk.Frame):
                     if tempy1 not in data_file.read():
                         try:
                             data_file.close()
-                            print(last_grade)
-                            print(class6_grade)
                             if float(last_grade) != float(class6_grade):
                                 data_file = open("six.txt", "a")
                                 data_file.write(str(class6_grade) +'@'+today +',')
@@ -689,7 +686,7 @@ class Login(tk.Frame):
                 x_valuer = items.split('@')[-1]
                 if len(x_valuer) > 1:
                     avg_data1x.append(x_valuer)
-            a.set_title(title)
+            a.set_title("GRADES Graph\nCurrent Avg= "+str(average))
 
             a.plot(avg_data1x, avg_data1y, label= 'Average', ls= '--')
             unatated.plot(avg_data1x, avg_data1y, label= 'Average', ls= '--')
@@ -697,8 +694,8 @@ class Login(tk.Frame):
             unatated.plot(data11x, data11y, "#ED1F11", label= class1_name, data= class1_name, marker= '.')
             a.plot(data22x, data22y, "#010101", label= class2_name, data= class2_name, marker= '.')
             unatated.plot(data22x, data22y, "#010101", label= class2_name, data= class2_name, marker= '.')
-            a.plot(data33x, data33y, "#7628B4", label= class3_name, data= class3_name, marker= '.')
-            unatated.plot(data33x, data33y, "#7628B4", label= class3_name, data= class3_name, marker= '.')
+            a.plot(data33x, data33y, "#25bcb5", label= class3_name, data= class3_name, marker= '.')
+            unatated.plot(data33x, data33y, "#25bcb5", label= class3_name, data= class3_name, marker= '.')
             a.plot(data44x, data44y, "#29A223", label= class4_name, data= class4_name, marker= '.')
             unatated.plot(data44x, data44y, "#29A223", label= class4_name, data= class4_name, marker= '.')
             a.plot(data55x, data55y, "#2E3ACA", label= class5_name, data= class5_name, marker= '.')
@@ -718,7 +715,7 @@ class Login(tk.Frame):
             except:
                 print("Class {} is not avaliable for bar graph".format(class2_name))
             try:
-                baro.bar(x=class3_name, height= class3_grade, color= "#7628B4", lw = 0.35)
+                baro.bar(x=class3_name, height= class3_grade, color= "#25bcb5", lw = 0.35)
             except:
                 print("Class {} is not avaliable for bar graph".format(class3_name))
             try:
@@ -942,7 +939,7 @@ class Login(tk.Frame):
                 a.plot(timestamps, g2, "#010101", label= n2, data= c2g, marker= '.')
                 for xy in zip(timestamps, g2):
                     a.annotate('(%s, %s)' % xy, xy=xy, textcoords='data')
-                a.plot(timestamps, g3, "#7628B4", label= n3, data= c3g, marker= '.')
+                a.plot(timestamps, g3, "#25bcb5", label= n3, data= c3g, marker= '.')
                 for xy in zip(timestamps, g3):
                     a.annotate('(%s, %s)' % xy, xy=xy, textcoords='data')
                 a.plot(timestamps, g4, "#29A223", label= n4, data= c4g, marker= '.')
@@ -1223,7 +1220,7 @@ class ClassThree(tk.Frame):
 
 
         zed3 = zed33.add_subplot(111)
-        zed3.plot(data33x,data33y, "#7628B4", marker='.' )
+        zed3.plot(data33x,data33y, "#25bcb5", marker='.' )
 
         for xy in zip(data33x, data33y):
                     zed3.annotate('(%s, %s)' % xy, xy=xy, textcoords='data')
@@ -1491,13 +1488,15 @@ class PageTwo(tk.Frame):
             g.add_subplot(111).pie(denominator, shadow=True, labels=pie_chart_indicator, autopct='%1.1f%%', startangle=90)
             g.legend()
             
-class DisplayInDepth1(ttk.Frame):
+class DisplayInDepth1(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent) 
         button1 = ttk.Button(self, text='Go back to HOME PAGE',  command= lambda: controller.show_frame(StartPage) )
         button3 = ttk.Button(self, text= 'Show Avaliable Data', command= lambda: self.shower())
         button1.grid(row= 1, column= 2)
         button3.grid(row= 1, column= 3)
+        button4 = ttk.Button(self, text= 'NEXT', command= lambda: controller.show_frame(DisplayInDepth2))
+        button4.grid(row=1, column=4)
 
     
 
@@ -1506,27 +1505,143 @@ class DisplayInDepth1(ttk.Frame):
         avadat1 = data_file.read()
         avadat11 = avadat1.split(',')
         data_file.close()
-        #for items in avadat11:
-            #print(items+'\n')
         avadat = []
         for i in avadat11:
             if len(i) > 1:
                 avadat.append(i)
-                print(i)
+               
         tk.Label(self, text= '{} Assignment(s)'.format(len(avadat)), font= Large_Font, bg= '#95c8f4').grid(row=1,column=1)
-        
-        numero = 1
-        for items in avadat11:
-            if len(items) > 0:
+        if len(avadat) < 20:
+            numero = 1
+            for items in avadat11:
+                if len(items) > 0:
+                    numero += 1
+                    tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 1, row=numero, sticky=  tk.E + tk.W)
+            
+            data_file = open("temp8.txt", 'r')
+            avadat4 = data_file.read()
+            avadat44 = avadat4.split(',')
+            data_file.close() 
+            numero = 1
+            for items in avadat44:
+                numero += 1
+                tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 2, row=numero, sticky=  tk.W)
+
+            
+            data_file = open("temp6.txt", 'r')
+            avadat2 = data_file.read()
+            avadat22 = avadat2.split(',')
+            data_file.close() 
+            numero = 1
+            for items in avadat22:
+                if len(items)  > 0:
+                    numero += 1
+                    tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 3, row=numero,  sticky= tk.E + tk.W)
+            data_file = open("temp7.txt", 'r')
+            avadat3 = data_file.read()
+            avadat33 = avadat3.split(',')
+            data_file.close() 
+            numero = 1
+            for items in avadat33:
+                if len(items)  > 0:
+                    numero += 1
+                    tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 4, row=numero, sticky=  tk.E + tk.W)
+        else:
+           
+            numero = 1
+            avadat111 = []
+            for items in avadat11:
+                if len(items) > 1:
+                    avadat111.append(items)
+
+            for items in avadat111[0:21]:
                 numero += 1
                 tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 1, row=numero, sticky=  tk.E + tk.W)
         
+            data_file = open("temp8.txt", 'r')
+            avadat4 = data_file.read()
+            avadat44 = avadat4.split(',')
+            data_file.close() 
+
+            numero = 1
+            avadat444 = []
+            for items in avadat44:
+                avadat444.append(items)
+
+            for items in avadat444[0:21]:
+                numero += 1
+                tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 2, row=numero, sticky=  tk.W)
+
+            
+            data_file = open("temp6.txt", 'r')
+            avadat2 = data_file.read()
+            avadat22 = avadat2.split(',')
+            data_file.close() 
+
+            numero = 1
+            avadat222 = []
+            for items in avadat22:
+                if len(items) > 0:
+                    avadat222.append(items)
+
+            for items in avadat222[0:21]:
+                if len(items)  > 0:
+                    numero += 1
+                    tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 3, row=numero,  sticky= tk.E + tk.W)
+            
+            data_file = open("temp7.txt", 'r')
+            avadat3 = data_file.read()
+            avadat33 = avadat3.split(',')
+            data_file.close() 
+
+            avadat333 = []
+            for items in avadat33:
+                if len(items) > 0:
+                    avadat333.append(items)
+
+            numero = 1
+            for items in avadat333[0:21]:
+                if len(items)  > 0:
+                    numero += 1
+                    tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 4, row=numero, sticky=  tk.E + tk.W)
+            
+
+class  DisplayInDepth2(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)     
+        button1 = ttk.Button(self, text='Go back to HOME PAGE',  command= lambda: controller.show_frame(StartPage) )
+        button3 = ttk.Button(self, text= 'Show Avaliable Data', command= lambda: self.shower())
+        button1.grid(row= 1, column= 2)
+        button3.grid(row= 1, column= 3)
+        button4 = ttk.Button(self, text= 'BACK', command= lambda: controller.show_frame(DisplayInDepth1))     
+        button4.grid(row=1, column=4)
+
+    def shower(self):
+        data_file = open("temp5.txt", 'r')
+        avadat1 = data_file.read()
+        avadat11 = avadat1.split(',')
+        data_file.close()
+        numero = 1
+        avadat111 = []
+        for items in avadat11:
+            if len(items) > 0:
+                avadat111.append(items)
+
+        for items in avadat111[22:-1]:
+            numero += 1
+            tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 1, row=numero, sticky=  tk.E + tk.W)
+
         data_file = open("temp8.txt", 'r')
         avadat4 = data_file.read()
         avadat44 = avadat4.split(',')
         data_file.close() 
+
         numero = 1
+        avadat444 = []
         for items in avadat44:
+            avadat444.append(items)
+
+        for items in avadat444[22:-1]:
             numero += 1
             tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 2, row=numero, sticky=  tk.W)
 
@@ -1535,20 +1650,35 @@ class DisplayInDepth1(ttk.Frame):
         avadat2 = data_file.read()
         avadat22 = avadat2.split(',')
         data_file.close() 
+
         numero = 1
+        avadat222 = []
         for items in avadat22:
+            if len(items) > 0:
+                avadat222.append(items)
+
+        for items in avadat222[22:-1]:
             if len(items)  > 0:
                 numero += 1
                 tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 3, row=numero,  sticky= tk.E + tk.W)
+        
         data_file = open("temp7.txt", 'r')
         avadat3 = data_file.read()
         avadat33 = avadat3.split(',')
         data_file.close() 
-        numero = 1
+
+        avadat333 = []
         for items in avadat33:
+            if len(items) > 0:
+                avadat333.append(items)
+
+        numero = 1
+        for items in avadat333[22:-1]:
             if len(items)  > 0:
                 numero += 1
-                tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 4, row=numero, sticky=  tk.E + tk.W)                        
+                tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 4, row=numero, sticky=  tk.E + tk.W)
+    
+
 
 class UnannotatedGraph(tk.Frame):
     def __init__(self, parent, controller):
