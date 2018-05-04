@@ -1546,6 +1546,40 @@ class DisplayInDepth1(tk.Frame):
                 if len(items)  > 0:
                     numero += 1
                     tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 4, row=numero, sticky=  tk.E + tk.W)
+
+            numero = 1
+            numerator = []
+
+            for nums in avadat22:
+                nums.replace(" /", '0')
+                numerator.append(nums)
+
+       
+            
+            for num, denom in numerator, avadat33:
+                numero += 1
+                try:
+                    ave = float(num) / float(denom)
+                    tk.Label(self, text= "({})".format(ave), bg= '#95c8f4', font= Large_Font).grid(column= 5, row=numero, sticky=  tk.E + tk.W)
+                except:
+                    tk.Label(self, text= " ", bg= '#95c8f4', font= Large_Font).grid(column= 5, row=numero, sticky=  tk.E + tk.W)
+
+            numero = 1
+            numerator = [x.replace(" /", '0') for x in avadat22 ]
+                    
+            for num, denom in zip(numerator, avadat33):
+                numero += 1
+                try:
+                    ave = round( (float(num) / float(denom)) * 100, 2 )
+                    if ave < 90:
+                        tk.Label(self, text= "({}%)".format(ave), bg= '#95c8f4', fg= "#d80f4f", font= Large_Font).grid(column= 5, row=numero, sticky=  tk.E + tk.W)
+                    else:
+                        tk.Label(self, text= "({}%)".format(ave), bg= '#95c8f4', fg= "#0bbf17", font= Large_Font).grid(column= 5, row=numero, sticky=  tk.E + tk.W)   
+                except:
+                    tk.Label(self, text= " ", bg= '#95c8f4', font= Large_Font).grid(column= 5, row=numero, sticky=  tk.E + tk.W)
+      
+            
+            
         else:
            
             numero = 1
@@ -1605,6 +1639,20 @@ class DisplayInDepth1(tk.Frame):
                     numero += 1
                     tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 4, row=numero, sticky=  tk.E + tk.W)
             
+            numero = 1
+            numerator = [x.replace(" /", '0') for x in avadat222[0:21] ]
+                    
+            for num, denom in zip(numerator, avadat333[0:21]):
+                numero += 1
+                try:
+                    ave = round( (float(num) / float(denom)) * 100, 2 )
+                    if ave < 90:
+                        tk.Label(self, text= "({}%)".format(ave), bg= '#95c8f4', fg= "#d80f4f", font= Large_Font).grid(column= 5, row=numero, sticky=  tk.E + tk.W)
+                    else:
+                        tk.Label(self, text= "({}%)".format(ave), bg= '#95c8f4', fg= "#0bbf17", font= Large_Font).grid(column= 5, row=numero, sticky=  tk.E + tk.W)
+                
+                except:
+                    tk.Label(self, text= " ", bg= '#95c8f4', font= Large_Font).grid(column= 5, row=numero, sticky=  tk.E + tk.W)
 
 class  DisplayInDepth2(tk.Frame):
     def __init__(self, parent, controller):
@@ -1678,7 +1726,19 @@ class  DisplayInDepth2(tk.Frame):
                 numero += 1
                 tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 4, row=numero, sticky=  tk.E + tk.W)
     
-
+        numero = 1
+        numerator = [x.replace(" /", '0') for x in avadat222[22:-1] ]
+                
+        for num, denom in zip(numerator, avadat333[22:-1]):
+            numero += 1
+            try:
+                ave = round((float(num) / float(denom)) * 100, 2)
+                if ave < 90:
+                    tk.Label(self, text= "({}%)".format(ave), bg= '#95c8f4',fg= "#d80f4f", font= Large_Font).grid(column= 5, row=numero, sticky=  tk.E + tk.W)
+                else:
+                    tk.Label(self, text= "({}%)".format(ave), bg= '#95c8f4',fg= "#0bbf17", font= Large_Font).grid(column= 5, row=numero, sticky=  tk.E + tk.W)                    
+            except:
+                tk.Label(self, text= " ", bg= '#95c8f4', font= Large_Font).grid(column= 5, row=numero, sticky=  tk.E + tk.W)        
 
 class UnannotatedGraph(tk.Frame):
     def __init__(self, parent, controller):
