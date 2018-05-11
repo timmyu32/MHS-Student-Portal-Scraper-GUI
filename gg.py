@@ -132,8 +132,8 @@ class Login(tk.Frame):
         
         if tim == True:
             options.add_argument("-headless")
-            driver = webdriver.Chrome(chrome_options=options)
-            #driver = webdriver.Chrome()
+            #driver = webdriver.Chrome(chrome_options=options)
+            driver = webdriver.Chrome()
             driver.get('https://www.mms669.org/MMSGB45/default.aspx?ReturnUrl=%2fMMSGB45%2fstudent')
             uname = driver.find_element_by_name('LoginControl1$txtUsername')
             password = driver.find_element_by_name('LoginControl1$txtPassword')
@@ -182,12 +182,12 @@ class Login(tk.Frame):
                     if len(class_identifiers) > 0:
                         ids.append(class_identifiers)
                         descriptor = [x.text.replace('\n',  ' ') for x in driver.find_elements_by_xpath("//div[@class='TextBox41 s28-']") ]
-                        if len(descriptors) > 0:
+                        if len(descriptor) > 0:
                             id_descriptors.append(descriptor)
-                        grd1 = [x.text for x in driver.find_elements_by_xpath("//div[@class='TextBox46 s29-']") ]
-                        grd2 = [x.text for x in driver.find_elements_by_xpath("//div[@class='TextBox27 s28-']") ]
-                        grd3 = [x.text.replace(",", "-") for x in driver.find_elements_by_xpath("//div[@class= 'TextBox42 s28-']") ] 
-                        if len(grdr1) > 0:
+                            grd1 = [x.text for x in driver.find_elements_by_xpath("//div[@class='TextBox46 s29-']") ]
+                            grd2 = [x.text for x in driver.find_elements_by_xpath("//div[@class='TextBox27 s28-']") ]
+                            grd3 = [x.text.replace(",", "-") for x in driver.find_elements_by_xpath("//div[@class= 'TextBox42 s28-']") ] 
+                        if len(grd1) > 0:
                             grdr.append(grd1)
                             grdr2.append(grd2)
                             grdr3.append(grd3)
