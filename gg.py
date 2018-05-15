@@ -24,6 +24,7 @@ import time
 import threading 
 from queue import Queue
 
+
 Largest_Font = ("Times New Roman", "16")
 Large_Font = ("Times New Roman", "12")
 smaller_font = ("Times New Roman", "9")
@@ -62,7 +63,7 @@ class GradeGetterApp(tk.Tk):
 
         self.frames = {}
         
-        for F in (StartPage, PageOne, PageTwo, Login, AdminPage, DisplayInDepth1, ClassOne, ClassTwo, ClassThree, ClassFour, ClassFive, ClassSix, ClassSeven, UnannotatedGraph, BarGraph, Average, DisplayInDepth2,  DisplayInDepth3):
+        for F in (StartPage, PageOne, PageTwo, Homework, Login, AdminPage, DisplayInDepth1, ClassOne, ClassTwo, ClassThree, ClassFour, ClassFive, ClassSix, ClassSeven, UnannotatedGraph, BarGraph, Average, DisplayInDepth2,  DisplayInDepth3):
             frame = F(container, self)
             self.frames[F] = frame
             frame.grid(row=0, column=0, sticky="nsew")
@@ -95,13 +96,14 @@ class AdminPage(tk.Frame):
         if a == "gui":
             tim = True
             timnoget = False
-            tk.Label(self, text= 'Welcome Back Tim', font= Largest_Font, bg= '#95c8f4').place(x=600, y=310)
+            tk.Label(self, text= 'Welcome Back Tim!', font= Largest_Font, bg= '#95c8f4').place(x=600, y=310)
         elif a == "gui/noget":
             timnoget = True
-            tk.Label(self, text= 'Welcome Back Tim', font= Largest_Font, bg= '#95c8f4').place(x=600, y=310)
+            tk.Label(self, text= 'Welcome Back Tim!', font= Largest_Font, bg= '#95c8f4').place(x=600, y=310)
             tim = True
         else:
             tim = False
+            tk.Label(self, text= 'Welcome {}!'.format(a), font= Largest_Font, bg= '#95c8f4').place(x=600, y=310)
            
 class Login(tk.Frame):
     def __init__(self, parent, controller):
@@ -136,58 +138,60 @@ class Login(tk.Frame):
 
         
     def go_login(self):
-       
-        def gc_get():
-            
-            if type(self.gc_p.get()) == str:
-                gc_password = self.gc_p.get()
-                configurer = webdriver.ChromeOptions()
-                configurer.add_argument("-headless")
-                #browser = webdriver.Chrome(chrome_options=configurer)
-                browser = webdriver.Chrome()
-                #browser.set_window_size(0, 0)
+        goog = self.gc_p.get()
+        if tim:
+            def gc_get():
+                
+                if type(self.gc_p.get()) == str:
+                    gc_password = self.gc_p.get()
+                    configurer = webdriver.ChromeOptions()
+                    configurer.add_argument("-headless")
+                    #browser = webdriver.Chrome(chrome_options=configurer)
+                    browser = webdriver.Chrome()
+                    #browser.set_window_size(0, 0)
 
-                browser.get("https://accounts.google.com/signin/v2/identifier?service=classroom&passive=1209600&continue=https%3A%2F%2Fclassroom.google.com%2F%3Femr%3D0&followup=https%3A%2F%2Fclassroom.google.com%2F%3Femr%3D0&flowName=GlifWebSignIn&flowEntry=ServiceLogin")
-                WebDriverWait(browser, 10).until(EC.visibility_of_element_located((By.XPATH, "//input[@class='whsOnd zHQkBf']")))
-                #time.sleep(4)
-                gc_uname = browser.find_element_by_xpath("//input[@class='whsOnd zHQkBf']")
-                next_btn = browser.find_element_by_xpath("//div[@id='identifierNext']")
-                email_adress = self.u1.get().lower() + '@student.medwayschools.org'
-                gc_uname.send_keys(email_adress)
-                next_btn.click()
-                time.sleep(2)
-                gc_password_box = browser.find_element_by_xpath("//input[@name='password']")
-                gc_password_box.send_keys(gc_password)
-                next_btn2 = browser.find_element_by_xpath("//span[@class='RveJvd snByac']")
-                next_btn2.click()
-                WebDriverWait(browser, 7).until(EC.visibility_of_element_located((By.XPATH, "//h2[@class='oBSRLe']")))
+                    browser.get("https://accounts.google.com/signin/v2/identifier?service=classroom&passive=1209600&continue=https%3A%2F%2Fclassroom.google.com%2F%3Femr%3D0&followup=https%3A%2F%2Fclassroom.google.com%2F%3Femr%3D0&flowName=GlifWebSignIn&flowEntry=ServiceLogin")
+                    WebDriverWait(browser, 10).until(EC.visibility_of_element_located((By.XPATH, "//input[@class='whsOnd zHQkBf']")))
+                    #time.sleep(4)
+                    gc_uname = browser.find_element_by_xpath("//input[@class='whsOnd zHQkBf']")
+                    next_btn = browser.find_element_by_xpath("//div[@id='identifierNext']")
+                    email_adress = self.u1.get().lower() + '@student.medwayschools.org'
+                    gc_uname.send_keys(email_adress)
+                    next_btn.click()
+                    time.sleep(2)
+                    gc_password_box = browser.find_element_by_xpath("//input[@name='password']")
+                    gc_password_box.send_keys(gc_password)
+                    next_btn2 = browser.find_element_by_xpath("//span[@class='RveJvd snByac']")
+                    next_btn2.click()
+                    WebDriverWait(browser, 7).until(EC.visibility_of_element_located((By.XPATH, "//h2[@class='oBSRLe']")))
 
 
-                assignments_date = [x.text for x in browser.find_elements_by_xpath("//h2[@class='oBSRLe']")]
-                assignments = [x.text.replace(",", "+") for x in browser.find_elements_by_xpath("//div[@class='hrUpcomingAssignmentGroup']")]
+                    assignments_date = [x.text for x in browser.find_elements_by_xpath("//h2[@class='oBSRLe']")]
+                    assignments = [x.text for x in browser.find_elements_by_xpath("//div[@class='hrUpcomingAssignmentGroup']")]
 
-                new_temp = open("temp9.txt", "w")
-                for items in assignments_date:
-                    new_temp.write(items +',')
-                new_temp.close()
-                new_temp = open("temp9.txt", 'a')
-                new_temp.write("***")
-                for items in assignments:
-                    new_temp.write(items+',')
+                    new_temp = open("temp9.txt", "w")
+                    for items in assignments_date:
+                        new_temp.write(items +',')
+                    new_temp.close()
+                    new_temp = open("temp9.txt", 'a')
+                    new_temp.write("***")
+                    for items in assignments:
+                        new_temp.write(items+'^^')
 
-                browser.close()
-                new_temp.close()
+                    browser.close()
+                    new_temp.close()
 
-            else:
-                pass
+                else:
+                    pass
 
-        def get_grades():
-            u = self.u1.get()
-            p = self.p1.get()
- 
-            options = webdriver.ChromeOptions()
-            
-            if tim == True:
+            def get_grades():
+                u = self.u1.get()
+                p = self.p1.get()
+                goog = self.gc_p.get()
+    
+                options = webdriver.ChromeOptions()
+                
+                
                 options.add_argument("-headless")
                 driver = webdriver.Chrome(chrome_options=options)
                 #driver = webdriver.Chrome()
@@ -816,214 +820,205 @@ class Login(tk.Frame):
                 self.label4.config(text='Click NEXT', fg= 'black' )
                 self.button3.place(x=460, y=330)
                 
+            threading.Thread(target = get_grades).start()
+            threading.Thread(target = gc_get).start() 
 
-            else:
-                nono = True
-                timestamps = ['Quarter 1', 'Quarter 2', 'Quarter 3', 'Current']            
+        else:
+            nono = True
+            timestamps = ['Quarter 1', 'Quarter 2', 'Quarter 3', 'Current']
+            u = self.u1.get()
+            p = self.p1.get()
+            goog = self.gc_p.get()
+            
+            
+        
+            if alter(u,p,goog):
+                self.label4.config(text='Click NEXT', fg= 'black' )
+                self.button3.place(x=460, y=330)
+                
+                
+
+
+                data_file = open("temp.txt", 'r')
+                temps = data_file.read()
+                data_file.close()
+                namers = temps.split('***')[0].split(',')
+                n1 = namers[0]
+                n2 = namers[1]
+                n3 = namers[2]
+                n4 = namers[3]
+                n5 = namers[4]
+                n6 = namers[5]
+                n7 = namers[6]
+                graders = temps.split('***')[1].split('/')
+                g1 = [x.split(",") for x in graders[0]]
+
                 try:
-                    
-                    alter(u,p)
+                    a111=int(graders[0].split(',')[0][::1])
                 except:
-                    nono = False 
-                    data_file = open("temp3.txt","r")
-                    err = data_file.read()
-                    if err.startswith('No'):
-                        self.label4.config(text='Click NEXT', fg= 'black' )
-                    else:
-                        self.label4.config(text= err)
-                    data_file.close()
-                if nono:
-                    data_file = open("temp3.txt","r")
-                    err = data_file.read()
-                    if err.startswith('No'):
-                            self.label4.config(text='Click NEXT', fg= 'black' )
-                            self.button3.place(x=460, y=330)
-                    data_file.close()
-
-
-                    data_file = open("temp.txt", 'r')
-                    temps = data_file.read()
-                    data_file.close()
-                    namers = temps.split('***')[0].split(',')
-                    n1 = namers[0]
-                    n2 = namers[1]
-                    n3 = namers[2]
-                    n4 = namers[3]
-                    n5 = namers[4]
-                    n6 = namers[5]
-                    n7 = namers[6]
-                    graders = temps.split('***')[1].split('/')
-                    g1 = [x.split(",") for x in graders[0]]
-
-                    try:
-                        a111=int(graders[0].split(',')[0][::1])
-                    except:
-                        a111=0
-                    try:
-                        b111=int(graders[0].split(',')[1][::1])
-                    except:
-                        b=0
-                    try:
-                        c=int(graders[0].split(',')[2][::1])
-                    except:
-                        c=0
-                    try:
-                        d=int(graders[1].split(',')[0][::1])
-                    except:
-                        d=0
-                    try:
-                        e= int(graders[1].split(',')[1][::1])
-                    except:
-                        e=0
-                    try:
-                        f111= int(graders[1].split(',')[2][::1])
-                    except:
-                        f111=0
-                    try:
-                        g111=int(graders[2].split(',')[0][::1])
-                    except:
-                        g111=0
-                    try:
-                        h=int(graders[2].split(',')[1][::1])
-                    except:
-                        h=0
-                    try:
-                        i=int(graders[2].split(',')[2][::1])
-                    except:
-                        i=0
-                    try:
-                        j=int(graders[3].split(',')[0][::1])
-                    except:
-                        j=0
-                    try:
-                        k=int(graders[3].split(',')[1][::1])
-                    except:
-                        k=0
-                    try:
-                        l=int(graders[3].split(',')[2][::1]) 
-                    except:
-                        l=0
-                    try:
-                        m= int(graders[4].split(',')[0][::1])
-                    except:
-                        m=0
-                    try:
-                        n=int(graders[4].split(',')[1][::1])
-                    except:
-                        n=0
-                    try:
-                        o=int(graders[4].split(',')[2][::1])
-                    except:
-                        o=0
-                    try:
-                        p=int(graders[5].split(',')[0][::1])
-                    except:
-                        p=0
-                    try:
-                        q=int(graders[5].split(',')[1][::1])
-                    except:
-                        q=0
-                    try:
-                        r=int(graders[5].split(',')[2][::1])
-                    except:
-                        r=0
-                    try:
-                        s=int(graders[6].split(',')[0][::1])
-                    except:
-                        s=0
-                    try:
-                        t=int(graders[6].split(',')[1][::1])
-                    except:
-                        t=0
-                    try:
-                        u=int(graders[6].split(',')[2][::1])
-                    except:
-                        u=0
-                    
-                    data_file = open("temp2.txt", 'r')
-                    cgz = data_file.read().split('&')
-                    data_file.close()
-
-                    try:
-                        c1g = int(cgz[0])
-                    except:
-                        c1g = float(cgz[0])
-                    try:
-                        c2g = int(cgz[1])
-                    except:
-                        c2g = float(cgz[1])
-                    try:
-                        c3g = int(cgz[2])
-                    except:
-                        c3g = float(cgz[2])
-                    try:
-                        c4g = int(cgz[3])
-                    except:
-                        c4g = float(cgz[3])
-                    try:
-                        c5g = int(cgz[4])
-                    except:
-                        c5g = float(cgz[4])
-                    try:
-                        c6g = int(cgz[5])
-                    except:
-                        c6g = float(cgz[5])
-                    try:
-                        c7g = int(cgz[6])
-                    except:
-                        c7g = float(cgz[6])
-
-
-                    g1 = [ a111,b111 ,c, c1g  ]  
-
-                    g2 = [ d,d,f111, c2g ]
-
-                    g3 = [g111,h ,i, c3g] 
-
-                    g4 = [ j,k,l, c4g ]  
-
-                    g5 = [m,n ,o, c5g  ]  
-
-                    g6 = [ p,q ,r,c6g  ]  
-
-                    g7 = [ s,t ,u ,c7g ]  
-
-                            
-
-                    a.plot(timestamps, g1, "#ED1F11", label= n1, data=c1g, marker= '.')
-                    for xy in zip(timestamps, g1):
-                        a.annotate('(%s, %s)' % xy, xy=xy, textcoords='data')
-                    a.plot(timestamps, g2, "#010101", label= n2, data= c2g, marker= '.')
-                    for xy in zip(timestamps, g2):
-                        a.annotate('(%s, %s)' % xy, xy=xy, textcoords='data')
-                    a.plot(timestamps, g3, "#25bcb5", label= n3, data= c3g, marker= '.')
-                    for xy in zip(timestamps, g3):
-                        a.annotate('(%s, %s)' % xy, xy=xy, textcoords='data')
-                    a.plot(timestamps, g4, "#29A223", label= n4, data= c4g, marker= '.')
-                    for xy in zip(timestamps, g4):
-                        a.annotate('(%s, %s)' % xy, xy=xy, textcoords='data')
-                    a.plot(timestamps, g5, "#2E3ACA", label= n5, data= c5g, marker= '.')
-                    for xy in zip(timestamps, g5):
-                        a.annotate('(%s, %s)' % xy, xy=xy, textcoords='data')
-                    a.plot(timestamps, g6, "#FF8CEC", label= n6, data= c6g, marker= '.')
-                    for xy in zip(timestamps, g6):
-                        a.annotate('(%s, %s)' % xy, xy=xy, textcoords='data')
-                    a.plot(timestamps, g7, "#F5891C", label= n7, data= c7g, marker= '.')
-                    for xy in zip(timestamps, g7):
-                        a.annotate('(%s, %s)' % xy, xy=xy, textcoords='data')
-                    a.legend()
-                    studentName = open("temp4.txt", "r")
-                    studentName1 = studentName.read()
-                    studentName.close()
-                    a.set_title('Graph of '+studentName1)
+                    a111=0
+                try:
+                    b111=int(graders[0].split(',')[1][::1])
+                except:
+                    b=0
+                try:
+                    c=int(graders[0].split(',')[2][::1])
+                except:
+                    c=0
+                try:
+                    d=int(graders[1].split(',')[0][::1])
+                except:
+                    d=0
+                try:
+                    e= int(graders[1].split(',')[1][::1])
+                except:
+                    e=0
+                try:
+                    f111= int(graders[1].split(',')[2][::1])
+                except:
+                    f111=0
+                try:
+                    g111=int(graders[2].split(',')[0][::1])
+                except:
+                    g111=0
+                try:
+                    h=int(graders[2].split(',')[1][::1])
+                except:
+                    h=0
+                try:
+                    i=int(graders[2].split(',')[2][::1])
+                except:
+                    i=0
+                try:
+                    j=int(graders[3].split(',')[0][::1])
+                except:
+                    j=0
+                try:
+                    k=int(graders[3].split(',')[1][::1])
+                except:
+                    k=0
+                try:
+                    l=int(graders[3].split(',')[2][::1]) 
+                except:
+                    l=0
+                try:
+                    m= int(graders[4].split(',')[0][::1])
+                except:
+                    m=0
+                try:
+                    n=int(graders[4].split(',')[1][::1])
+                except:
+                    n=0
+                try:
+                    o=int(graders[4].split(',')[2][::1])
+                except:
+                    o=0
+                try:
+                    p=int(graders[5].split(',')[0][::1])
+                except:
+                    p=0
+                try:
+                    q=int(graders[5].split(',')[1][::1])
+                except:
+                    q=0
+                try:
+                    r=int(graders[5].split(',')[2][::1])
+                except:
+                    r=0
+                try:
+                    s=int(graders[6].split(',')[0][::1])
+                except:
+                    s=0
+                try:
+                    t=int(graders[6].split(',')[1][::1])
+                except:
+                    t=0
+                try:
+                    u=int(graders[6].split(',')[2][::1])
+                except:
+                    u=0
                 
-            
-            
-                
+                data_file = open("temp2.txt", 'r')
+                cgz = data_file.read().split('&')
                 data_file.close()
 
-        threading.Thread(target = get_grades).start()
-        threading.Thread(target = gc_get).start()            
+                try:
+                    c1g = int(cgz[0])
+                except:
+                    c1g = float(cgz[0])
+                try:
+                    c2g = int(cgz[1])
+                except:
+                    c2g = float(cgz[1])
+                try:
+                    c3g = int(cgz[2])
+                except:
+                    c3g = float(cgz[2])
+                try:
+                    c4g = int(cgz[3])
+                except:
+                    c4g = float(cgz[3])
+                try:
+                    c5g = int(cgz[4])
+                except:
+                    c5g = float(cgz[4])
+                try:
+                    c6g = int(cgz[5])
+                except:
+                    c6g = float(cgz[5])
+                try:
+                    c7g = int(cgz[6])
+                except:
+                    c7g = float(cgz[6])
+
+
+                g1 = [ a111,b111 ,c, c1g  ]  
+
+                g2 = [ d,d,f111, c2g ]
+
+                g3 = [g111,h ,i, c3g] 
+
+                g4 = [ j,k,l, c4g ]  
+
+                g5 = [m,n ,o, c5g  ]  
+
+                g6 = [ p,q ,r,c6g  ]  
+
+                g7 = [ s,t ,u ,c7g ]  
+
+                        
+
+                a.plot(timestamps, g1, "#ED1F11", label= n1, data=c1g, marker= '.')
+                for xy in zip(timestamps, g1):
+                    a.annotate('(%s, %s)' % xy, xy=xy, textcoords='data')
+                a.plot(timestamps, g2, "#010101", label= n2, data= c2g, marker= '.')
+                for xy in zip(timestamps, g2):
+                    a.annotate('(%s, %s)' % xy, xy=xy, textcoords='data')
+                a.plot(timestamps, g3, "#25bcb5", label= n3, data= c3g, marker= '.')
+                for xy in zip(timestamps, g3):
+                    a.annotate('(%s, %s)' % xy, xy=xy, textcoords='data')
+                a.plot(timestamps, g4, "#29A223", label= n4, data= c4g, marker= '.')
+                for xy in zip(timestamps, g4):
+                    a.annotate('(%s, %s)' % xy, xy=xy, textcoords='data')
+                a.plot(timestamps, g5, "#2E3ACA", label= n5, data= c5g, marker= '.')
+                for xy in zip(timestamps, g5):
+                    a.annotate('(%s, %s)' % xy, xy=xy, textcoords='data')
+                a.plot(timestamps, g6, "#FF8CEC", label= n6, data= c6g, marker= '.')
+                for xy in zip(timestamps, g6):
+                    a.annotate('(%s, %s)' % xy, xy=xy, textcoords='data')
+                a.plot(timestamps, g7, "#F5891C", label= n7, data= c7g, marker= '.')
+                for xy in zip(timestamps, g7):
+                    a.annotate('(%s, %s)' % xy, xy=xy, textcoords='data')
+                a.legend()
+                studentName = open("temp4.txt", "r")
+                studentName1 = studentName.read()
+                studentName.close()
+                a.set_title('Graph of '+studentName1)
+            
+        
+        
+            
+                data_file.close()
 
 class StartPage(tk.Frame):
     
@@ -1046,7 +1041,7 @@ class StartPage(tk.Frame):
         self.showImg()
         button7  = ttk.Button(self, text= 'Go to Student Portal Web Page', command= lambda: self.mms())
         button7.grid(row= 6, column= 2, columnspan= 2, sticky= tk.W)
-        label = tk.Label(self, text= 'hi', font= Largest_Font, background= "#95c8f4", fg= "#95c8f4")
+        label = ttk.Button(self, text= 'HOMEWORK', command= lambda: controller.show_frame(Homework))
         label.grid(row=7, column=2, columnspan= 2, sticky= tk.W)
 
 
@@ -1807,11 +1802,21 @@ class  DisplayInDepth2(tk.Frame):
                     tk.Label(self, text= " ", bg= '#95c8f4', font= Large_Font).grid(column= 5, row=numero, sticky=  tk.E + tk.W)        
         else:
             self.button5.grid(row=1, column= 5)
+            data_file = open("temp5.txt", 'r')
+            avadat1 = data_file.read()
+            avadat11 = avadat1.split(',')
+            data_file.close()
+            numero = 1
+            avadat444 = []
 
+            for items in avadat11:
+                if len(items) > 0:
+                    avadat444.append(items)
+            
             
             for items in avadat444[21:41]:
                 numero += 1
-                tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 2, row=numero, sticky=  tk.W)
+                tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 1, row=numero, sticky=  tk.W)
 
             
             data_file = open("temp6.txt", 'r')
@@ -1845,7 +1850,25 @@ class  DisplayInDepth2(tk.Frame):
                 if len(items)  > 0:
                     numero += 1
                     tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 4, row=numero, sticky=  tk.E + tk.W)
+
+            data_file = open("temp8.txt", 'r')
+            avadat5 = data_file.read()
+            avadat55 = avadat5.split(',')
+            data_file.close() 
+
+            avadat555 = []
+            for items in avadat55:
+                avadat555.append(items)
+
+            numero = 1
+            for items in avadat555[21:41]:
+                if len(items)  > 0:
+                    numero += 1
+                    tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 2, row=numero, sticky=  tk.E + tk.W)
         
+
+
+
             numero = 1
             numerator = [x.replace(" /", '0') for x in avadat222[21:41] ]
                     
@@ -1946,6 +1969,36 @@ class  DisplayInDepth3(tk.Frame):
             except:
                 tk.Label(self, text= " ", bg= '#95c8f4', font= Large_Font).grid(column= 5, row=numero, sticky=  tk.E + tk.W)
 
+class Homework(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        button3 = ttk.Button(self, text= 'Show Avaliable Data', command= lambda: self.shower())
+        button3.grid(row= 1, column= 3)
+        button1 = ttk.Button(self, text='Go back to HOME PAGE',  command= lambda: controller.show_frame(StartPage) )
+        button1.grid(row= 1, column= 2)
+        
+    def shower(self):
+        data_file = open("temp9.txt", 'r')
+        avadat1 = data_file.read()
+        avadat11 = avadat1.split('***')
+        dates = avadat11[0].split(',')
+        hws = avadat11[1].split('^^')
+        data_file.close()
+
+        numero = 1
+        for items in dates:
+            numero += 1
+            tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 1, row=numero, sticky=  tk.E + tk.W)
+        
+        numero = 1 
+        for items in hws:
+            numero += 1
+            if len(items) < 50:
+                tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 2, row=numero, sticky=  tk.W)
+            else:
+                i = items[0:50] + '...'
+                tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 2, row=numero, sticky=  tk.W)
+            
 class UnannotatedGraph(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
