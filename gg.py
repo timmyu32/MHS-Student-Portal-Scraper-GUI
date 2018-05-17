@@ -828,8 +828,14 @@ class Login(tk.Frame):
                     a.annotate('(%s, %s)' % xy, xy=xy, textcoords='data')
                 for xy in zip(data77x, data77y):
                     a.annotate('(%s, %s)' % xy, xy=xy, textcoords='data')
-                self.label4.config(text='Click NEXT', fg= 'black' )
-                self.button3.place(x=460, y=330)
+                temporal_lobe = open('temp3.txt', 'r')
+                occipital = temporal_lobe.read()
+                if occipital.startswith('N'):
+                    self.label4.config(text='Click NEXT', fg= 'black' )
+                    self.button3.place(x=460, y=330)
+                else:
+                    self.label4.config(text='An ERROR has occured, try correcting your user and password.')
+
                 
             threading.Thread(target = get_grades).start()
             threading.Thread(target = gc_get).start() 
@@ -1040,7 +1046,8 @@ class StartPage(tk.Frame):
         label2 = tk.Label(self, text= 'This program can be used to plot the course of your courses over a month, semester, or even a year! Lets get started...', font= smaller_font, background= "#95c8f4")
         label2.grid(row= 2, column = 1, columnspan= 3, sticky= tk.W)
         button1 = ttk.Button(self, text= 'Go to Student Portal Class Data Graph', command= lambda: controller.show_frame(PageOne))
-        button1.grid(row=3, column= 2, columnspan= 2, sticky= tk.W)
+        button1.grid(row=3, column= 2, sticky= tk.W)
+        tk.Label(self, bg= '#95c8f4',text= '(Program graphs up to 7 classes)').grid(row=3, column= 3, sticky= tk.W)
         button2 = ttk.Button(self, text= 'Go to Class Data Pie Chart', command= lambda: controller.show_frame(PageTwo))
         button5 = ttk.Button(self, text= 'Bar Graph Page', command= lambda: controller.show_frame(BarGraph))
         button2.grid(row= 5, column= 2, sticky= tk.W)
@@ -2027,9 +2034,7 @@ class Homework(tk.Frame):
                     i = items[0:50] + '...'
                     tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 2, row=numero, sticky=  tk.W)
         except:
-            tk.Label(self, text= 'Homework from Google Classroom was not collected', bg= '#95c8f4', font= Large_Font).grid(column= 2, row=1, sticky=  tk.W)
-
-
+            tk.Label(self, text= 'Homework from Google Classroom was not collected', bg= '#95c8f4', font= Large_Font).grid(column= 2, row=4, sticky=  tk.W)
             
 class UnannotatedGraph(tk.Frame):
     def __init__(self, parent, controller):
