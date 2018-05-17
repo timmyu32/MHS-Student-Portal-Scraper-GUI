@@ -142,7 +142,7 @@ class Login(tk.Frame):
         if tim:
             def gc_get():
                 
-                if type(self.gc_p.get()) == str:
+                if len(self.gc_p.get()) > 1:
                     gc_password = self.gc_p.get()
                     configurer = webdriver.ChromeOptions()
                     configurer.add_argument("-headless")
@@ -244,7 +244,11 @@ class Login(tk.Frame):
                             ids.append(class_identifiers)
                             descriptor = [x.text.replace('\n',  ' ') for x in driver.find_elements_by_xpath("//div[@class='TextBox41 s28-']") ]
                             if len(descriptor) > 0:
+                                id_descriptors.append([('***{}***').format( driver.find_element_by_xpath("//div[@class='TextBox5 s5-']").text[0:-2])])
                                 id_descriptors.append(descriptor)
+                                grdr.append([' '])
+                                grdr2.append([' '])
+                                grdr3.append([' '])
                                 grd1 = [x.text for x in driver.find_elements_by_xpath("//div[@class='TextBox46 s29-']") ]
                                 grd2 = [x.text for x in driver.find_elements_by_xpath("//div[@class='TextBox27 s28-']") ]
                                 grd3 = [x.text.replace(",", "-") for x in driver.find_elements_by_xpath("//div[@class= 'TextBox42 s28-']") ] 
@@ -269,10 +273,14 @@ class Login(tk.Frame):
                             ids.append(class_identifiers)
                             descriptor = [x.text.replace('\n',  ' ') for x in driver.find_elements_by_xpath("//div[@class='TextBox41 s28-']") ]
                             if len(descriptor) >0:
+                                id_descriptors.append([('***{}***').format( driver.find_element_by_xpath("//div[@class='TextBox5 s5-']").text[0:-2])])
                                 id_descriptors.append(descriptor)
-                            grd1 = [x.text for x in driver.find_elements_by_xpath("//div[@class='TextBox46 s29-']") ]
-                            grd2 = [x.text for x in driver.find_elements_by_xpath("//div[@class='TextBox27 s28-']") ]
-                            grd3 = [x.text.replace(",", "-") for x in driver.find_elements_by_xpath("//div[@class= 'TextBox42 s28-']") ]
+                                grdr.append([' '])
+                                grdr2.append([' '])
+                                grdr3.append([' '])
+                                grd1 = [x.text for x in driver.find_elements_by_xpath("//div[@class='TextBox46 s29-']") ]
+                                grd2 = [x.text for x in driver.find_elements_by_xpath("//div[@class='TextBox27 s28-']") ]
+                                grd3 = [x.text.replace(",", "-") for x in driver.find_elements_by_xpath("//div[@class= 'TextBox42 s28-']") ]
                             if len(grd1) > 0:
                                 grdr.append(grd1)
                                 grdr2.append(grd2)
@@ -1575,7 +1583,10 @@ class DisplayInDepth1(tk.Frame):
             for items in avadat11:
                 if len(items) > 0:
                     numero += 1
-                    tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 1, row=numero, sticky=  tk.E + tk.W)
+                    if "***" in items:
+                        tk.Label(self, text= items, bg= '#f9ee68', font= Large_Font).grid(column= 1, row=numero, sticky=  tk.E + tk.W)
+                    else:
+                        tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 1, row=numero, sticky=  tk.E + tk.W)
             
             data_file = open("temp8.txt", 'r')
             avadat4 = data_file.read()
@@ -1649,7 +1660,10 @@ class DisplayInDepth1(tk.Frame):
 
             for items in avadat111[0:21]:
                 numero += 1
-                tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 1, row=numero, sticky=  tk.E + tk.W)
+                if "***" in items:
+                    tk.Label(self, text= items, bg= '#f9ee68', font= Large_Font).grid(column= 1, row=numero, sticky=  tk.E + tk.W)
+                else:
+                    tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 1, row=numero, sticky=  tk.E + tk.W)
         
             data_file = open("temp8.txt", 'r')
             avadat4 = data_file.read()
@@ -1738,7 +1752,11 @@ class  DisplayInDepth2(tk.Frame):
         if len(avadat111) < 50:
             for items in avadat111[21:-1]:
                 numero += 1
-                tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 1, row=numero, sticky=  tk.E + tk.W)
+                if "***" in items:
+                    tk.Label(self, text= items, bg= '#f9ee68', font= Large_Font).grid(column= 1, row=numero, sticky=  tk.E + tk.W)
+                else:
+                    tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 1, row=numero, sticky=  tk.E + tk.W)
+        
 
             data_file = open("temp8.txt", 'r')
             avadat4 = data_file.read()
@@ -1816,8 +1834,11 @@ class  DisplayInDepth2(tk.Frame):
             
             for items in avadat444[21:41]:
                 numero += 1
-                tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 1, row=numero, sticky=  tk.W)
-
+                if "***" in items:
+                        tk.Label(self, text= items, bg= '#f9ee68', font= Large_Font).grid(column= 1, row=numero, sticky=  tk.E + tk.W)
+                else:
+                    tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 1, row=numero, sticky=  tk.E + tk.W)
+        
             
             data_file = open("temp6.txt", 'r')
             avadat2 = data_file.read()
@@ -1904,10 +1925,13 @@ class  DisplayInDepth3(tk.Frame):
             if len(items) > 0:
                 avadat111.append(items)
 
-        for items in avadat111[42:-1]:
+        for items in avadat111[41:-1]:
             numero += 1
-            tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 1, row=numero, sticky=  tk.E + tk.W)
-
+            if "***" in items:
+                tk.Label(self, text= items, bg= '#f9ee68', font= Large_Font).grid(column= 1, row=numero, sticky=  tk.E + tk.W)
+            else:
+                tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 1, row=numero, sticky=  tk.E + tk.W)
+    
         data_file = open("temp8.txt", 'r')
         avadat4 = data_file.read()
         avadat44 = avadat4.split(',')
@@ -1918,7 +1942,7 @@ class  DisplayInDepth3(tk.Frame):
             avadat444.append(items)
         
 
-        for items in avadat444[42:-1]:
+        for items in avadat444[41:-1]:
             numero += 1
             tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 2, row=numero, sticky=  tk.W)
 
@@ -1934,7 +1958,7 @@ class  DisplayInDepth3(tk.Frame):
             if len(items) > 0:
                 avadat222.append(items)
 
-        for items in avadat222[42:-1]:
+        for items in avadat222[41:-1]:
             if len(items)  > 0:
                 numero += 1
                 tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 3, row=numero,  sticky= tk.E + tk.W)
@@ -1950,15 +1974,15 @@ class  DisplayInDepth3(tk.Frame):
                 avadat333.append(items)
 
         numero = 1
-        for items in avadat333[42:-1]:
+        for items in avadat333[41:-1]:
             if len(items)  > 0:
                 numero += 1
                 tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 4, row=numero, sticky=  tk.E + tk.W)
     
         numero = 1
-        numerator = [x.replace(" /", '0') for x in avadat222[42:-1] ]
+        numerator = [x.replace(" /", '0') for x in avadat222[41:-1] ]
                 
-        for num, denom in zip(numerator, avadat333[42:-1]):
+        for num, denom in zip(numerator, avadat333[41:-1]):
             numero += 1
             try:
                 ave = round((float(num) / float(denom)) * 100, 2)
