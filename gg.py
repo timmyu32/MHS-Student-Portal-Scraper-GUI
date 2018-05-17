@@ -182,7 +182,10 @@ class Login(tk.Frame):
                     new_temp.close()
 
                 else:
-                    pass
+                    new_temp = open('temp9.txt', 'w')
+                    new_temp.write('')
+                    new_temp.close()
+                    
 
             def get_grades():
                 u = self.u1.get()
@@ -2002,26 +2005,31 @@ class Homework(tk.Frame):
         button1.grid(row= 1, column= 2)
         
     def shower(self):
-        data_file = open("temp9.txt", 'r')
-        avadat1 = data_file.read()
-        avadat11 = avadat1.split('***')
-        dates = avadat11[0].split(',')
-        hws = avadat11[1].split('^^')
-        data_file.close()
+        try:
+            data_file = open("temp9.txt", 'r')
+            avadat1 = data_file.read()
+            avadat11 = avadat1.split('***')
+            dates = avadat11[0].split(',')
+            hws = avadat11[1].split('^^')
+            data_file.close()
 
-        numero = 1
-        for items in dates:
-            numero += 1
-            tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 1, row=numero, sticky=  tk.E + tk.W)
-        
-        numero = 1 
-        for items in hws:
-            numero += 1
-            if len(items) < 50:
-                tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 2, row=numero, sticky=  tk.W)
-            else:
-                i = items[0:50] + '...'
-                tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 2, row=numero, sticky=  tk.W)
+            numero = 1
+            for items in dates:
+                numero += 1
+                tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 1, row=numero, sticky=  tk.E + tk.W)
+            
+            numero = 1 
+            for items in hws:
+                numero += 1
+                if len(items) < 50:
+                    tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 2, row=numero, sticky=  tk.W)
+                else:
+                    i = items[0:50] + '...'
+                    tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 2, row=numero, sticky=  tk.W)
+        except:
+            tk.Label(self, text= 'Homework from Google Classroom was not collected', bg= '#95c8f4', font= Large_Font).grid(column= 2, row=1, sticky=  tk.W)
+
+
             
 class UnannotatedGraph(tk.Frame):
     def __init__(self, parent, controller):
