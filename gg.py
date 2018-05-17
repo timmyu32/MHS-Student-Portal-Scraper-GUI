@@ -1568,7 +1568,7 @@ class DisplayInDepth1(tk.Frame):
     
 
     def shower(self):
-        data_file = open("temp5.txt", 'r')
+        data_file = open("temp7.txt", 'r')
         avadat1 = data_file.read()
         avadat11 = avadat1.split(',')
         data_file.close()
