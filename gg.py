@@ -146,13 +146,11 @@ class Login(tk.Frame):
                     gc_password = self.gc_p.get()
                     configurer = webdriver.ChromeOptions()
                     configurer.add_argument("-headless")
-                    #browser = webdriver.Chrome(chrome_options=configurer)
-                    browser = webdriver.Chrome()
-                    #browser.set_window_size(0, 0)
+                    browser = webdriver.Chrome(chrome_options=configurer)
+                    #browser = webdriver.Chrome()
 
                     browser.get("https://accounts.google.com/signin/v2/identifier?service=classroom&passive=1209600&continue=https%3A%2F%2Fclassroom.google.com%2F%3Femr%3D0&followup=https%3A%2F%2Fclassroom.google.com%2F%3Femr%3D0&flowName=GlifWebSignIn&flowEntry=ServiceLogin")
                     WebDriverWait(browser, 10).until(EC.visibility_of_element_located((By.XPATH, "//input[@class='whsOnd zHQkBf']")))
-                    #time.sleep(4)
                     gc_uname = browser.find_element_by_xpath("//input[@class='whsOnd zHQkBf']")
                     next_btn = browser.find_element_by_xpath("//div[@id='identifierNext']")
                     email_adress = self.u1.get().lower() + '@student.medwayschools.org'
@@ -203,14 +201,31 @@ class Login(tk.Frame):
                 password = driver.find_element_by_name('LoginControl1$txtPassword')
                 login_btn = driver.find_element_by_name('LoginControl1$btnLogin')
 
-
+                uname.clear()
                 uname.send_keys(u)
                 password.send_keys(p)
                 login_btn.click()
 
+                try:
+                    WebDriverWait(driver, 3).until(EC.visibility_of_element_located((By.XPATH, "//span[@id='LoginControl1_lblErrMsg']")))
+                    error_msg = driver.find_element_by_xpath("//span[@id='LoginControl1_lblErrMsg']").text
+                    if type(error_msg) != None:
+                        data_file = open("temp3.txt", 'w')
+                        data_file.write(error_msg)
+                        data_file.close()
+                        self.label4.config(text=error_msg)
+                           
+                except:
+                    data_file = open("temp3.txt", 'w')
+                    data_file.write("No errors")
+                    data_file.close()
 
-                timeout = 20
-                WebDriverWait(driver, timeout).until(EC.visibility_of_element_located((By.XPATH, "//table[@class='rgMasterTable rgClipCells']")))
+
+                timeout = 10
+                try:
+                    WebDriverWait(driver, timeout).until(EC.visibility_of_element_located((By.XPATH, "//table[@class='rgMasterTable rgClipCells']")))
+                except:
+                    driver.close()
 
                 class_names1 = driver.find_elements_by_xpath("//tr[@class='rgRow']")
                 evens = [x.text for x in class_names1]
@@ -852,6 +867,12 @@ class Login(tk.Frame):
             if alter(u,p,goog):
                 self.label4.config(text='Click NEXT', fg= 'black' )
                 self.button3.place(x=460, y=330)
+            else:
+                data_file = open("temp3.txt", 'r')
+                msg = data_file.read()
+                data_file.close()
+                self.label4.config(text=msg, fg= 'black' )
+
                 
                 
 
@@ -1578,7 +1599,7 @@ class DisplayInDepth1(tk.Frame):
     
 
     def shower(self):
-        data_file = open("temp7.txt", 'r')
+        data_file = open("temp5.txt", 'r')
         avadat1 = data_file.read()
         avadat11 = avadat1.split(',')
         data_file.close()
@@ -1587,7 +1608,7 @@ class DisplayInDepth1(tk.Frame):
             if len(i) > 1:
                 avadat.append(i)
                
-        tk.Label(self, text= '{} Assignment(s)'.format(len(avadat)), font= Large_Font, bg= '#95c8f4').grid(row=1,column=1)
+        
         if len(avadat) < 20:
             numero = 1
             for items in avadat11:
@@ -1603,6 +1624,7 @@ class DisplayInDepth1(tk.Frame):
             avadat44 = avadat4.split(',')
             data_file.close() 
             numero = 1
+            tk.Label(self, text= '{} Assignment(s)'.format(len(avadat44)), font= Large_Font, bg= '#95c8f4').grid(row=1,column=1)
             for items in avadat44:
                 numero += 1
                 tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 2, row=numero, sticky=  tk.W)
