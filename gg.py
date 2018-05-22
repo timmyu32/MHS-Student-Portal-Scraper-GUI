@@ -1624,7 +1624,6 @@ class DisplayInDepth1(tk.Frame):
             avadat44 = avadat4.split(',')
             data_file.close() 
             numero = 1
-            tk.Label(self, text= '{} Assignment(s)'.format(len(avadat44)), font= Large_Font, bg= '#95c8f4').grid(row=1,column=1)
             for items in avadat44:
                 numero += 1
                 tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 2, row=numero, sticky=  tk.W)
@@ -1679,7 +1678,9 @@ class DisplayInDepth1(tk.Frame):
                         tk.Label(self, text= "({}%)".format(ave), bg= '#95c8f4', fg= "#0bbf17", font= Large_Font).grid(column= 5, row=numero, sticky=  tk.E + tk.W)   
                 except:
                     tk.Label(self, text= " ", bg= '#95c8f4', font= Large_Font).grid(column= 5, row=numero, sticky=  tk.E + tk.W)
-      
+        
+            tk.Label(self, text= '{} Assignment(s)'.format(len(avadat44)), font= Large_Font, bg= '#95c8f4').grid(row=1,column=1)
+
             
             
         else:
@@ -1758,6 +1759,9 @@ class DisplayInDepth1(tk.Frame):
                 
                 except:
                     tk.Label(self, text= " ", bg= '#95c8f4', font= Large_Font).grid(column= 5, row=numero, sticky=  tk.E + tk.W)
+
+            tk.Label(self, text= '{} Assignment(s)'.format(len(avadat44)), font= Large_Font, bg= '#95c8f4').grid(row=1,column=1)
+
 
 class  DisplayInDepth2(tk.Frame):
     def __init__(self, parent, controller):
