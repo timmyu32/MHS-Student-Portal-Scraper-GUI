@@ -265,7 +265,7 @@ class Login(tk.Frame):
                             if len(descriptor) > 0:
                                 id_descriptors.append([('***{}***').format( driver.find_element_by_xpath("//div[@class='TextBox5 s5-']").text[0:-2])])
                                 id_descriptors.append(descriptor)
-                                grdr.append(['{} Assigments'.format(len(driver.find_elements_by_xpath("//div[@class='TextBox46 s29-']") + '4465'))])
+                                grdr.append(['{}{} Assignments'.format(  len( driver.find_elements_by_xpath("//div[@class='TextBox46 s29-']"))-1, '4465' )])
                                 grdr2.append([driver.find_element_by_xpath("//div[@class='TextBox16 s13-']").text + '4465'])
                                 grdr3.append([' '])
                                 grd1 = [x.text for x in driver.find_elements_by_xpath("//div[@class='TextBox46 s29-']") ]
@@ -294,7 +294,7 @@ class Login(tk.Frame):
                             if len(descriptor) >0:
                                 id_descriptors.append([('***{}***').format( driver.find_element_by_xpath("//div[@class='TextBox5 s5-']").text[0:-2])])
                                 id_descriptors.append(descriptor)
-                                grdr.append(['{} Assigments'.format(len(driver.find_elements_by_xpath("//div[@class='TextBox46 s29-']") + '4465'))])
+                                grdr.append(['{}{} Assignments'.format(  len( driver.find_elements_by_xpath("//div[@class='TextBox46 s29-']"))-1, '4465' )])
                                 grdr2.append([driver.find_element_by_xpath("//div[@class='TextBox16 s13-']").text + '4465'])
                                 grdr3.append([' '])
                                 grd1 = [x.text for x in driver.find_elements_by_xpath("//div[@class='TextBox46 s29-']") ]
@@ -2163,10 +2163,323 @@ class DisplayInDepth1(tk.Frame):
         button3 = ttk.Button(self, text= 'Show Avaliable Data', command= lambda: self.shower())
         button1.grid(row= 1, column= 2)
         button3.grid(row= 1, column= 3)
-        button4 = ttk.Button(self, text= 'NEXT', command= lambda: controller.show_frame(DisplayInDepth2))
+        self.page_counter = 1
+        button4 = ttk.Button(self, text= 'NEXT', command= lambda:  controller.show_frame(DisplayInDepth2) )
         button4.grid(row=1, column=4)
+        '''
+        button5 = ttk.Button(self, text= 'BACK', command= lambda: self.ticker_down())
+        button5.grid(row=1, column=5)
+        '''
+
+    '''
+
+    def ticker(self):
+        self.page_counter += 1
+
+    def ticker_down(self):
+        self.page_counter += -1
+        if self.page_counter < 1:
+            self.page_counter = 1
 
     
+
+    def shower(self):
+        def gogo():
+            while True:
+                time.sleep(2)
+                if self.page_counter == 1:
+
+                    data_file = open("temp5.txt", 'r')
+                    avadat1 = data_file.read()
+                    avadat11 = avadat1.split(',')
+                    data_file.close()
+                    avadat = []
+                    for i in avadat11:
+                        if len(i) > 1:
+                            avadat.append(i)
+                        
+
+                    numero = 1
+                    avadat111 = []
+                    for items in avadat11:
+                        if len(items) > 1:
+                            avadat111.append(items)
+
+                    for items in avadat111[0:21]:
+                        numero += 1
+                        if "***" in items:
+                            tk.Label(self, text= items, bg= '#f9ee68', font= Large_Font).grid(column= 1, row=numero, sticky=  tk.E + tk.W)
+                        else:
+                            tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 1, row=numero, sticky=  tk.E + tk.W)
+                
+                    data_file = open("temp8.txt", 'r')
+                    avadat4 = data_file.read()
+                    avadat44 = avadat4.split(',')
+                    data_file.close() 
+
+                    numero = 1
+                    avadat444 = []
+                    for items in avadat44:
+                        avadat444.append(items)
+
+                    for items in avadat444[0:21]:
+                        numero += 1
+                        tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 2, row=numero, sticky=  tk.W)
+
+                    
+                    data_file = open("temp6.txt", 'r')
+                    avadat2 = data_file.read()
+                    avadat22 = avadat2.split(',')
+                    data_file.close() 
+
+                    numero = 1
+                    avadat222 = []
+                    for items in avadat22:
+                        if len(items) > 0:
+                            avadat222.append(items)
+
+                    for items in avadat222[0:21]:
+                        if len(items)  > 0:
+                            numero += 1
+                            if "4465" in items:
+                                tk.Label(self, text= '({})'.format( items.replace('4465', '') ), bg= '#f9ee68', font= Large_Font).grid(column= 3, row=numero, sticky=  tk.E + tk.W)
+                            else:
+                                tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 3, row=numero, sticky=  tk.E + tk.W)
+                    
+                    
+                    data_file = open("temp7.txt", 'r')
+                    avadat3 = data_file.read()
+                    avadat33 = avadat3.split(',')
+                    data_file.close() 
+
+                    avadat333 = []
+                    for items in avadat33:
+                        if len(items) > 0:
+                            avadat333.append(items)
+
+                    numero = 1
+                    for items in avadat333[0:21]:
+                        if len(items)  > 0:
+                            numero += 1
+                            if "4465" in items:
+                                tk.Label(self, text= '({})'.format( items.replace('4465', '') ), bg= '#f9ee68', font= Large_Font).grid(column= 4, row=numero, sticky=  tk.E + tk.W)
+                            else:
+                                tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 4, row=numero, sticky=  tk.E + tk.W)
+                    
+                    
+                    numero = 1
+                    numerator = [x.replace(" /", '0') for x in avadat222[0:21] ]
+                            
+                    for num, denom in zip(numerator, avadat333[0:21]):
+                        numero += 1
+                        try:
+                            ave = round( (float(num) / float(denom)) * 100, 2 )
+                            if ave < 90:
+                                tk.Label(self, text= "({}%)".format(ave), bg= '#95c8f4', fg= "#d80f4f", font= Large_Font).grid(column= 5, row=numero, sticky=  tk.E + tk.W)
+                            else:
+                                tk.Label(self, text= "({}%)".format(ave), bg= '#95c8f4', fg= "#0bbf17", font= Large_Font).grid(column= 5, row=numero, sticky=  tk.E + tk.W)
+                        
+                        except:
+                            tk.Label(self, text= " ", bg= '#95c8f4', font= Large_Font).grid(column= 5, row=numero, sticky=  tk.E + tk.W)
+
+                    tk.Label(self, text= '{} Assignment(s)'.format(len(avadat44)), font= Large_Font, bg= '#95c8f4').grid(row=1,column=1)
+                
+                elif self.page_counter == 2:
+
+                    data_file = open("temp5.txt", 'r')
+                    avadat1 = data_file.read()
+                    avadat11 = avadat1.split(',')
+                    data_file.close()
+                    avadat = []
+                    for i in avadat11:
+                        if len(i) > 1:
+                            avadat.append(i)
+                        
+
+                    numero = 1
+                    avadat111 = []
+                    for items in avadat11:
+                        if len(items) > 1:
+                            avadat111.append(items)
+
+                    for items in avadat111[21:41]:
+                        numero += 1
+                        if "***" in items:
+                            tk.Label(self, text= items, bg= '#f9ee68', font= Large_Font).grid(column= 1, row=numero, sticky=  tk.E + tk.W)
+                        else:
+                            tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 1, row=numero, sticky=  tk.E + tk.W)
+                
+                    data_file = open("temp8.txt", 'r')
+                    avadat4 = data_file.read()
+                    avadat44 = avadat4.split(',')
+                    data_file.close() 
+
+                    numero = 1
+                    avadat444 = []
+                    for items in avadat44:
+                        avadat444.append(items)
+
+                    for items in avadat444[21:41]:
+                        numero += 1
+                        tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 2, row=numero, sticky=  tk.W)
+
+                    
+                    data_file = open("temp6.txt", 'r')
+                    avadat2 = data_file.read()
+                    avadat22 = avadat2.split(',')
+                    data_file.close() 
+
+                    numero = 1
+                    avadat222 = []
+                    for items in avadat22:
+                        if len(items) > 0:
+                            avadat222.append(items)
+
+                    for items in avadat222[21:41]:
+                        if len(items)  > 0:
+                            numero += 1
+                            if "4465" in items:
+                                tk.Label(self, text= '({})'.format( items.replace('4465', '') ), bg= '#f9ee68', font= Large_Font).grid(column= 3, row=numero, sticky=  tk.E + tk.W)
+                            else:
+                                tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 3, row=numero, sticky=  tk.E + tk.W)
+                    
+                    
+                    data_file = open("temp7.txt", 'r')
+                    avadat3 = data_file.read()
+                    avadat33 = avadat3.split(',')
+                    data_file.close() 
+
+                    avadat333 = []
+                    for items in avadat33:
+                        if len(items) > 0:
+                            avadat333.append(items)
+
+                    numero = 1
+                    for items in avadat333[21:41]:
+                        if len(items)  > 0:
+                            numero += 1
+                            if "4465" in items:
+                                tk.Label(self, text= '({})'.format( items.replace('4465', '') ), bg= '#f9ee68', font= Large_Font).grid(column= 4, row=numero, sticky=  tk.E + tk.W)
+                            else:
+                                tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 4, row=numero, sticky=  tk.E + tk.W)
+                    
+                    
+                    numero = 1
+                    numerator = [x.replace(" /", '0') for x in avadat222[21:41] ]
+                            
+                    for num, denom in zip(numerator, avadat333[21:41]):
+                        numero += 1
+                        try:
+                            ave = round( (float(num) / float(denom)) * 100, 2 )
+                            if ave < 90:
+                                tk.Label(self, text= "({}%)".format(ave), bg= '#95c8f4', fg= "#d80f4f", font= Large_Font).grid(column= 5, row=numero, sticky=  tk.E + tk.W)
+                            else:
+                                tk.Label(self, text= "({}%)".format(ave), bg= '#95c8f4', fg= "#0bbf17", font= Large_Font).grid(column= 5, row=numero, sticky=  tk.E + tk.W)
+                        
+                        except:
+                            tk.Label(self, text= " ", bg= '#95c8f4', font= Large_Font).grid(column= 5, row=numero, sticky=  tk.E + tk.W)
+
+                    tk.Label(self, text= '{} Assignment(s)'.format(len(avadat44)), font= Large_Font, bg= '#95c8f4').grid(row=1,column=1)
+
+                elif self.page_counter == 3:
+
+                    data_file = open("temp5.txt", 'r')
+                    avadat1 = data_file.read()
+                    avadat11 = avadat1.split(',')
+                    data_file.close()
+                    avadat = []
+                    for i in avadat11:
+                        if len(i) > 1:
+                            avadat.append(i)
+                        
+
+                    numero = 1
+                    avadat111 = []
+                    for items in avadat11:
+                        if len(items) > 1:
+                            avadat111.append(items)
+
+                    for items in avadat111[41:61]:
+                        numero += 1
+                        if "***" in items:
+                            tk.Label(self, text= items, bg= '#f9ee68', font= Large_Font).grid(column= 1, row=numero, sticky=  tk.E + tk.W)
+                        else:
+                            tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 1, row=numero, sticky=  tk.E + tk.W)
+                
+                    data_file = open("temp8.txt", 'r')
+                    avadat4 = data_file.read()
+                    avadat44 = avadat4.split(',')
+                    data_file.close() 
+
+                    numero = 1
+                    avadat444 = []
+                    for items in avadat44:
+                        avadat444.append(items)
+
+                    for items in avadat444[41:61]:
+                        numero += 1
+                        tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 2, row=numero, sticky=  tk.W)
+
+                    
+                    data_file = open("temp6.txt", 'r')
+                    avadat2 = data_file.read()
+                    avadat22 = avadat2.split(',')
+                    data_file.close() 
+
+                    numero = 1
+                    avadat222 = []
+                    for items in avadat22:
+                        if len(items) > 0:
+                            avadat222.append(items)
+
+                    for items in avadat222[41:61]:
+                        if len(items)  > 0:
+                            numero += 1
+                            if "4465" in items:
+                                tk.Label(self, text= '({})'.format( items.replace('4465', '') ), bg= '#f9ee68', font= Large_Font).grid(column= 3, row=numero, sticky=  tk.E + tk.W)
+                            else:
+                                tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 3, row=numero, sticky=  tk.E + tk.W)
+                    
+                    
+                    data_file = open("temp7.txt", 'r')
+                    avadat3 = data_file.read()
+                    avadat33 = avadat3.split(',')
+                    data_file.close() 
+
+                    avadat333 = []
+                    for items in avadat33:
+                        if len(items) > 0:
+                            avadat333.append(items)
+
+                    numero = 1
+                    for items in avadat333[41:61]:
+                        if len(items)  > 0:
+                            numero += 1
+                            if "4465" in items:
+                                tk.Label(self, text= '({})'.format( items.replace('4465', '') ), bg= '#f9ee68', font= Large_Font).grid(column= 4, row=numero, sticky=  tk.E + tk.W)
+                            else:
+                                tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 4, row=numero, sticky=  tk.E + tk.W)
+                    
+                    
+                    numero = 1
+                    numerator = [x.replace(" /", '0') for x in avadat222[41:61] ]
+                            
+                    for num, denom in zip(numerator, avadat333[41:61]):
+                        numero += 1
+                        try:
+                            ave = round( (float(num) / float(denom)) * 100, 2 )
+                            if ave < 90:
+                                tk.Label(self, text= "({}%)".format(ave), bg= '#95c8f4', fg= "#d80f4f", font= Large_Font).grid(column= 5, row=numero, sticky=  tk.E + tk.W)
+                            else:
+                                tk.Label(self, text= "({}%)".format(ave), bg= '#95c8f4', fg= "#0bbf17", font= Large_Font).grid(column= 5, row=numero, sticky=  tk.E + tk.W)
+                        
+                        except:
+                            tk.Label(self, text= " ", bg= '#95c8f4', font= Large_Font).grid(column= 5, row=numero, sticky=  tk.E + tk.W)
+
+                    tk.Label(self, text= '{} Assignment(s)'.format(len(avadat44)), font= Large_Font, bg= '#95c8f4').grid(row=1,column=1)
+        
+        threading.Thread(target = gogo).start()
+    '''
 
     def shower(self):
         data_file = open("temp5.txt", 'r')
@@ -2177,177 +2490,93 @@ class DisplayInDepth1(tk.Frame):
         for i in avadat11:
             if len(i) > 1:
                 avadat.append(i)
-               
+            
+
+        numero = 1
+        avadat111 = []
+        for items in avadat11:
+            if len(items) > 1:
+                avadat111.append(items)
+
+        for items in avadat111[0:21]:
+            numero += 1
+            if "***" in items:
+                tk.Label(self, text= items, bg= '#f9ee68', font= Large_Font).grid(column= 1, row=numero, sticky=  tk.E + tk.W)
+            else:
+                tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 1, row=numero, sticky=  tk.E + tk.W)
+    
+        data_file = open("temp8.txt", 'r')
+        avadat4 = data_file.read()
+        avadat44 = avadat4.split(',')
+        data_file.close() 
+
+        numero = 1
+        avadat444 = []
+        for items in avadat44:
+            avadat444.append(items)
+
+        for items in avadat444[0:21]:
+            numero += 1
+            tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 2, row=numero, sticky=  tk.W)
+
         
-        if len(avadat) < 20:
-            numero = 1
-            for items in avadat11:
-                if len(items) > 0:
-                    numero += 1
-                    if "***" in items:
-                        tk.Label(self, text= items, bg= '#f9ee68', font= Large_Font).grid(column= 1, row=numero, sticky=  tk.E + tk.W)
-                    else:
-                        tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 1, row=numero, sticky=  tk.E + tk.W)
-            
-            data_file = open("temp8.txt", 'r')
-            avadat4 = data_file.read()
-            avadat44 = avadat4.split(',')
-            data_file.close() 
-            numero = 1
-            for items in avadat44:
+        data_file = open("temp6.txt", 'r')
+        avadat2 = data_file.read()
+        avadat22 = avadat2.split(',')
+        data_file.close() 
+
+        numero = 1
+        avadat222 = []
+        for items in avadat22:
+            if len(items) > 0:
+                avadat222.append(items)
+
+        for items in avadat222[0:21]:
+            if len(items)  > 0:
                 numero += 1
-                tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 2, row=numero, sticky=  tk.W)
-
-            
-            data_file = open("temp6.txt", 'r')
-            avadat2 = data_file.read()
-            avadat22 = avadat2.split(',')
-            data_file.close() 
-            numero = 1
-            for items in avadat22:
-                if len(items)  > 0:
-                    numero += 1
-                    if "4465" in items:
-                        tk.Label(self, text= '({})'.format( items.replace('4465', '') ), bg= '#f9ee68', font= Large_Font).grid(column= 3, row=numero, sticky=  tk.E + tk.W)
-                    else:
-                        tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 3, row=numero, sticky=  tk.E + tk.W)
-            
-            data_file = open("temp7.txt", 'r')
-            avadat3 = data_file.read()
-            avadat33 = avadat3.split(',')
-            data_file.close() 
-            numero = 1
-            for items in avadat33:
-                if len(items)  > 0:
-                    numero += 1
-                    if "4465" in items:
-                        tk.Label(self, text= '({})'.format( items.replace('4465', '') ), bg= '#f9ee68', font= Large_Font).grid(column= 4, row=numero, sticky=  tk.E + tk.W)
-                    else:
-                        tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 4, row=numero, sticky=  tk.E + tk.W)
-            
-
-            numero = 1
-            numerator = []
-
-            for nums in avadat22:
-                nums.replace(" /", '0')
-                numerator.append(nums)
-
-       
-            
-            for num, denom in numerator, avadat33:
-                numero += 1
-                try:
-                    ave = float(num) / float(denom)
-                    tk.Label(self, text= "({})".format(ave), bg= '#95c8f4', font= Large_Font).grid(column= 5, row=numero, sticky=  tk.E + tk.W)
-                except:
-                    tk.Label(self, text= " ", bg= '#95c8f4', font= Large_Font).grid(column= 5, row=numero, sticky=  tk.E + tk.W)
-
-            numero = 1
-            numerator = [x.replace(" /", '0') for x in avadat22 ]
-                    
-            for num, denom in zip(numerator, avadat33):
-                numero += 1
-                try:
-                    ave = round( (float(num) / float(denom)) * 100, 2 )
-                    if ave < 90:
-                        tk.Label(self, text= "({}%)".format(ave), bg= '#95c8f4', fg= "#d80f4f", font= Large_Font).grid(column= 5, row=numero, sticky=  tk.E + tk.W)
-                    else:
-                        tk.Label(self, text= "({}%)".format(ave), bg= '#95c8f4', fg= "#0bbf17", font= Large_Font).grid(column= 5, row=numero, sticky=  tk.E + tk.W)   
-                except:
-                    tk.Label(self, text= " ", bg= '#95c8f4', font= Large_Font).grid(column= 5, row=numero, sticky=  tk.E + tk.W)
-        
-            tk.Label(self, text= '{} Assignment(s)'.format(len(avadat44)), font= Large_Font, bg= '#95c8f4').grid(row=1,column=1)
-
-            
-            
-        else:
-           
-            numero = 1
-            avadat111 = []
-            for items in avadat11:
-                if len(items) > 1:
-                    avadat111.append(items)
-
-            for items in avadat111[0:21]:
-                numero += 1
-                if "***" in items:
-                    tk.Label(self, text= items, bg= '#f9ee68', font= Large_Font).grid(column= 1, row=numero, sticky=  tk.E + tk.W)
+                if "4465" in items:
+                    tk.Label(self, text= '({})'.format( items.replace('4465', '') ), bg= '#f9ee68', font= Large_Font).grid(column= 3, row=numero, sticky=  tk.E + tk.W)
                 else:
-                    tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 1, row=numero, sticky=  tk.E + tk.W)
+                    tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 3, row=numero, sticky=  tk.E + tk.W)
         
-            data_file = open("temp8.txt", 'r')
-            avadat4 = data_file.read()
-            avadat44 = avadat4.split(',')
-            data_file.close() 
+        
+        data_file = open("temp7.txt", 'r')
+        avadat3 = data_file.read()
+        avadat33 = avadat3.split(',')
+        data_file.close() 
 
-            numero = 1
-            avadat444 = []
-            for items in avadat44:
-                avadat444.append(items)
+        avadat333 = []
+        for items in avadat33:
+            if len(items) > 0:
+                avadat333.append(items)
 
-            for items in avadat444[0:21]:
+        numero = 1
+        for items in avadat333[0:21]:
+            if len(items)  > 0:
                 numero += 1
-                tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 2, row=numero, sticky=  tk.W)
-
-            
-            data_file = open("temp6.txt", 'r')
-            avadat2 = data_file.read()
-            avadat22 = avadat2.split(',')
-            data_file.close() 
-
-            numero = 1
-            avadat222 = []
-            for items in avadat22:
-                if len(items) > 0:
-                    avadat222.append(items)
-
-            for items in avadat222[0:21]:
-                if len(items)  > 0:
-                    numero += 1
-                    if "4465" in items:
-                        tk.Label(self, text= '({})'.format( items.replace('4465', '') ), bg= '#f9ee68', font= Large_Font).grid(column= 3, row=numero, sticky=  tk.E + tk.W)
-                    else:
-                        tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 3, row=numero, sticky=  tk.E + tk.W)
-            
-            
-            data_file = open("temp7.txt", 'r')
-            avadat3 = data_file.read()
-            avadat33 = avadat3.split(',')
-            data_file.close() 
-
-            avadat333 = []
-            for items in avadat33:
-                if len(items) > 0:
-                    avadat333.append(items)
-
-            numero = 1
-            for items in avadat333[0:21]:
-                if len(items)  > 0:
-                    numero += 1
-                    if "4465" in items:
-                        tk.Label(self, text= '({})'.format( items.replace('4465', '') ), bg= '#f9ee68', font= Large_Font).grid(column= 4, row=numero, sticky=  tk.E + tk.W)
-                    else:
-                        tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 4, row=numero, sticky=  tk.E + tk.W)
-            
-            
-            numero = 1
-            numerator = [x.replace(" /", '0') for x in avadat222[0:21] ]
-                    
-            for num, denom in zip(numerator, avadat333[0:21]):
-                numero += 1
-                try:
-                    ave = round( (float(num) / float(denom)) * 100, 2 )
-                    if ave < 90:
-                        tk.Label(self, text= "({}%)".format(ave), bg= '#95c8f4', fg= "#d80f4f", font= Large_Font).grid(column= 5, row=numero, sticky=  tk.E + tk.W)
-                    else:
-                        tk.Label(self, text= "({}%)".format(ave), bg= '#95c8f4', fg= "#0bbf17", font= Large_Font).grid(column= 5, row=numero, sticky=  tk.E + tk.W)
+                if "4465" in items:
+                    tk.Label(self, text= '({})'.format( items.replace('4465', '') ), bg= '#f9ee68', font= Large_Font).grid(column= 4, row=numero, sticky=  tk.E + tk.W)
+                else:
+                    tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 4, row=numero, sticky=  tk.E + tk.W)
+        
+        
+        numero = 1
+        numerator = [x.replace(" /", '0') for x in avadat222[0:21] ]
                 
-                except:
-                    tk.Label(self, text= " ", bg= '#95c8f4', font= Large_Font).grid(column= 5, row=numero, sticky=  tk.E + tk.W)
+        for num, denom in zip(numerator, avadat333[0:21]):
+            numero += 1
+            try:
+                ave = round( (float(num) / float(denom)) * 100, 2 )
+                if ave < 90:
+                    tk.Label(self, text= "({}%)".format(ave), bg= '#95c8f4', fg= "#d80f4f", font= Large_Font).grid(column= 5, row=numero, sticky=  tk.E + tk.W)
+                else:
+                    tk.Label(self, text= "({}%)".format(ave), bg= '#95c8f4', fg= "#0bbf17", font= Large_Font).grid(column= 5, row=numero, sticky=  tk.E + tk.W)
+            
+            except:
+                tk.Label(self, text= " ", bg= '#95c8f4', font= Large_Font).grid(column= 5, row=numero, sticky=  tk.E + tk.W)
 
-            tk.Label(self, text= '{} Assignment(s)'.format(len(avadat44)), font= Large_Font, bg= '#95c8f4').grid(row=1,column=1)
-
+        tk.Label(self, text= '{} Assignment(s)'.format(len(avadat44)), font= Large_Font, bg= '#95c8f4').grid(row=1,column=1)
+    
 class  DisplayInDepth2(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)     
