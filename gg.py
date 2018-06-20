@@ -38,6 +38,8 @@ global g
 global zed
 global una
 global bary
+global uname_for_pop_up_trans
+global pass_for_pop_up_trans
 una = Figure(figsize = (10,5), dpi=100)
 f = Figure(figsize = (10,5), dpi=100)
 g = Figure(figsize = (5,5), dpi=100)
@@ -46,6 +48,26 @@ bary = Figure(figsize= (5,5), dpi=100)
 unatated = una.add_subplot(111)
 a = f.add_subplot(111)
 baro = bary.add_subplot(111)
+
+class reassign1(object):
+    #This class stores the integer number of the player's value once they abstain at any point
+    #reassign_pv will be used to compare compturn vlue to player value and return a string 
+    def __init__(self, pvalue= 0):
+        self.pvalue = pvalue
+
+    def reassign_user(self):
+        #This class holds the value of the player's value outside of playerturn()
+        return self.pvalue
+
+class reassign2(object):
+    #This class stores the integer number of the player's value once they abstain at any point
+    #reassign_pv will be used to compare compturn vlue to player value and return a string 
+    def __init__(self, pvalue= 0):
+        self.pvalue = pvalue
+
+    def reassign_pass(self):
+        #This class holds the value of the player's value outside of playerturn()
+        return self.pvalue
 
 
 class GradeGetterApp(tk.Tk):
@@ -64,7 +86,7 @@ class GradeGetterApp(tk.Tk):
 
         self.frames = {}
         
-        for F in (StartPage, PageOne, PageTwo, Homework, Login, AdminPage, DisplayInDepth1, ClassOne, ClassTwo, ClassThree, ClassFour, ClassFive, ClassSix, ClassSeven, UnannotatedGraph, BarGraph, Average, DisplayInDepth2,  DisplayInDepth3):
+        for F in (StartPage, PageOne, PageTwo, Homework, Login, AdminPage, DisplayInDepth1, ClassOne, ClassTwo, ClassThree, ClassFour, ClassFive, ClassSix, ClassSeven, UnannotatedGraph, BarGraph, Average, DisplayInDepth2,  DisplayInDepth3, DisplayInDepth4):
             frame = F(container, self)
             self.frames[F] = frame
             frame.grid(row=0, column=0, sticky="nsew")
@@ -140,6 +162,15 @@ class Login(tk.Frame):
         
     def go_login(self):
         goog = self.gc_p.get()
+        self.label4.config(text= 'Please Wait...', fg= 'black')
+        uname_for_pop_up = reassign1(self.u1.get())
+        #print(uname_for_pop_up.reassign_user())
+        uname_for_pop_up_trans = uname_for_pop_up
+        
+
+        pass_for_pop_up = reassign2(self.p1.get())
+        pass_for_pop_up.reassign_pass()
+        pass_for_pop_up_trans = pass_for_pop_up
         if tim:
             def gc_get():
                 
@@ -195,8 +226,8 @@ class Login(tk.Frame):
                 
                 
                 options.add_argument("-headless")
-                driver = webdriver.Chrome(chrome_options=options)
-                #driver = webdriver.Chrome()
+                #driver = webdriver.Chrome(chrome_options=options)
+                driver = webdriver.Chrome()
                 driver.get('https://www.mms669.org/MMSGB45/default.aspx?ReturnUrl=%2fMMSGB45%2fstudent')
                 uname = driver.find_element_by_name('LoginControl1$txtUsername')
                 password = driver.find_element_by_name('LoginControl1$txtPassword')
@@ -214,7 +245,7 @@ class Login(tk.Frame):
                         data_file = open("temp3.txt", 'w')
                         data_file.write(error_msg)
                         data_file.close()
-                        self.label4.config(text=error_msg)
+                        self.label4.config(text=error_msg, fg='red')
                            
                 except:
                     data_file = open("temp3.txt", 'w')
@@ -259,6 +290,8 @@ class Login(tk.Frame):
                         links.click()
                         driver.switch_to.frame(driver.find_element_by_xpath("//iframe[@id= 'ctl00_ContentPlaceHolder1_ReportViewer1ReportFrame']"))
                         class_identifiers = [x.text for x in driver.find_elements_by_xpath("//div[@class='HtmlTextBox2 s22-']")]
+                        class_identifiers2 = [x.text for x in driver.find_elements_by_xpath("//div[@class='HtmlTextBox2 s25-']")]
+                        
                         if len(class_identifiers) > 0:
                             ids.append(class_identifiers)
                             descriptor = [x.text.replace('\n',  ' ') for x in driver.find_elements_by_xpath("//div[@class='TextBox41 s28-']") ]
@@ -288,6 +321,8 @@ class Login(tk.Frame):
                         links.click()
                         driver.switch_to.frame(driver.find_element_by_xpath("//iframe[@id= 'ctl00_ContentPlaceHolder1_ReportViewer1ReportFrame']"))
                         class_identifiers = [x.text for x in driver.find_elements_by_xpath("//div[@class='HtmlTextBox2 s22-']")]
+                        class_identifiers2 = [x.text for x in driver.find_elements_by_xpath("//div[@class='HtmlTextBox2 s25-']")]
+                        
                         if len(class_identifiers) > 0:
                             ids.append(class_identifiers)
                             descriptor = [x.text.replace('\n',  ' ') for x in driver.find_elements_by_xpath("//div[@class='TextBox41 s28-']") ]
@@ -850,7 +885,7 @@ class Login(tk.Frame):
                     self.label4.config(text='Click NEXT', fg= 'black' )
                     self.button3.place(x=460, y=330)
                 else:
-                    self.label4.config(text='An ERROR has occured, try correcting your user and password.')
+                    self.label4.config(text='An ERROR has occured, try correcting your user and password.', fg= 'red')
 
                 
             threading.Thread(target = get_grades).start()
@@ -900,7 +935,7 @@ class Login(tk.Frame):
                 try:
                     WebDriverWait(driver, timeout).until(EC.visibility_of_element_located((By.XPATH, "//table[@class='rgMasterTable rgClipCells']")))
                 except:
-                    self.label4.config(text='An Error has occured, please use correct username and password')
+                    self.label4.config(text='An Error has occured, please use correct username and password', fg='red')
                     driver.close()
 
                 class_names1 = driver.find_elements_by_xpath("//tr[@class='rgRow']")
@@ -932,6 +967,7 @@ class Login(tk.Frame):
                         driver.switch_to.frame(driver.find_element_by_xpath("//iframe[@id= 'ctl00_ContentPlaceHolder1_ReportViewer1ReportFrame']"))
                         
                         class_identifiers = [x.text for x in driver.find_elements_by_xpath("//div[@class='HtmlTextBox2 s22-']")]
+                        class_identifiers2 = [x.text for x in driver.find_elements_by_xpath("//div[@class='HtmlTextBox2 s25-']")]
                         
                         if len(class_identifiers) > 0:
                             ids.append(class_identifiers)
@@ -970,6 +1006,7 @@ class Login(tk.Frame):
                         driver.switch_to.frame(driver.find_element_by_xpath("//iframe[@id= 'ctl00_ContentPlaceHolder1_ReportViewer1ReportFrame']"))
                         
                         class_identifiers = [x.text for x in driver.find_elements_by_xpath("//div[@class='HtmlTextBox2 s22-']")]
+                        class_identifiers2 = [x.text for x in driver.find_elements_by_xpath("//div[@class='HtmlTextBox2 s25-']")]
                         
                         if len(class_identifiers) > 0:
                             ids.append(class_identifiers)
@@ -1670,6 +1707,17 @@ class StartPage(tk.Frame):
         #driver = webdriver.Chrome(chrome_options=options)
         driver = webdriver.Chrome()
         driver.get('https://www.mms669.org/MMSGB45/default.aspx?ReturnUrl=%2fMMSGB45%2fstudent')
+        uname = driver.find_element_by_name('LoginControl1$txtUsername')
+        password = driver.find_element_by_name('LoginControl1$txtPassword')
+        login_btn = driver.find_element_by_name('LoginControl1$btnLogin')
+
+        u = uname_for_pop_up_trans
+        p = pass_for_pop_up_trans
+
+        uname.clear()
+        uname.send_keys(u)
+        password.send_keys(p)
+        login_btn.click()
 
 class PageOne(tk.Frame):
     
@@ -2587,6 +2635,7 @@ class  DisplayInDepth2(tk.Frame):
         button4 = ttk.Button(self, text= 'BACK', command= lambda: controller.show_frame(DisplayInDepth1))     
         button4.grid(row=1, column=4)
         self.button5 = ttk.Button(self, text= 'NEXT', command= lambda: controller.show_frame(DisplayInDepth3))
+        self.button5.grid(row=1,column=5)
         
 
     def shower(self):
@@ -2779,6 +2828,8 @@ class  DisplayInDepth3(tk.Frame):
         button3.grid(row= 1, column= 3)
         button4 = ttk.Button(self, text= 'BACK', command= lambda: controller.show_frame(DisplayInDepth2))     
         button4.grid(row=1, column=4)
+        button4 = ttk.Button(self, text= 'NEXT', command= lambda: controller.show_frame(DisplayInDepth4))     
+        button4.grid(row=1, column=5)
 
     def shower(self):
         data_file = open("temp5.txt", 'r')
@@ -2791,7 +2842,7 @@ class  DisplayInDepth3(tk.Frame):
             if len(items) > 0:
                 avadat111.append(items)
 
-        for items in avadat111[41:-1]:
+        for items in avadat111[41:61]:
             numero += 1
             if "***" in items:
                 tk.Label(self, text= items, bg= '#f9ee68', font= Large_Font).grid(column= 1, row=numero, sticky=  tk.E + tk.W)
@@ -2808,7 +2859,7 @@ class  DisplayInDepth3(tk.Frame):
             avadat444.append(items)
         
 
-        for items in avadat444[41:-1]:
+        for items in avadat444[41:61]:
             numero += 1
             tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 2, row=numero, sticky=  tk.W)
 
@@ -2824,7 +2875,7 @@ class  DisplayInDepth3(tk.Frame):
             if len(items) > 0:
                 avadat222.append(items)
 
-        for items in avadat222[41:-1]:
+        for items in avadat222[41:61]:
             if len(items)  > 0:
                 numero += 1
                 if "4465" in items:
@@ -2844,7 +2895,7 @@ class  DisplayInDepth3(tk.Frame):
                 avadat333.append(items)
 
         numero = 1
-        for items in avadat333[41:-1]:
+        for items in avadat333[41:61]:
             if len(items)  > 0:
                 numero += 1
                 if "4465" in items:
@@ -2854,9 +2905,106 @@ class  DisplayInDepth3(tk.Frame):
         
     
         numero = 1
-        numerator = [x.replace(" /", '0') for x in avadat222[41:-1] ]
+        numerator = [x.replace(" /", '0') for x in avadat222[41:61] ]
                 
-        for num, denom in zip(numerator, avadat333[41:-1]):
+        for num, denom in zip(numerator, avadat333[41:61]):
+            numero += 1
+            try:
+                ave = round((float(num) / float(denom)) * 100, 2)
+                if ave < 90:
+                    tk.Label(self, text= "({}%)".format(ave), bg= '#95c8f4',fg= "#d80f4f", font= Large_Font).grid(column= 5, row=numero, sticky=  tk.E + tk.W)
+                else:
+                    tk.Label(self, text= "({}%)".format(ave), bg= '#95c8f4',fg= "#0bbf17", font= Large_Font).grid(column= 5, row=numero, sticky=  tk.E + tk.W)                    
+            except:
+                tk.Label(self, text= " ", bg= '#95c8f4', font= Large_Font).grid(column= 5, row=numero, sticky=  tk.E + tk.W)
+
+class DisplayInDepth4(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        button1 = ttk.Button(self, text='Go back to HOME PAGE',  command= lambda: controller.show_frame(StartPage) )
+        button3 = ttk.Button(self, text= 'Show Avaliable Data', command= lambda: self.shower())
+        button1.grid(row= 1, column= 2)
+        button3.grid(row= 1, column= 3)
+        button4 = ttk.Button(self, text= 'BACK', command= lambda: controller.show_frame(DisplayInDepth3))     
+        button4.grid(row=1, column=4)
+
+    def shower(self):
+        data_file = open("temp5.txt", 'r')
+        avadat1 = data_file.read()
+        avadat11 = avadat1.split(',')
+        data_file.close()
+        numero = 1
+        avadat111 = []
+        for items in avadat11:
+            if len(items) > 0:
+                avadat111.append(items)
+
+        for items in avadat111[61:81]:
+            numero += 1
+            if "***" in items:
+                tk.Label(self, text= items, bg= '#f9ee68', font= Large_Font).grid(column= 1, row=numero, sticky=  tk.E + tk.W)
+            else:
+                tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 1, row=numero, sticky=  tk.E + tk.W)
+    
+        data_file = open("temp8.txt", 'r')
+        avadat4 = data_file.read()
+        avadat44 = avadat4.split(',')
+        data_file.close() 
+        numero = 1
+        avadat444 = []
+        for items in avadat44:
+            avadat444.append(items)
+        
+
+        for items in avadat444[61:81]:
+            numero += 1
+            tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 2, row=numero, sticky=  tk.W)
+
+        
+        data_file = open("temp6.txt", 'r')
+        avadat2 = data_file.read()
+        avadat22 = avadat2.split(',')
+        data_file.close() 
+
+        numero = 1
+        avadat222 = []
+        for items in avadat22:
+            if len(items) > 0:
+                avadat222.append(items)
+
+        for items in avadat222[61:81]:
+            if len(items)  > 0:
+                numero += 1
+                if "4465" in items:
+                    tk.Label(self, text= '({})'.format( items.replace('4465', '') ), bg= '#f9ee68', font= Large_Font).grid(column= 3, row=numero, sticky=  tk.E + tk.W)
+                else:
+                    tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 3, row=numero, sticky=  tk.E + tk.W)
+        
+        
+        data_file = open("temp7.txt", 'r')
+        avadat3 = data_file.read()
+        avadat33 = avadat3.split(',')
+        data_file.close() 
+
+        avadat333 = []
+        for items in avadat33:
+            if len(items) > 0:
+                avadat333.append(items)
+
+        numero = 1
+        for items in avadat333[61:81]:
+            if len(items)  > 0:
+                numero += 1
+                if "4465" in items:
+                    tk.Label(self, text= '({})'.format( items.replace('4465', '') ), bg= '#f9ee68', font= Large_Font).grid(column= 4, row=numero, sticky=  tk.E + tk.W)
+                else:
+                    tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 4, row=numero, sticky=  tk.E + tk.W)
+        
+    
+        numero = 1
+        numerator = [x.replace(" /", '0') for x in avadat222[61:81] ]
+                
+        for num, denom in zip(numerator, avadat333[61:81]):
             numero += 1
             try:
                 ave = round((float(num) / float(denom)) * 100, 2)
