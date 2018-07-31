@@ -102,7 +102,6 @@ class GradeGetterApp(tk.Tk):
 class AdminPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        tk.Frame.__init__(self, parent)
         label1 = tk.Label(self, text= "Enter your name, then click Verifiy and NEXT.", bg="#95c8f4", font = Largest_Font)
         label1.place(x=400, y= 200)
         self.enter = tk.Entry(self, show='*')
@@ -226,8 +225,8 @@ class Login(tk.Frame):
                 
                 
                 options.add_argument("-headless")
-                #driver = webdriver.Chrome(chrome_options=options)
-                driver = webdriver.Chrome()
+                driver = webdriver.Chrome(chrome_options=options)
+                #driver = webdriver.Chrome()
                 driver.get('https://www.mms669.org/MMSGB45/default.aspx?ReturnUrl=%2fMMSGB45%2fstudent')
                 uname = driver.find_element_by_name('LoginControl1$txtUsername')
                 password = driver.find_element_by_name('LoginControl1$txtPassword')
