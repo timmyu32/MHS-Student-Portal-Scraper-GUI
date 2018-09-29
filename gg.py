@@ -16,6 +16,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 
 
 from functools import reduce as reducer
+
 from datetime import date as date
 
 from PIL import Image, ImageTk
@@ -24,6 +25,8 @@ import time
 
 import threading 
 from queue import Queue
+
+import csv
 
 
 Largest_Font = ("Times New Roman", "16")
@@ -69,7 +72,6 @@ class reassign2(object):
         #This class holds the value of the player's value outside of playerturn()
         return self.pvalue
 
-
 class GradeGetterApp(tk.Tk):
     
     def __init__(self, *args, **kwargs):
@@ -102,8 +104,8 @@ class GradeGetterApp(tk.Tk):
 class AdminPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        label1 = tk.Label(self, text= "Enter your name, then click Verifiy and NEXT.", bg="#95c8f4", font = Largest_Font)
-        label1.place(x=400, y= 200)
+        self.label1 = tk.Label(self, text= "Enter your name, then click Verifiy and NEXT.", bg="#95c8f4", font = Largest_Font)
+        self.label1.place(x=400, y= 200)
         self.enter = tk.Entry(self, show='*')
         self.enter.place(x=400, y=250)
         button1 = ttk.Button(self, text="Verify", command= lambda: self.go_login())
@@ -115,10 +117,42 @@ class AdminPage(tk.Frame):
         a = self.enter.get()
         global tim
         global timnoget
+        def rgb_2_hex():
+            import random
+            
+            hex_keys = {10: 'A',
+                        11: 'B',
+                        12: 'C',
+                        13: 'D',
+                        14: 'E',
+                        15: 'F'}
+            
+            end_result = []
+
+            for i in range(1):
+                num = random.randint(0,256)
+                x = num // 16
+                y = num % 16
+
+                if x > 9:
+                    x = hex_keys[x]
+                if y > 9:
+                    y = hex_keys[y]
+
+                value = str(x) + str(y)
+                end_result.append(value)
+                
+            
+            return end_result
+
+
         if a == "gui":
             tim = True
             timnoget = False
             tk.Label(self, text= 'Welcome Back Tim!', font= Largest_Font, bg= '#95c8f4').place(x=600, y=310)
+            random_color = '#'+rgb_2_hex()[0] + rgb_2_hex()[0] + rgb_2_hex()[0]
+            self.label1.config(fg= random_color )
+            print(random_color)
         elif a == "gui/noget":
             timnoget = True
             tk.Label(self, text= 'Welcome Back Tim!', font= Largest_Font, bg= '#95c8f4').place(x=600, y=310)
@@ -177,7 +211,7 @@ class Login(tk.Frame):
                     gc_password = self.gc_p.get()
                     configurer = webdriver.ChromeOptions()
                     configurer.add_argument("-headless")
-                    browser = webdriver.Chrome(chrome_options=configurer)
+                    browser = webdriver.Chrome("C:\\Users\\inspiron\\Downloads\\chromedriver_win32\\chromedriver", chrome_options=configurer)
                     #browser = webdriver.Chrome()
 
                     browser.get("https://accounts.google.com/signin/v2/identifier?service=classroom&passive=1209600&continue=https%3A%2F%2Fclassroom.google.com%2F%3Femr%3D0&followup=https%3A%2F%2Fclassroom.google.com%2F%3Femr%3D0&flowName=GlifWebSignIn&flowEntry=ServiceLogin")
@@ -225,12 +259,12 @@ class Login(tk.Frame):
                 
                 
                 options.add_argument("-headless")
-                driver = webdriver.Chrome(chrome_options=options)
-                #driver = webdriver.Chrome()
-                driver.get('https://www.mms669.org/MMSGB45/default.aspx?ReturnUrl=%2fMMSGB45%2fstudent')
-                uname = driver.find_element_by_name('LoginControl1$txtUsername')
-                password = driver.find_element_by_name('LoginControl1$txtPassword')
-                login_btn = driver.find_element_by_name('LoginControl1$btnLogin')
+                driver = webdriver.Chrome("C:\\Users\\inspiron\\Downloads\\chromedriver_win32\\chromedriver", chrome_options=options)
+                #driver = webdriver.Chrome("C:\\Users\\inspiron\\Downloads\\chromedriver_win32\\chromedriver")
+                driver.get('https://medway.crportals.studentinformation.systems/')
+                uname = driver.find_element_by_name('Email')
+                password = driver.find_element_by_name('Password')
+                login_btn = driver.find_element_by_id('loginBtn')
 
                 uname.clear()
                 uname.send_keys(u)
@@ -238,8 +272,8 @@ class Login(tk.Frame):
                 login_btn.click()
 
                 try:
-                    WebDriverWait(driver, 3).until(EC.visibility_of_element_located((By.XPATH, "//span[@id='LoginControl1_lblErrMsg']")))
-                    error_msg = driver.find_element_by_xpath("//span[@id='LoginControl1_lblErrMsg']").text
+                    WebDriverWait(driver, 3).until(EC.visibility_of_element_located((By.XPATH, "//span[@class='field-validation-error text-danger']")))
+                    error_msg = driver.find_element_by_xpath("//span[@class='field-validation-error text-danger']").text
                     if type(error_msg) != None:
                         data_file = open("temp3.txt", 'w')
                         data_file.write(error_msg)
@@ -254,26 +288,115 @@ class Login(tk.Frame):
 
                 timeout = 10
                 try:
-                    WebDriverWait(driver, timeout).until(EC.visibility_of_element_located((By.XPATH, "//table[@class='rgMasterTable rgClipCells']")))
+                    WebDriverWait(driver, timeout).until(EC.visibility_of_element_located((By.XPATH, "//ul[@class='student-info-list']")))
                 except:
                     driver.close()
 
-                class_names1 = driver.find_elements_by_xpath("//tr[@class='rgRow']")
-                evens = [x.text for x in class_names1]
+                at_a_glance = driver.find_elements_by_xpath("//span[@class='tile-anchor-label']")[5]
+                at_a_glance.click()
 
-                class_names2 = driver.find_elements_by_xpath("//tr[@class='rgAltRow']")
-                odds = [x.text for x in class_names2]
+                try:
+                    WebDriverWait(driver, timeout).until(EC.visibility_of_element_located((By.XPATH, "//a[@class='k-link']")))
+                except:
+                    driver.close()
 
-                all_class_codes = driver.find_elements_by_xpath("//td[@style='background-color:White;width:95px;']")
-                class_codes = [x.text for x in all_class_codes]
+                alphabetizer = driver.find_elements_by_xpath("//a[@class='k-link']")[0]
+                alphabetizer.click()
+
+                grade_table = driver.find_elements_by_xpath("//tbody[@role='rowgroup']")[0]
+
+                
+                class_names = []
+                class_grades = []
+
+                for row in grade_table.find_elements_by_tag_name('tr'):
+                    grade = row.find_elements_by_tag_name('td')
+                    for thingy in grade:
+                        try:
+                            class_names.append(float(thingy.text.split('\n')[0]))
+                        except:
+                            class_names.append(str(thingy.text.split('\n')[0]))
 
 
+                for item in class_names:
+                    if type(item) == float or type(item) == int or item == 'No Grade':
+                        transfer = item
+                        class_names.remove(item)
+                        class_grades.append(item)
+
+
+                
                 today = str(date.today())
 
                 global denominator
                 denominator = []
                 global pie_chart_indicator
+
+                
                 pie_chart_indicator = []
+
+                data_file = open('temp10.csv', 'w')
+                
+                class_name_csv = csv.writer(data_file)
+                class_name_csv.writerow(class_names)
+
+                data_file.close()
+
+                try:
+                    class1_name = class_names[0]
+                except:
+                    pass
+                try:
+                    class2_name = class_names[1]
+                except:
+                    pass
+                try:
+                    class3_name = class_names[2]
+                except:
+                    pass
+                try:
+                    class4_name = class_names[3]
+                except:
+                    pass
+                try:
+                    class5_name = class_names[4]
+                except:
+                    pass
+                try:
+                    class6_name = class_names[5]
+                except:
+                    pass
+                try:
+                    class7_name = class_names[6]
+                except:
+                    pass
+                try:
+                    class8_name = class_names[7]
+                except:
+                    pass
+                
+                
+                    
+
+
+                driver.get('https://medway.crportals.studentinformation.systems/')
+                uname = driver.find_element_by_name('Email')
+                password = driver.find_element_by_name('Password')
+                login_btn = driver.find_element_by_id('loginBtn')
+
+                uname.clear()
+                uname.send_keys(u)
+                password.send_keys(p)
+                login_btn.click()
+
+                WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@class='col-md-6 tile-wrapper']")))
+                assignments_tab = driver.find_elements_by_xpath("//div[@class='col-md-6 tile-wrapper']")[1]
+                assignments_tab.click()
+
+                time.sleep(4)
+
+                class_name = driver.find_elements_by_xpath("//h3[@class='panel-title']")[1].text
+
 
                 ids = []
                 id_descriptors = []
@@ -282,73 +405,59 @@ class Login(tk.Frame):
                 grdr3 = []
 
 
-                numero = len(driver.find_elements_by_xpath("//td[@style= 'background-color:White;width:145px;']"))
+                numero = 5
 
-                for links in driver.find_elements_by_xpath("//td[@style= 'background-color:White;width:145px;']"):
+                for links in range(       len(driver.find_elements_by_xpath("//li[@role= 'presentation']"))):
                     try:
-                        links.click()
-                        driver.switch_to.frame(driver.find_element_by_xpath("//iframe[@id= 'ctl00_ContentPlaceHolder1_ReportViewer1ReportFrame']"))
-                        class_identifiers = [x.text for x in driver.find_elements_by_xpath("//div[@class='HtmlTextBox2 s22-']")]
-                        class_identifiers2 = [x.text for x in driver.find_elements_by_xpath("//div[@class='HtmlTextBox2 s25-']")]
-                        
-                        if len(class_identifiers) > 0:
-                            ids.append(class_identifiers)
-                            descriptor = [x.text.replace('\n',  ' ') for x in driver.find_elements_by_xpath("//div[@class='TextBox41 s28-']") ]
-                            if len(descriptor) > 0:
-                                id_descriptors.append([('***{}***').format( driver.find_element_by_xpath("//div[@class='TextBox5 s5-']").text[0:-2])])
-                                id_descriptors.append(descriptor)
-                                grdr.append(['{}{} Assignments'.format(  len( driver.find_elements_by_xpath("//div[@class='TextBox46 s29-']"))-1, '4465' )])
-                                grdr2.append([driver.find_element_by_xpath("//div[@class='TextBox16 s13-']").text + '4465'])
-                                grdr3.append([' '])
-                                grd1 = [x.text for x in driver.find_elements_by_xpath("//div[@class='TextBox46 s29-']") ]
-                                grd2 = [x.text for x in driver.find_elements_by_xpath("//div[@class='TextBox27 s28-']") ]
-                                grd3 = [x.text.replace(",", "-") for x in driver.find_elements_by_xpath("//div[@class= 'TextBox42 s28-']") ] 
-                            if len(grd1) > 0:
-                                grdr.append(grd1)
-                                grdr2.append(grd2)
-                                grdr3.append(grd3)
-                            driver.switch_to.parent_frame()
-                            driver.find_elements_by_xpath("//a[@class= 'rmLink rmRootLink']")[4].click()
-                            numero += -1
-                        else:
-                            driver.switch_to.parent_frame()
-                            driver.find_elements_by_xpath("//a[@class= 'rmLink rmRootLink']")[4].click()
-                            numero += -1
-
+                        driver.switch_to.parent_frame()
                     except:
-                        links = driver.find_elements_by_xpath("//td[@style= 'background-color:White;width:145px;']")[numero]
-                        links.click()
-                        driver.switch_to.frame(driver.find_element_by_xpath("//iframe[@id= 'ctl00_ContentPlaceHolder1_ReportViewer1ReportFrame']"))
-                        class_identifiers = [x.text for x in driver.find_elements_by_xpath("//div[@class='HtmlTextBox2 s22-']")]
-                        class_identifiers2 = [x.text for x in driver.find_elements_by_xpath("//div[@class='HtmlTextBox2 s25-']")]
-                        
-                        if len(class_identifiers) > 0:
-                            ids.append(class_identifiers)
-                            descriptor = [x.text.replace('\n',  ' ') for x in driver.find_elements_by_xpath("//div[@class='TextBox41 s28-']") ]
-                            if len(descriptor) >0:
-                                id_descriptors.append([('***{}***').format( driver.find_element_by_xpath("//div[@class='TextBox5 s5-']").text[0:-2])])
-                                id_descriptors.append(descriptor)
-                                grdr.append(['{}{} Assignments'.format(  len( driver.find_elements_by_xpath("//div[@class='TextBox46 s29-']"))-1, '4465' )])
-                                grdr2.append([driver.find_element_by_xpath("//div[@class='TextBox16 s13-']").text + '4465'])
-                                grdr3.append([' '])
-                                grd1 = [x.text for x in driver.find_elements_by_xpath("//div[@class='TextBox46 s29-']") ]
-                                grd2 = [x.text for x in driver.find_elements_by_xpath("//div[@class='TextBox27 s28-']") ]
-                                grd3 = [x.text.replace(",", "-") for x in driver.find_elements_by_xpath("//div[@class= 'TextBox42 s28-']") ]
+                        print('no element')
+
+                    links = driver.find_elements_by_xpath("//li[@role= 'presentation']")[numero]
+                    links.click()
+                    progress_report = driver.find_elements_by_xpath("//button[@class='btn btn-link']")[numero]
+                    progress_report.click()
+
+                    WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//iframe[@id= 'courseProgressReportFrame']")))
+                    driver.switch_to.frame(driver.find_elements_by_xpath("//iframe[@id= 'courseProgressReportFrame']")[0])
+
+                    
+                    driver.switch_to.frame(driver.find_element_by_xpath("//iframe[@id= 'ctl00_ContentPlaceHolder1_ReportViewer1ReportFrame']"))
+                    class_identifiers = [x.text for x in driver.find_elements_by_xpath("//div[@class='HtmlTextBox2 s22-']")]
+                    class_identifiers2 = [x.text for x in driver.find_elements_by_xpath("//div[@class='HtmlTextBox2 s25-']")]
+                                    
+                    if len(class_identifiers) > 0:
+                        ids.append(class_identifiers)
+                        descriptor = [x.text.replace('\n',  ' ') for x in driver.find_elements_by_xpath("//div[@class='TextBox41 s28-']") ]
+                        if len(descriptor) > 0:
+                            id_descriptors.append([('***{}***').format( driver.find_element_by_xpath("//div[@class='TextBox5 s5-']").text[0:-2])])
+                            id_descriptors.append(descriptor)
+                            grdr.append(['{}{} Assignments'.format(  len( driver.find_elements_by_xpath("//div[@class='TextBox46 s29-']"))-1, '4465' )])
+                            grdr2.append([driver.find_element_by_xpath("//div[@class='TextBox16 s13-']").text + '4465'])
+                            grdr3.append([' '])
+                            grd1 = [x.text for x in driver.find_elements_by_xpath("//div[@class='TextBox46 s29-']") ]
+                            grd2 = [x.text for x in driver.find_elements_by_xpath("//div[@class='TextBox27 s28-']") ]
+                            grd3 = [x.text.replace(",", "-") for x in driver.find_elements_by_xpath("//div[@class= 'TextBox42 s28-']") ] 
                             if len(grd1) > 0:
                                 grdr.append(grd1)
                                 grdr2.append(grd2)
                                 grdr3.append(grd3)
                             driver.switch_to.parent_frame()
-                            driver.find_elements_by_xpath("//a[@class= 'rmLink rmRootLink']")[4].click()
-                            numero += -1
+                            driver.refresh()
+                            
 
-                        else:
-                            driver.switch_to.parent_frame()
-                            driver.find_elements_by_xpath("//a[@class= 'rmLink rmRootLink']")[4].click()
                             numero += -1
+                        else:
+                            numero += -1
+                            driver.switch_to.parent_frame()
+                            driver.refresh()
+                        
+                    else:
+                        numero += -1
+                        driver.switch_to.parent_frame()
+                        driver.refresh()
 
                 driver.close()
-
                 data_file = open("temp5.txt", 'w')
                 for items in id_descriptors:
                     for item in items:
@@ -368,67 +477,20 @@ class Login(tk.Frame):
                 for items in grdr3:
                     for item in items:
                         data_file.write(str(item)+',')
-                data_file.close()            
-                
-                try:
-                    class1_code = class_codes[0]
-                    class1_name = evens[0].split(class1_code)[0]
-                except:
-                    pass
-                try:
-                    class2_code = class_codes[1]
-                    class2_name = odds[0].split(class2_code)[0]
-                except:
-                    pass
-                try:
-                    class3_code = class_codes[2]
-                    class3_name = evens[1].split(class3_code)[0]
-                except:
-                    pass
-                try:
-                    class4_code = class_codes[3]
-                    class4_name = odds[1].split(class4_code)[0]
-                except:
-                    pass
-                try:
-                    class5_code = class_codes[4]
-                    class5_name = evens[2].split(class5_code)[0]
-                except:
-                    pass
-                try:
-                    class6_code = class_codes[5]
-                    class6_name = odds[2].split(class6_code)[0]
-                except:
-                    pass
-                try:
-                    class7_code = class_codes[6]
-                    class7_name = evens[3].split(class7_code)[0]
-                except:
-                    pass
-                try:
-                    class8_code = class_codes[7]
-                    class8_name = odds[3].split(class8_code)[0]
-                except:
-                    pass
-                try:
-                    class9_code = class_code[8]
-                    class9_name = evens[4].split(class9_code)[0]
-                except:
-                    pass
-                try:
-                    class10_code = class_codes[9]
-                    class10_name = odds[4].split(class10_code)[0]
-                except:
-                    pass
+                data_file.close()  
+                        
 
-                
 
                 try:
-                    class1 = evens[0]
-                    class1_g = class1.split(",")
-                    class1_grade = float(class1_g[1].split(')')[0].split('(')[1]) 
+
+
+                    try:
+                        class1_grade = float(class_grades[0])
+                    except:
+                        class1_grade = int(class_grades[0])
+                    
                     denominator.append(class1_grade)
-                    pie_chart_indicator.append(str(class1_name) + str(class1_grade))
+                    pie_chart_indicator.append(str(class1_name) + '(' + str(class1_grade) + ')')
                     if timnoget == False:
                         data_file = open("one.txt", "r")
                         last_grade = data_file.read().split(',')[-2].split('@')[0]
@@ -450,11 +512,12 @@ class Login(tk.Frame):
                 except:
                     class1_grade = None
                 try:
-                    class2 = odds[0]
-                    class2_g = class2.split(",")
-                    class2_grade = float(class2_g[1].split(')')[0].split('(')[1])
+                    try:
+                        class2_grade = float(class_grades[1])
+                    except:
+                        class2_grade = int(class_grades[1])
                     denominator.append(class2_grade)
-                    pie_chart_indicator.append(str(class2_name) + str(class2_grade))
+                    pie_chart_indicator.append(str(class2_name) +'(' + str(class2_grade) + ')')
                     if timnoget == False:
                         data_file = open("two.txt", "r")
                         last_grade = data_file.read().split(',')[-2].split('@')[0]
@@ -476,11 +539,13 @@ class Login(tk.Frame):
                 except:
                     class2_grade = None
                 try:
-                    class3 = evens[1]
-                    class3_g = class3.split(",")
-                    class3_grade = float(class3_g[1].split(')')[0].split('(')[1])    
+                    try:
+                        class3_grade = float(class_grades[2])
+                    except:
+                        class3_grade = int(class_grades[2])
+
                     denominator.append(class3_grade) 
-                    pie_chart_indicator.append(str(class3_name) + str(class3_grade))
+                    pie_chart_indicator.append(str(class3_name) + '(' + str(class3_grade) + ')')
                     if timnoget == False:
                         data_file = open("three.txt", "r")
                         last_grade = data_file.read().split(',')[-2].split('@')[0]
@@ -502,11 +567,13 @@ class Login(tk.Frame):
                 except:
                     class3_grade = None
                 try:
-                    class4 = odds[1]
-                    class4_g = class4.split(",")
-                    class4_grade = float(class4_g[1].split(')')[0].split('(')[1])    
+                    try:
+                        class4_grade = float(class_grades[3])
+                    except:
+                        class4_grade = int(class_grades[3])
+
                     denominator.append(class4_grade) 
-                    pie_chart_indicator.append(str(class4_name) + str(class4_grade))
+                    pie_chart_indicator.append(str(class4_name) +'(' + str(class4_grade) + ')')
                     if timnoget == False:
                         data_file = open("four.txt", "r")
                         last_grade = data_file.read().split(',')[-2].split('@')[0]
@@ -527,12 +594,15 @@ class Login(tk.Frame):
                         print('Tim No get is false')  
                 except:
                     class4_grade = None
+
                 try:
-                    class5 = evens[2]
-                    class5_g = class5.split(",")
-                    class5_grade = float(class5_g[1].split(')')[0].split('(')[1])    
+                    try:
+                        class5_grade = float(class_grades[4])
+                    except:
+                        class5_grade = int(class_grades[4])
+
                     denominator.append(class5_grade)
-                    pie_chart_indicator.append(str(class5_name) + str(class5_grade))  
+                    pie_chart_indicator.append(str(class5_name) +'(' + str(class5_grade) + ')')  
                     if timnoget == False:
                         data_file = open("five.txt", "r")
                         last_grade = data_file.read().split(',')[-2].split('@')[0]
@@ -553,12 +623,15 @@ class Login(tk.Frame):
                         print('Tim No get is false') 
                 except:
                     class5_grade = None
+
                 try:
-                    class6 = odds[2]
-                    class6_g = class6.split(",")
-                    class6_grade = float(class6_g[1].split(')')[0].split('(')[1])    
+                    try:
+                        class6_grade = float(class_grades[5])
+                    except:
+                        class6_grade = int(class_grades[5])  
+
                     denominator.append(class6_grade) 
-                    pie_chart_indicator.append(str(class6_name) + str(class6_grade)) 
+                    pie_chart_indicator.append(str(class6_name) + '(' + str(class6_grade) + ')') 
                     if timnoget == False:
                         data_file = open("six.txt", "r")
                         last_grade = data_file.read().split(',')[-2].split('@')[0]
@@ -579,12 +652,15 @@ class Login(tk.Frame):
                         print('Tim No get is false')
                 except:
                     class6_grade = None
+
                 try:
-                    class7 = evens[3]
-                    class7_g = class7.split(",")
-                    class7_grade = float(class7_g[1].split(')')[0].split('(')[1])    
+                    try:
+                        class7_grade = float(class_grades[6])
+                    except:
+                        class7_grade = int(class_grades[6])
+
                     denominator.append(class7_grade)
-                    pie_chart_indicator.append(str(class7_name) + str(class7_grade))
+                    pie_chart_indicator.append(str(class7_name) + '(' + str(class7_grade) + ')')
                     if timnoget == False:
                         data_file = open("seven.txt", "r")
                         last_grade = data_file.read().split(',')[-2].split('@')[0]
@@ -605,36 +681,9 @@ class Login(tk.Frame):
                         print('Tim No get is false') 
                 except:
                     class7_grade = None
-                try:
-                    class8 = odds[3]
-                    class8_g = class8.split(",")
-                    class8_grade = float(class8_g[1].split(')')[0].split('(')[1])   
-                    denominator.append(class8_grade)
-                    pie_chart_indicator.append(str(class8_name) + str(class8_grade)) 
-                except:
-                    class8_grade = None
-                try:
-                    class9 = evens[4]
-                    class9_g = class9.split(",")
-                    class9_grade = float(class9_g[1].split(')')[0].split('(')[1])    
-                    denominator.append(class9_grade) 
-                    pie_chart_indicator.append(class9_name) 
-                except:
-                    class9_grade = None
-                try:
-                    class10 = odds[4]
-                    class10_g = class10.split(",")
-                    class10_grade = float(class10_g[1].split(')')[0].split('(')[1])  
-                    denominator.append(class10_grade)  
-                except:
-                    class10_grade = None
-
-
-                try:        
-                    d = len(denominator)
-                    n = reducer(lambda x,y: x+y, denominator)
-                except:
-                    pass
+            
+                d = len(denominator)
+                n = reducer(lambda x,y: x+y, denominator)
 
                 try:
                     average = round(n/d, 2)
@@ -824,8 +873,6 @@ class Login(tk.Frame):
                 unatated.plot(data55x, data55y, "#2E3ACA", label= class5_name, data= class5_name, marker= '.')
                 a.plot(data66x, data66y, "#FF8CEC", label= class6_name, data= class6_name, marker= '.')
                 unatated.plot(data66x, data66y, "#FF8CEC", label= class6_name, data= class6_name, marker= '.')
-                a.plot(data77x, data77y, "#F5891C", label= class7_name, data= class7_name, marker= '.')
-                unatated.plot(data77x, data77y, "#F5891C", label= class7_name, data= class7_name, marker= '.')
                 a.legend()
                 unatated.legend()
                 try:
@@ -852,10 +899,6 @@ class Login(tk.Frame):
                     baro.bar(x=class6_name, height= class6_grade, color= "#FF8CEC", lw = 0.35)
                 except:
                     print("Class {} is not avaliable for bar graph".format(class6_name))
-                try:
-                    baro.bar(x=class7_name, height= class7_grade, color = "#F5891C")
-                except:
-                    print("Class {} is not avaliable for bar graph".format(class7_name))
                 try:
                     baro.bar(x='Average', height= average, lw = 0.35)
                 except:
@@ -905,13 +948,13 @@ class Login(tk.Frame):
                 options = webdriver.ChromeOptions()
 
                 options.add_argument("-headless")
-                #driver = webdriver.Chrome(chrome_options=options)
-                driver = webdriver.Chrome()
+                driver = webdriver.Chrome(chrome_options=options)
+                #driver = webdriver.Chrome("C:\\Users\\inspiron\\Downloads\\chromedriver_win32\\chromedriver")
 
-                driver.get('https://www.mms669.org/MMSGB45/default.aspx?ReturnUrl=%2fMMSGB45%2fstudent')
-                uname = driver.find_element_by_name('LoginControl1$txtUsername')
-                password = driver.find_element_by_name('LoginControl1$txtPassword')
-                login_btn = driver.find_element_by_name('LoginControl1$btnLogin')
+                driver.get('https://medway.crportals.studentinformation.systems/')
+                uname = driver.find_element_by_name('Email')
+                password = driver.find_element_by_name('Password')
+                login_btn = driver.find_element_by_id('loginBtn')
 
                 uname.clear()
                 password.clear()
@@ -921,7 +964,8 @@ class Login(tk.Frame):
                 time.sleep(1)
 
                 try:
-                    error_msg = driver.find_element_by_xpath("//span[@id='LoginControl1_lblErrMsg']").text
+                    WebDriverWait(driver, 3).until(EC.visibility_of_element_located((By.XPATH, "//span[@class='field-validation-error text-danger']")))
+                    error_msg = driver.find_element_by_xpath("//span[@class='field-validation-error text-danger']").text
                     if type(error_msg) != None:
                         data_file = open("temp3.txt", 'w')
                         data_file.write(error_msg)
@@ -932,23 +976,97 @@ class Login(tk.Frame):
 
                 timeout = 4.6
                 try:
-                    WebDriverWait(driver, timeout).until(EC.visibility_of_element_located((By.XPATH, "//table[@class='rgMasterTable rgClipCells']")))
+                    WebDriverWait(driver, timeout).until(EC.visibility_of_element_located((By.XPATH, "//ul[@class='student-info-list']")))
                 except:
                     self.label4.config(text='An Error has occured, please use correct username and password', fg='red')
                     driver.close()
 
-                class_names1 = driver.find_elements_by_xpath("//tr[@class='rgRow']")
-                evens = [x.text for x in class_names1]
-                self.label4.config(text='Please Wait...', fg='black')
+                at_a_glance = driver.find_elements_by_xpath("//span[@class='tile-anchor-label']")[5]
+                at_a_glance.click()
 
-                class_names2 = driver.find_elements_by_xpath("//tr[@class='rgAltRow']")
-                odds = [x.text for x in class_names2]
+                try:
+                    WebDriverWait(driver, timeout).until(EC.visibility_of_element_located((By.XPATH, "//a[@class='k-link']")))
+                except:
+                    driver.close()
 
-                code_grade = []
-                all_class_codes = driver.find_elements_by_xpath("//td[@style='background-color:White;width:95px;']")
-                class_codes = [x.text for x in all_class_codes]
+
+                alphabetizer = driver.find_elements_by_xpath("//a[@class='k-link']")[0]
+                alphabetizer.click()
+
+                grade_table = driver.find_elements_by_xpath("//tbody[@role='rowgroup']")[0]
+
+                
+                class_names = []
+                class_grades = []
+
+                for row in grade_table.find_elements_by_tag_name('tr'):
+                    grade = row.find_elements_by_tag_name('td')
+                    for thingy in grade:
+                        print(thingy.text.split('\n'))
+                        class_names.append(thingy.text.split('\n')[0])
+                        class_grades.append(thingy.text.split('\n')[1])
+
+                for item in class_names:
+                    if type(item) == float or type(item) == int or item == 'No Grade':
+                        transfer = item
+                        class_names.remove(item)
+                        class_grades.append(item)
+
+             
+                try:
+                    class1_name = class_names[0]
+                except:
+                    pass
+                try:
+                    class2_name = class_names[1]
+                except:
+                    pass
+                try:
+                    class3_name = class_names[2]
+                except:
+                    pass
+                try:
+                    class4_name = class_names[3]
+                except:
+                    pass
+                try:
+                    class5_name = class_names[4]
+                except:
+                    pass
+                try:
+                    class6_name = class_names[5]
+                except:
+                    pass
+                try:
+                    class7_name = class_names[6]
+                except:
+                    pass
+                try:
+                    class8_name = class_names[7]
+                except:
+                    pass
+               
                 global denominator
                 denominator = []
+                
+                driver.get('https://medway.crportals.studentinformation.systems/')
+                uname = driver.find_element_by_name('Email')
+                password = driver.find_element_by_name('Password')
+                login_btn = driver.find_element_by_id('loginBtn')
+
+                uname.clear()
+                uname.send_keys(u)
+                password.send_keys(p)
+                login_btn.click()
+
+                WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//div[@class='col-md-6 tile-wrapper']")))
+                assignments_tab = driver.find_elements_by_xpath("//div[@class='col-md-6 tile-wrapper']")[1]
+                assignments_tab.click()
+
+                time.sleep(4)
+
+                class_name = driver.find_elements_by_xpath("//h3[@class='panel-title']")[1].text
+
 
                 ids = []
                 id_descriptors = []
@@ -956,117 +1074,63 @@ class Login(tk.Frame):
                 grdr2 = []
                 grdr3 = []
 
-                numero = len(driver.find_elements_by_xpath("//td[@style= 'background-color:White;width:145px;']"))
 
-                for links in driver.find_elements_by_xpath("//td[@style= 'background-color:White;width:145px;']"):
+                numero = 5
+
+                for links in range(       len(driver.find_elements_by_xpath("//li[@role= 'presentation']"))):
                     try:
-                        
-                        links.click()
-                        
-                        driver.switch_to.frame(driver.find_element_by_xpath("//iframe[@id= 'ctl00_ContentPlaceHolder1_ReportViewer1ReportFrame']"))
-                        
-                        class_identifiers = [x.text for x in driver.find_elements_by_xpath("//div[@class='HtmlTextBox2 s22-']")]
-                        class_identifiers2 = [x.text for x in driver.find_elements_by_xpath("//div[@class='HtmlTextBox2 s25-']")]
-                        
-                        if len(class_identifiers) > 0:
-                            ids.append(class_identifiers)
-                            
-                            descriptor = [x.text.replace('\n',  ' ') for x in driver.find_elements_by_xpath("//div[@class='TextBox41 s28-']") ]
-                            
-                            if len(descriptor) > 0:
-                                id_descriptors.append([('***{}***').format( driver.find_element_by_xpath("//div[@class='TextBox5 s5-']").text[0:-2])])
-                                
-                                id_descriptors.append(descriptor)
-                                
-                                grdr.append(['{}{} Assignments'.format(  len( driver.find_elements_by_xpath("//div[@class='TextBox46 s29-']"))-1, '4465' )])
-                                
-                                grdr2.append([driver.find_element_by_xpath("//div[@class='TextBox16 s13-']").text + '4465'])
-                                grdr3.append([' '])
-                                grd1 = [x.text for x in driver.find_elements_by_xpath("//div[@class='TextBox46 s29-']") ]
-                                grd2 = [x.text for x in driver.find_elements_by_xpath("//div[@class='TextBox27 s28-']") ]
-                                grd3 = [x.text.replace(",", "-") for x in driver.find_elements_by_xpath("//div[@class= 'TextBox42 s28-']") ] 
-                            if len(grd1) > 0:
-                                grdr.append(grd1)
-                                grdr2.append(grd2)
-                                grdr3.append(grd3)
-                            driver.switch_to.parent_frame()
-                            driver.find_elements_by_xpath("//a[@class= 'rmLink rmRootLink']")[4].click()
-                            numero += -1
-                        else:
-                            driver.switch_to.parent_frame()
-                            driver.find_elements_by_xpath("//a[@class= 'rmLink rmRootLink']")[4].click()
-                            numero += -1
-
+                        driver.switch_to.parent_frame()
                     except:
-                        links = driver.find_elements_by_xpath("//td[@style= 'background-color:White;width:145px;']")[numero]
-                        
-                        links.click()
-                        
-                        driver.switch_to.frame(driver.find_element_by_xpath("//iframe[@id= 'ctl00_ContentPlaceHolder1_ReportViewer1ReportFrame']"))
-                        
-                        class_identifiers = [x.text for x in driver.find_elements_by_xpath("//div[@class='HtmlTextBox2 s22-']")]
-                        class_identifiers2 = [x.text for x in driver.find_elements_by_xpath("//div[@class='HtmlTextBox2 s25-']")]
-                        
-                        if len(class_identifiers) > 0:
-                            ids.append(class_identifiers)
-                            descriptor = [x.text.replace('\n',  ' ') for x in driver.find_elements_by_xpath("//div[@class='TextBox41 s28-']") ]
-                            if len(descriptor) >0:
-                                id_descriptors.append([('***{}***').format( driver.find_element_by_xpath("//div[@class='TextBox5 s5-']").text[0:-2])])
-                                id_descriptors.append(descriptor)
-                                grdr.append(['{}{} Assignments'.format(  len( driver.find_elements_by_xpath("//div[@class='TextBox46 s29-']"))-1, '4465' )])
-                                grdr2.append([driver.find_element_by_xpath("//div[@class='TextBox16 s13-']").text + '4465'])
-                                grdr3.append([' '])
-                                grd1 = [x.text for x in driver.find_elements_by_xpath("//div[@class='TextBox46 s29-']") ]
-                                grd2 = [x.text for x in driver.find_elements_by_xpath("//div[@class='TextBox27 s28-']") ]
-                                grd3 = [x.text.replace(",", "-") for x in driver.find_elements_by_xpath("//div[@class= 'TextBox42 s28-']") ]
+                        print('no element')
+
+                    print('9')
+                    print(numero)
+                    links = driver.find_elements_by_xpath("//li[@role= 'presentation']")[numero]
+                    links.click()
+                    print('10')
+                    progress_report = driver.find_elements_by_xpath("//button[@class='btn btn-link']")[numero]
+                    progress_report.click()
+
+                    WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "//iframe[@id= 'courseProgressReportFrame']")))
+                    driver.switch_to.frame(driver.find_elements_by_xpath("//iframe[@id= 'courseProgressReportFrame']")[0])
+
+                    
+                    driver.switch_to.frame(driver.find_element_by_xpath("//iframe[@id= 'ctl00_ContentPlaceHolder1_ReportViewer1ReportFrame']"))
+                    class_identifiers = [x.text for x in driver.find_elements_by_xpath("//div[@class='HtmlTextBox2 s22-']")]
+                    class_identifiers2 = [x.text for x in driver.find_elements_by_xpath("//div[@class='HtmlTextBox2 s25-']")]
+                                    
+                    if len(class_identifiers) > 0:
+                        ids.append(class_identifiers)
+                        descriptor = [x.text.replace('\n',  ' ') for x in driver.find_elements_by_xpath("//div[@class='TextBox41 s28-']") ]
+                        if len(descriptor) > 0:
+                            id_descriptors.append([('***{}***').format( driver.find_element_by_xpath("//div[@class='TextBox5 s5-']").text[0:-2])])
+                            id_descriptors.append(descriptor)
+                            grdr.append(['{}{} Assignments'.format(  len( driver.find_elements_by_xpath("//div[@class='TextBox46 s29-']"))-1, '4465' )])
+                            grdr2.append([driver.find_element_by_xpath("//div[@class='TextBox16 s13-']").text + '4465'])
+                            grdr3.append([' '])
+                            grd1 = [x.text for x in driver.find_elements_by_xpath("//div[@class='TextBox46 s29-']") ]
+                            grd2 = [x.text for x in driver.find_elements_by_xpath("//div[@class='TextBox27 s28-']") ]
+                            grd3 = [x.text.replace(",", "-") for x in driver.find_elements_by_xpath("//div[@class= 'TextBox42 s28-']") ] 
                             if len(grd1) > 0:
                                 grdr.append(grd1)
                                 grdr2.append(grd2)
                                 grdr3.append(grd3)
                             driver.switch_to.parent_frame()
-                            driver.find_elements_by_xpath("//a[@class= 'rmLink rmRootLink']")[4].click()
-                            numero += -1
+                            driver.refresh()
+                            
 
+                            numero += -1
                         else:
-                            driver.switch_to.parent_frame()
-                            driver.find_elements_by_xpath("//a[@class= 'rmLink rmRootLink']")[4].click()
                             numero += -1
-
-
-                tabs = driver.find_elements_by_class_name("rmItem")
-                hisstorical_grades_tab = tabs[7]
-
-                loggout = driver.find_element_by_xpath("//div[@id='SignOutHolder']")
-                hover = ActionChains(driver).move_to_element(loggout)
-                hover.perform()
-                time.sleep(1)
-
-                studentName = driver.find_elements_by_xpath("//a[@class='rmLink']")[0].text[0:-9]
-                data_file = open("temp4.txt", "w")
-                data_file.write(studentName)
-                data_file.close()
-
-                hover = ActionChains(driver).move_to_element(hisstorical_grades_tab)
-                hover.perform()
-                time.sleep(1)
-
-                report_card = driver.find_elements_by_xpath("//span[@class='rmText']")[5]
-                report_card.click()
-                time.sleep(1.5)
-                driver.switch_to.frame(driver.find_element_by_xpath("//iframe[@id= 'ctl00_ContentPlaceHolder1_ReportViewer3ReportFrame']"))
-
-                class_name_coullumn = driver.find_elements_by_xpath("//div[@class='TextBox87 s8-']")
-                class_name_coullumn = [x.text for x in class_name_coullumn]
-
-                grade_collumn1 = driver.find_elements_by_xpath("//div[@class='TextBox93 s9-']")
-                grade_collumn1 = [x.text for x in grade_collumn1]
-                grade_collumn2 = driver.find_elements_by_xpath("//div[@class='TextBox107 s9-']")
-                grade_collumn2 = [x.text for x in grade_collumn2]
-                grade_collumn3 = driver.find_elements_by_xpath("//div[@class='TextBox112 s9-']")
-                grade_collumn3 = [x.text for x in grade_collumn3]
+                            driver.switch_to.parent_frame()
+                            driver.refresh()
+                        
+                    else:
+                        numero += -1
+                        driver.switch_to.parent_frame()
+                        driver.refresh()
 
                 driver.close()
-
                 data_file = open("temp5.txt", 'w')
                 for items in id_descriptors:
                     for item in items:
@@ -1086,157 +1150,93 @@ class Login(tk.Frame):
                 for items in grdr3:
                     for item in items:
                         data_file.write(str(item)+',')
-                data_file.close()
+                data_file.close()  
+
+
+
 
                 try:
-                    class1 = evens[0]
-                    class1_g = class1.split(",")
-                    class1_grade = float(class1_g[1].split(')')[0].split('(')[1])
-                    if class1_grade == 100.0:
-                        class1_grade = 100
+                    try:
+                        class1_grade = float(class_grades[0])
+                    except:
+                        class1_grade = int(class_grades[0])
+                    
+
                     denominator.append(class1_grade)
                 except:
                     class1_grade = 0
                 try:
-                    class2 = odds[0]
-                    class2_g = class2.split(",")
-                    class2_grade = float(class2_g[1].split(')')[0].split('(')[1])
-                    if class2_grade == 100.0:
-                        class2_grade = 100
+                    try:
+                        class2_grade = float(class_grades[1])
+                    except:
+                        class2_grade = int(class_grades[1])
+                    
+
                     denominator.append(class2_grade)         
                 except:
                     class2_grade = 0
                 try:
-                    class3 = evens[1]
-                    class3_g = class3.split(",")
-                    class3_grade = float(class3_g[1].split(')')[0].split('(')[1])   
-                    if class3_grade == 100.0:
-                        class3_grade = 100 
+                    try:
+                        class3_grade = float(class_grades[2])
+                    except:
+                        class3_grade = int(class_grades[2])
+                    
+
                     denominator.append(class3_grade)   
                 except:
                     class3_grade = 0
                 try:
-                    class4 = odds[1]
-                    class4_g = class4.split(",")
-                    class4_grade = float(class4_g[1].split(')')[0].split('(')[1])   
-                    if class4_grade == 100.0:
-                        class4_grade = 100 
+                    try:
+                        class4_grade = float(class_grades[3])
+                    except:
+                        class4_grade = int(class_grades[3])
+                    
+
                     denominator.append(class4_grade)   
                 except:
                     class4_grade = 0
                 try:
-                    class5 = evens[2]
-                    class5_g = class5.split(",")
-                    class5_grade = float(class5_g[1].split(')')[0].split('(')[1])    
-                    if class5_grade == 100.0:
-                        class5_grade = 100
+                    try:
+                        class5_grade = float(class_grades[4])
+                    except:
+                        class5_grade = int(class_grades[4])
+                    
+
                     denominator.append(class5_grade)   
                 except:
                     class5_grade = 0
                 try:
-                    class6 = odds[2]
-                    class6_g = class6.split(",")
-                    class6_grade = float(class6_g[1].split(')')[0].split('(')[1])    
-                    if class6_grade == 100.0:
-                        class6_grade = 100
+                    try:
+                        class6_grade = float(class_grades[5])
+                    except:
+                        class6_grade = int(class_grades[5])
+                    
+
                     denominator.append(class6_grade)  
                 except:
                     class6_grade = 0
                 try:
-                    class7 = evens[3]
-                    class7_g = class7.split(",")
-                    class7_grade = float(class7_g[1].split(')')[0].split('(')[1])    
-                    if class7_grade == 100.0:
-                        class7_grade = 100
+                    try:
+                        class7_grade = float(class_grades[6])
+                    except:
+                        class7_grade = int(class_grades[6])
+                    
+
                     denominator.append(class7_grade)   
                 except:
                     class7_grade = 0
                 try:
-                    class8 = odds[3]
-                    class8_g = class8.split(",")
-                    class8_grade = float(class8_g[1].split(')')[0].split('(')[1])   
-                    if class8_grade == 100.0:
-                        class8_grade = 100
+                    try:
+                        class8_grade = float(class_grades[0])
+                    except:
+                        class8_grade = int(class_grades[0])
+                    
+
                     denominator.append(class8_grade)  
                 except:
                     class8_grade = 0
-                try:
-                    class9 = evens[4]
-                    class9_g = class9.split(",")
-                    class9_grade = float(class9_g[1].split(')')[0].split('(')[1])    
-                    if class9_grade == 100.0:
-                        class9_grade = 100
-                    denominator.append(class9_grade)  
-                except:
-                    class9_grade = 0
-                try:
-                    class10 = odds[4]
-                    class10_g = class10.split(",")
-                    class10_grade = float(class10_g[1].split(')')[0].split('(')[1])  
-                    if class10_grade == 100.0:
-                        class10_grade = 100
-                    denominator.append(class10_grade)  
-                except:
-                    class10_grade = 0
 
 
-                try:
-                    class1_code = class_codes[0]
-                    class1_name = class1.split(class1_code)[0]
-                    code_grade.append( str(class1_code) + '4465' + str(class1_grade) )
-                except:
-                    pass
-                try:
-                    class2_code = class_codes[1]
-                    class2_name = class2.split(class2_code)[0]
-                    code_grade.append( str(class2_code) + '4465' + str(class2_grade) )
-                except:
-                    pass
-                try:
-                    class3_code = class_codes[2]
-                    class3_name = class3.split(class3_code)[0]
-                    code_grade.append( str(class3_code) + '4465' + str(class3_grade) )
-                except:
-                    pass
-                try:
-                    class4_code = class_codes[3]
-                    class4_name = class4.split(class4_code)[0]
-                    code_grade.append( str(class4_code) + '4465' + str(class4_grade) )
-                except:
-                    pass
-                try:
-                    class5_code = class_codes[4]
-                    class5_name = class5.split(class5_code)[0]
-                    code_grade.append( str(class5_code) + '4465' + str(class5_grade) )
-                except:
-                    pass
-                try:
-                    class6_code = class_codes[5]
-                    class6_name = class6.split(class6_code)[0]
-                    code_grade.append( str(class6_code) + '4465' + str(class6_grade) )
-                except:
-                    pass
-                try:
-                    class7_code = class_codes[6]
-                    class7_name = class7.split(class7_code)[0]
-                    code_grade.append( str(class7_code) + '4465' + str(class7_grade) )
-                except:
-                    pass
-                try:
-                    class8_code = class_codes[7]
-                    class8_name = class8.split(class8_code)[0]
-                except:
-                    pass
-                try:
-                    class9_code = class_code[8]
-                    class9_name = class9.split(class9_code)[0]
-                except:
-                    pass
-                try:
-                    class10_code = class_codes[9]
-                    class10_name = class10.split(class10_code)[0]
-                except:
-                    pass
 
                 try:        
                     d = len(denominator)
@@ -1434,7 +1434,7 @@ class Login(tk.Frame):
                         configurer = webdriver.ChromeOptions()
                         configurer.add_argument("-headless")
                         #browser = webdriver.Chrome(chrome_options=configurer)
-                        browser = webdriver.Chrome()
+                        browser = webdriver.Chrome("C:\\Users\\inspiron\\Downloads\\chromedriver_win32\\chromedriver")
                         #browser.set_window_size(0, 0)
 
                         browser.get("https://accounts.google.com/signin/v2/identifier?service=classroom&passive=1209600&continue=https%3A%2F%2Fclassroom.google.com%2F%3Femr%3D0&followup=https%3A%2F%2Fclassroom.google.com%2F%3Femr%3D0&flowName=GlifWebSignIn&flowEntry=ServiceLogin")
@@ -1704,20 +1704,9 @@ class StartPage(tk.Frame):
         options = webdriver.ChromeOptions()
         options.add_argument("-headless")
         #driver = webdriver.Chrome(chrome_options=options)
-        driver = webdriver.Chrome()
-        driver.get('https://www.mms669.org/MMSGB45/default.aspx?ReturnUrl=%2fMMSGB45%2fstudent')
-        uname = driver.find_element_by_name('LoginControl1$txtUsername')
-        password = driver.find_element_by_name('LoginControl1$txtPassword')
-        login_btn = driver.find_element_by_name('LoginControl1$btnLogin')
-
-        u = uname_for_pop_up_trans
-        p = pass_for_pop_up_trans
-
-        uname.clear()
-        uname.send_keys(u)
-        password.send_keys(p)
-        login_btn.click()
-
+        driver = webdriver.Chrome("C:\\Users\\inspiron\\Downloads\\chromedriver_win32\\chromedriver")
+        driver.get('https://medway.crportals.studentinformation.systems/')
+        
 class PageOne(tk.Frame):
     
     def __init__(self, parent, controller):
@@ -1735,7 +1724,7 @@ class PageOne(tk.Frame):
         self.button7 = ttk.Button(self, text = " ", command= lambda: controller.show_frame(ClassFour))
         self.button8 = ttk.Button(self, text = " ", command= lambda: controller.show_frame(ClassFive))
         self.button9 = ttk.Button(self, text = " ", command= lambda: controller.show_frame(ClassSix))
-        self.button10 = ttk.Button(self, text = " ", command= lambda: controller.show_frame(ClassSeven))
+        #self.button10 = ttk.Button(self, text = " ", command= lambda: controller.show_frame(ClassSeven))
         self.button11 = ttk.Button(self, text= ' ',command= lambda: controller.show_frame(UnannotatedGraph) )
         self.button12 = ttk.Button(self, text= 'Go to Bar Graph Page', command= lambda: controller.show_frame(BarGraph))
         self.e = ttk.Entry(self)
@@ -1773,8 +1762,8 @@ class PageOne(tk.Frame):
             self.button8.place(x=240,y=0)
             self.button9.config(text='6')
             self.button9.place(x=300,y=0)
-            self.button10.config(text='7')
-            self.button10.place(x=360,y=0)
+            #self.button10.config(text='7')
+            #self.button10.place(x=360,y=0)
             self.button14.place(x=440, y=0)
             self.button11.place(x=180,y=50)
             self.button11.config(text='Show Unannotated Graph')
@@ -1817,13 +1806,34 @@ class BarGraph(tk.Frame):
 class ClassOne(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)  
-
+        self.label = tk.Label(self, text=' ', bg= '#95c8f4', font= Large_Font)
         button1 = ttk.Button(self, text= 'Go back to graph', command= lambda: controller.show_frame(PageOne))
         button2 = ttk.Button(self,  text= 'Update Graph',  command= lambda: self.refresh2())
+        self.label.pack()
         button1.pack()
         button2.pack()
 
     def refresh2(self):
+
+
+        data_file = open("temp10.csv", 'r' )
+
+        csv_reader = csv.reader(data_file)
+
+
+        class_names = []
+        for row in csv_reader:
+            for item in row:
+                class_names.append(item)
+
+        graph_title = class_names[0]
+
+        data_file.close()
+
+        self.label.config(text= graph_title)
+        
+
+
         try:    
             data_1 = open("one.txt", "r")
             data11 = data_1.read().split(',')
@@ -1864,6 +1874,8 @@ class ClassTwo(tk.Frame):
 
         button1 = ttk.Button(self, text= 'Go back to graph', command= lambda: controller.show_frame(PageOne))
         button2 = ttk.Button(self,  text= 'Update Graph',  command= lambda: self.refresh2())
+        self.label = tk.Label(self, text=' ', bg= '#95c8f4', font= Large_Font)
+        self.label.pack()
         button1.pack()
         button2.pack()
 
@@ -1886,6 +1898,23 @@ class ClassTwo(tk.Frame):
                     data22x.append(x_valuer)         
         except:
             pass
+
+        data_file = open("temp10.csv", 'r' )
+
+        csv_reader = csv.reader(data_file)
+
+
+        class_names = []
+        for row in csv_reader:
+            for item in row:
+                class_names.append(item)
+
+        graph_title = class_names[1]
+
+        data_file.close()
+
+        self.label.config(text= graph_title)
+
         zed22 = Figure(figsize= (10,5), dpi=100)
 
         zed2 = zed22.add_subplot(111)
@@ -1909,6 +1938,8 @@ class ClassThree(tk.Frame):
 
         button1 = ttk.Button(self, text= 'Go back to graph', command= lambda: controller.show_frame(PageOne))
         button2 = ttk.Button(self,  text= 'Update Graph',  command= lambda: self.refresh2())
+        self.label = tk.Label(self, text=' ', bg= '#95c8f4', font= Large_Font)
+        self.label.pack()
         button1.pack()
         button2.pack()
 
@@ -1931,6 +1962,23 @@ class ClassThree(tk.Frame):
                     data33x.append(x_valuer)         
         except:
             pass   
+
+        data_file = open("temp10.csv", 'r' )
+
+        csv_reader = csv.reader(data_file)
+
+
+        class_names = []
+        for row in csv_reader:
+            for item in row:
+                class_names.append(item)
+
+        graph_title = class_names[2]
+
+        data_file.close()
+
+        self.label.config(text= graph_title)
+
         zed33 = Figure(figsize= (10,5), dpi=100)
 
 
@@ -1955,6 +2003,8 @@ class ClassFour(tk.Frame):
 
         button1 = ttk.Button(self, text= 'Go back to graph', command= lambda: controller.show_frame(PageOne))
         button2 = ttk.Button(self,  text= 'Update Graph',  command= lambda: self.refresh2())
+        self.label = tk.Label(self, text=' ', bg= '#95c8f4', font= Large_Font)
+        self.label.pack()
         button1.pack()
         button2.pack()
 
@@ -1977,6 +2027,24 @@ class ClassFour(tk.Frame):
                     data44x.append(x_valuer)         
         except:
             pass   
+
+
+        data_file = open("temp10.csv", 'r' )
+
+        csv_reader = csv.reader(data_file)
+
+
+        class_names = []
+        for row in csv_reader:
+            for item in row:
+                class_names.append(item)
+
+        graph_title = class_names[3]
+
+        data_file.close()
+
+        self.label.config(text= graph_title)
+
         zed44 = Figure(figsize= (10,5), dpi=100)
 
 
@@ -1999,8 +2067,10 @@ class ClassFive(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)  
 
-        button1 = ttk.Button(self, text= 'Go back to graph', command= lambda: controller.show_frame(PageOne))
+        button1 = ttk.Button(self, text= 'Go back to graph',  command= lambda: controller.show_frame(PageOne))
         button2 = ttk.Button(self,  text= 'Update Graph',  command= lambda: self.refresh2())
+        self.label = tk.Label(self, text=' ',bg= '#95c8f4', font= Large_Font)
+        self.label.pack()
         button1.pack()
         button2.pack()
 
@@ -2023,6 +2093,24 @@ class ClassFive(tk.Frame):
                     data55x.append(x_valuer)         
         except:
             pass   
+
+        data_file = open("temp10.csv", 'r' )
+
+        csv_reader = csv.reader(data_file)
+
+
+        class_names = []
+        for row in csv_reader:
+            for item in row:
+                class_names.append(item)
+
+        graph_title = class_names[4]
+
+        data_file.close()
+
+        self.label.config(text= graph_title)
+
+
         zed55 = Figure(figsize= (10,5), dpi=100)
 
         zed5 = zed55.add_subplot(111)
@@ -2044,8 +2132,10 @@ class ClassSix(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)  
 
-        button1 = ttk.Button(self, text= 'Go back to graph', command= lambda: controller.show_frame(PageOne))
+        button1 = ttk.Button(self, text= 'Go back to graph',command= lambda: controller.show_frame(PageOne))
         button2 = ttk.Button(self,  text= 'Update Graph',  command= lambda: self.refresh2())
+        self.label = tk.Label(self, text=' ',bg= '#95c8f4', font= Large_Font)
+        self.label.pack()
         button1.pack()
         button2.pack()
 
@@ -2068,6 +2158,23 @@ class ClassSix(tk.Frame):
                     data66x.append(x_valuer)         
         except:
             pass   
+
+        data_file = open("temp10.csv", 'r' )
+
+        csv_reader = csv.reader(data_file)
+
+
+        class_names = []
+        for row in csv_reader:
+            for item in row:
+                class_names.append(item)
+
+        graph_title = class_names[5]
+
+        data_file.close()
+
+        self.label.config(text= graph_title)
+
         zed66 = Figure(figsize= (10,5), dpi=100)
 
 
