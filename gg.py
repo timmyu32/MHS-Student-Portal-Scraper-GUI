@@ -28,6 +28,8 @@ from queue import Queue
 
 import csv
 
+import winsound
+
 
 Largest_Font = ("Times New Roman", "16")
 Large_Font = ("Times New Roman", "12")
@@ -317,15 +319,45 @@ class Login(tk.Frame):
                             class_names.append(float(thingy.text.split('\n')[0]))
                         except:
                             class_names.append(str(thingy.text.split('\n')[0]))
-
+                
+               
+                print(class_names)
+                
 
                 for item in class_names:
                     if type(item) == float or type(item) == int or item == 'No Grade':
-                        transfer = item
                         class_names.remove(item)
                         class_grades.append(item)
+                
+                #this segment is still under development and may be needed when there is a transition from term to term... not sure- 11/15/18
+                '''
+                class_name_holder = ''
+                for items in class_names:
+                    print(items+'\n')
+                    print(class_name_holder)
+                    class_name_holder = items
+                    if items == class_name_holder:
+                        class_names.remove(items)
+                
 
+                print(class_grades)
+                print(class_names)
+                input('sadfad')
 
+                guideLine = len(class_names) + 1
+                appropriateNumberOfGrades = ( len(class_grades) + 1 ) / guideLine
+                counter = 0
+                class_grades2 = []
+                for items in class_grades:
+                    if counter % appropriateNumberOfGrades != 0:
+                        class_grades2.append(items)
+                    
+                    counter += 1
+
+                print(class_grades2)
+                print(class_names)
+                input('sadfad')
+                '''
                 
                 today = str(date.today())
 
@@ -1009,6 +1041,8 @@ class Login(tk.Frame):
                     self.button3.place(x=460, y=330)
                 else:
                     self.label4.config(text='An ERROR has occured, try correcting your user and password.', fg= 'red')
+
+                winsound.MessageBeep()
 
                 
             threading.Thread(target = get_grades).start()
@@ -1768,8 +1802,8 @@ class StartPage(tk.Frame):
         button7  = ttk.Button(self, text= 'Go to Student Portal Web Page', command= lambda: self.mms())
         button7.grid(row= 6, column= 2, columnspan= 2, sticky= tk.W)
         label = ttk.Button(self, text= 'HOMEWORK', command= lambda: controller.show_frame(Homework))
-        label.grid(row=7, column=2, columnspan= 2, sticky= tk.W)
-
+        #label.grid(row=7, column=2, columnspan= 2, sticky= tk.W)
+        #The HOMEWORK page is no longer functional, code will be left in as it may still be useable
 
 
     def showImg(self):
