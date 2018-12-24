@@ -15,7 +15,7 @@
                 save guest data after the change from the previous grading portal to the new one as of 8/18.
                 Right now, this part of the progam is not functional 
 
-                Look into how to create a text area with vertical scrollbar to consolodate graded assignments into one page/class
+
 
 
  * Date: 12/24/18
@@ -79,26 +79,6 @@ unatated = una.add_subplot(111)
 a = f.add_subplot(111)
 baro = bary.add_subplot(111)
 
-class reassign1(object):
-    #This class stores the integer number of the player's value once they abstain at any point
-    #reassign_pv will be used to compare compturn vlue to player value and return a string 
-    def __init__(self, pvalue= 0):
-        self.pvalue = pvalue
-
-    def reassign_user(self):
-        #This class holds the value of the player's value outside of playerturn()
-        return self.pvalue
-
-class reassign2(object):
-    #This class stores the integer number of the player's value once they abstain at any point
-    #reassign_pv will be used to compare compturn vlue to player value and return a string 
-    def __init__(self, pvalue= 0):
-        self.pvalue = pvalue
-
-    def reassign_pass(self):
-        #This class holds the value of the player's value outside of playerturn()
-        return self.pvalue
-
 class GradeGetterApp(tk.Tk):
     
     def __init__(self, *args, **kwargs):
@@ -115,7 +95,7 @@ class GradeGetterApp(tk.Tk):
 
         self.frames = {}
         
-        for F in (StartPage, PageOne, PageTwo, Homework, Login, AdminPage, DisplayInDepth1, ClassOne, ClassTwo, ClassThree, ClassFour, ClassFive, ClassSix, ClassSeven, UnannotatedGraph, BarGraph, Average, DisplayInDepth2,  DisplayInDepth3, DisplayInDepth4):
+        for F in (StartPage, PageOne, PageTwo, Homework, Login, AdminPage, DisplayInDepth1, ClassOne, ClassTwo, ClassThree, ClassFour, ClassFive, ClassSix, ClassSeven, UnannotatedGraph, BarGraph, Average):
             frame = F(container, self)
             self.frames[F] = frame
             frame.grid(row=0, column=0, sticky="nsew")
@@ -2461,31 +2441,223 @@ class DisplayInDepth1(tk.Frame):
         button1.grid(row= 1, column= 2)
         button3.grid(row= 1, column= 3)
         self.page_counter = 1
+        '''
         button4 = ttk.Button(self, text= 'NEXT', command= lambda:  controller.show_frame(DisplayInDepth2) )
         button4.grid(row=1, column=4)
-        '''
+        
         button5 = ttk.Button(self, text= 'BACK', command= lambda: self.ticker_down())
         button5.grid(row=1, column=5)
         '''
 
     def shower(self):
+    
+
+        def data():
+
+            data_file = open("temp5.txt", 'r')
+            avadat1 = data_file.read()
+            avadat11 = avadat1.split(',')
+            data_file.close()
+            looper = 1
+            avadat111 = []
+            for items in avadat11:
+                if len(items) > 0:
+                    avadat111.append(items)
+
+
+            data_file = open("temp8.txt", 'r')
+            avadat4 = data_file.read()
+            avadat44 = avadat4.split(',')
+            data_file.close() 
+            looper = 2
+            avadat444 = []
+            for items in avadat44:
+                avadat444.append(items)
+        
+
+            data_file = open("temp6.txt", 'r')
+            avadat2 = data_file.read()
+            avadat22 = avadat2.split(',')
+            data_file.close() 
+
+            looper = 1
+            avadat222 = []
+            for items in avadat22:
+                if len(items) > 0:
+                    avadat222.append(items)
+
+            data_file = open("temp7.txt", 'r')
+            avadat3 = data_file.read()
+            avadat33 = avadat3.split(',')
+            data_file.close() 
+
+            avadat333 = []
+            for items in avadat33:
+                if len(items) > 0:
+                    avadat333.append(items)
+
+
+
+            for i in range(len(avadat111)):
+                if not "***" in avadat111[i]:
+                    tk.Label(frame,text=avadat111[i], bg= '#95c8f4').grid(row=i,column=0)
+                else:
+                    tk.Label(frame, text=avadat111[i], bg= '#f9ee68').grid(row=i,column=0)
+            
+            for i in range(len(avadat444)): 
+                tk.Label(frame,text=avadat444[i], bg= '#95c8f4').grid(row=i,column=1)
+            
+            for i in range(len(avadat222)):
+                if "4465" in avadat222[i]:
+                    tk.Label(frame, text= '({})'.format( avadat222[i].replace('4465', '') ), bg= '#f9ee68').grid(column= 2, row=i)
+                else:
+                    tk.Label(frame, text= avadat222[i], bg= '#95c8f4').grid(column= 2, row=i)
+            
+            for i in range(len(avadat333)):
+                if "4465" in avadat333[i]:
+                    tk.Label(frame, text= '({})'.format( avadat333[i].replace('4465', '') ), bg= '#f9ee68').grid(column= 3, row=i)
+                else:
+                    tk.Label(frame, text= avadat333[i], bg= '#95c8f4').grid(column= 3, row=i)
+
+            looper = -1
+            numerator = [x.replace(" /", '0') for x in avadat222]
+                    
+            for num, denom in zip(numerator, avadat333):
+                looper += 1
+                try:
+                    ave = round( (float(num) / float(denom)) * 100, 2 )
+
+
+                    green = 100 # if grade is 100 it will be pure red
+                    yellow = 90 # grades at 90 will be pure yellow
+                    red = 85 #    grades below 85 will show as red
+
+
+                    if (ave < green) and (ave > yellow):
+
+                        redValue = int( str(round( 255 * (100-ave) / 10, 0)).split('.')[0] )
+                        greenValue = 255
+                        blueValue = 0 
+
+                    elif (ave < yellow) and (ave > red):
+
+                        redValue = 255
+                        greenValue = int( str( round(255 - 255 * (90 - ave) / 5, 0)).split('.')[0] )
+                        blueValue = 0
+
+
+                    elif ave == 100:
+                        
+                        redValue = 0
+                        greenValue = 255
+                        blueValue = 0
+                    
+                    elif ave == 90:
+                        
+                        redValue = 255
+                        greenValue = 255
+                        blueValue = 0
+
+                    else:
+
+                        redValue = 255
+                        greenValue = 0
+                        blueValue = 0
+
+                    def rgb_2_hex(red, green, blue):
+                        rgb = []
+                        hexColor = []
+
+                        rgb.append(red)
+                        rgb.append(green)
+                        rgb.append(blue)
+
+                        hex_keys = {10: 'A',
+                                    11: 'B',
+                                    12: 'C',
+                                    13: 'D',
+                                    14: 'E',
+                                    15: 'F'}
+                        
+                        
+
+                        for i in rgb:
+                            x = i // 16
+                            y = i % 16
+
+                            if x > 9:
+                                x = hex_keys[x]
+                            if y > 9:
+                                y = hex_keys[y]
+
+                            value = str(x) + str(y)
+                            hexColor.append(value)
+                            
+                        
+                        return hexColor
+
+                    hexColor = rgb_2_hex(redValue, greenValue, blueValue)
+                    hexColor = "#" + hexColor[0] + hexColor[1] + hexColor[2]
+
+                    
+                    
+                    tk.Label(frame, text= "({}%)".format(ave), bg='#696969', fg= hexColor).grid(column= 4, row=looper)  
+                except:
+                    tk.Label(frame, text= " ", bg= '#95c8f4').grid(column= 4, row=looper)
+            
+
+        
+        
+
+        def myfunction(event):
+            canvas.configure(scrollregion=canvas.bbox("all"),width=1100,height=500)
+
+        root=tk.Tk()
+        sizex = 800
+        sizey = 600
+        posx  = 10
+        posy  = 10
+        root.wm_geometry("%dx%d+%d+%d" % (sizex, sizey, posx, posy))
+        root.configure(background= "#95c8f4")
+
+        myframe= tk.Frame(root,width=1100,height=500,bd=1)
+        myframe.configure(background= "#95c8f4")
+        myframe.place(x=10,y=10)
+
+        canvas = tk.Canvas(myframe)
+        canvas.configure(background= "#95c8f4")
+        frame = tk.Frame(canvas)
+        frame.configure(background= "#95c8f4")
+        myscrollbar = tk.Scrollbar(myframe,orient="vertical",command=canvas.yview)
+        canvas.configure(yscrollcommand = myscrollbar.set)
+
+        myscrollbar.pack(side="right",fill="y")
+        canvas.pack(side="left")
+        canvas.create_window((0,0),window=frame,anchor='nw')
+        frame.bind("<Configure>",myfunction)
+        data()
+        root.mainloop()
+
+
+'''
+
         data_file = open("temp5.txt", 'r')
-        loadedData1 = data_file.read()
-        loadedData11 = loadedData1.split(',')
+        avadat1 = data_file.read()
+        avadat11 = avadat1.split(',')
         data_file.close()
-        loadedData = []
-        for i in loadedData11:
+        avadat = []
+        for i in avadat11:
             if len(i) > 1:
-                loadedData.append(i)
+                avadat.append(i)
             
 
         looper = 1
-        loadedData111 = []
-        for items in loadedData11:
+        avadat111 = []
+        for items in avadat11:
             if len(items) > 1:
-                loadedData111.append(items)
+                avadat111.append(items)
 
-        for items in loadedData111[0:21]:
+        for items in avadat111[0:21]:
             #displays the assignments and the name of the classes
             looper += 1
             if "***" in items:
@@ -2494,32 +2666,32 @@ class DisplayInDepth1(tk.Frame):
                 tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 1, row=looper, sticky=  tk.E + tk.W)
     
         data_file = open("temp8.txt", 'r')
-        loadedData4 = data_file.read()
-        loadedData44 = loadedData4.split(',')
+        avadat4 = data_file.read()
+        avadat44 = avadat4.split(',')
         data_file.close() 
 
         looper = 1
-        loadedData444 = []
-        for items in loadedData44:
-            loadedData444.append(items)
+        avadat444 = []
+        for items in avadat44:
+            avadat444.append(items)
 
-        for items in loadedData444[0:21]:
+        for items in avadat444[0:21]:
             looper += 1
             tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 2, row=looper, sticky=  tk.W)
 
         
         data_file = open("temp6.txt", 'r')
-        loadedData2 = data_file.read()
-        loadedData22 = loadedData2.split(',')
+        avadat2 = data_file.read()
+        avadat22 = avadat2.split(',')
         data_file.close() 
 
         looper = 1
-        loadedData222 = []
-        for items in loadedData22:
+        avadat222 = []
+        for items in avadat22:
             if len(items) > 0:
-                loadedData222.append(items)
+                avadat222.append(items)
 
-        for items in loadedData222[0:21]:
+        for items in avadat222[0:21]:
             if len(items)  > 0:
                 looper += 1
                 if "4465" in items:
@@ -2529,17 +2701,17 @@ class DisplayInDepth1(tk.Frame):
         
         
         data_file = open("temp7.txt", 'r')
-        loadedData3 = data_file.read()
-        loadedData33 = loadedData3.split(',')
+        avadat3 = data_file.read()
+        avadat33 = avadat3.split(',')
         data_file.close() 
 
-        loadedData333 = []
-        for items in loadedData33:
+        avadat333 = []
+        for items in avadat33:
             if len(items) > 0:
-                loadedData333.append(items)
+                avadat333.append(items)
 
         looper = 1
-        for items in loadedData333[0:21]:
+        for items in avadat333[0:21]:
             if len(items)  > 0:
                 looper += 1
                 if "4465" in items:
@@ -2549,9 +2721,9 @@ class DisplayInDepth1(tk.Frame):
         
         
         looper = 1
-        numerator = [x.replace(" /", '0') for x in loadedData222[0:21] ]
+        numerator = [x.replace(" /", '0') for x in avadat222[0:21] ]
                 
-        for num, denom in zip(numerator, loadedData333[0:21]):
+        for num, denom in zip(numerator, avadat333[0:21]):
             looper += 1
             try:
                 ave = round( (float(num) / float(denom)) * 100, 2 )
@@ -2636,689 +2808,8 @@ class DisplayInDepth1(tk.Frame):
             except:
                 tk.Label(self, text= " ", bg= '#696969', font= Large_Font).grid(column= 5, row=looper, sticky=  tk.E + tk.W)
 
-        tk.Label(self, text= '{} Assignment(s)'.format(len(loadedData44)), font= Large_Font, bg= '#95c8f4').grid(row=1,column=1)
-    
-class  DisplayInDepth2(tk.Frame):
-    def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent)     
-        button1 = ttk.Button(self, text='Go back to HOME PAGE',  command= lambda: controller.show_frame(StartPage) )
-        button3 = ttk.Button(self, text= 'Show Avaliable Data', command= lambda: self.shower())
-        button1.grid(row= 1, column= 2)
-        button3.grid(row= 1, column= 3)
-        button4 = ttk.Button(self, text= 'BACK', command= lambda: controller.show_frame(DisplayInDepth1))     
-        button4.grid(row=1, column=4)
-        self.button5 = ttk.Button(self, text= 'NEXT', command= lambda: controller.show_frame(DisplayInDepth3))
-        self.button5.grid(row=1,column=5)
-        
+        tk.Label(self, text= '{} Assignment(s)'.format(len(avadat44)), font= Large_Font, bg= '#95c8f4').grid(row=1,column=1)'''
 
-    def shower(self):
-        data_file = open("temp5.txt", 'r')
-        loadedData1 = data_file.read()
-        loadedData11 = loadedData1.split(',')
-        data_file.close()
-        looper = 1
-        loadedData111 = []
-        for items in loadedData11:
-            if len(items) > 0:
-                loadedData111.append(items)
-        if len(loadedData111) < 50:
-            for items in loadedData111[21:-1]:
-                looper += 1
-                if "***" in items:
-                    tk.Label(self, text= items, bg= '#f9ee68', font= Large_Font).grid(column= 1, row=looper, sticky=  tk.E + tk.W)
-                else:
-                    tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 1, row=looper, sticky=  tk.E + tk.W)
-        
-
-            data_file = open("temp8.txt", 'r')
-            loadedData4 = data_file.read()
-            loadedData44 = loadedData4.split(',')
-            data_file.close() 
-            looper = 2
-            loadedData444 = []
-            for items in loadedData44:
-                loadedData444.append(items)
-        
-
-            for items in loadedData444[21:-1]:
-                looper += 1
-                tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 2, row=looper, sticky=  tk.W)
-
-            
-            data_file = open("temp6.txt", 'r')
-            loadedData2 = data_file.read()
-            loadedData22 = loadedData2.split(',')
-            data_file.close() 
-
-            looper = 1
-            loadedData222 = []
-            for items in loadedData22:
-                if len(items) > 0:
-                    loadedData222.append(items)
-
-            for items in loadedData222[21:-1]:
-                if len(items)  > 0:
-                    looper += 1
-                    if "4465" in items:
-                        tk.Label(self, text='({})'.format( items.replace('4465', '') ), bg= '#f9ee68', font= Large_Font).grid(column= 3, row=looper, sticky=  tk.E + tk.W)
-                    else:
-                        tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 3, row=looper, sticky=  tk.E + tk.W)
-            
-            
-            data_file = open("temp7.txt", 'r')
-            loadedData3 = data_file.read()
-            loadedData33 = loadedData3.split(',')
-            data_file.close() 
-
-            loadedData333 = []
-            for items in loadedData33:
-                if len(items) > 0:
-                    loadedData333.append(items)
-
-            looper = 1
-            for items in loadedData333[21:-1]:
-                if len(items)  > 0:
-                    looper += 1
-                    if "4465" in items:
-                        tk.Label(self, text= '({})'.format( items.replace('4465', '') ), bg= '#f9ee68', font= Large_Font).grid(column= 4, row=looper, sticky=  tk.E + tk.W)
-                    else:
-                        tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 4, row=looper, sticky=  tk.E + tk.W)
-            
-        
-            looper = 1
-            numerator = [x.replace(" /", '0') for x in loadedData222[21:-1] ]
-                    
-            for num, denom in zip(numerator, loadedData333[21:-1]):
-                looper += 1
-                try:
-                    ave = round( (float(num) / float(denom)) * 100, 2 )
-
-
-                    green = 100 # if grade is 100 it will be pure red
-                    yellow = 90 # grades at 90 will be pure yellow
-                    red = 85 #    grades below 85 will show as red
-
-
-                    if (ave < green) and (ave > yellow):
-
-                        redValue = int( str(round( 255 * (100-ave) / 10, 0)).split('.')[0] )
-                        greenValue = 255
-                        blueValue = 0 
-
-                    elif (ave < yellow) and (ave > red):
-
-                        redValue = 255
-                        greenValue = int( str( round(255 - 255 * (90 - ave) / 5, 0)).split('.')[0] )
-                        blueValue = 0
-
-
-                    elif ave == 100:
-                        
-                        redValue = 0
-                        greenValue = 255
-                        blueValue = 0
-                    
-                    elif ave == 90:
-                        
-                        redValue = 255
-                        greenValue = 255
-                        blueValue = 0
-
-                    else:
-
-                        redValue = 255
-                        greenValue = 0
-                        blueValue = 0
-
-                    def rgb_2_hex(red, green, blue):
-                        rgb = []
-                        hexColor = []
-
-                        rgb.append(red)
-                        rgb.append(green)
-                        rgb.append(blue)
-
-                        hex_keys = {10: 'A',
-                                    11: 'B',
-                                    12: 'C',
-                                    13: 'D',
-                                    14: 'E',
-                                    15: 'F'}
-                        
-                        
-
-                        for i in rgb:
-                            x = i // 16
-                            y = i % 16
-
-                            if x > 9:
-                                x = hex_keys[x]
-                            if y > 9:
-                                y = hex_keys[y]
-
-                            value = str(x) + str(y)
-                            hexColor.append(value)
-                            
-                        
-                        return hexColor
-
-                    hexColor = rgb_2_hex(redValue, greenValue, blueValue)
-                    hexColor = "#" + hexColor[0] + hexColor[1] + hexColor[2]
-
-                    
-                    
-                    tk.Label(self, text= "({}%)".format(ave), bg='#696969', fg= hexColor , font= Large_Font).grid(column= 5, row=looper, sticky=  tk.E + tk.W)
-                except:
-                        tk.Label(self, text= " ", bg= '#696969', font= Large_Font).grid(column= 5, row=looper, sticky=  tk.E + tk.W)        
-        else:
-            self.button5.grid(row=1, column= 5)
-            data_file = open("temp5.txt", 'r')
-            loadedData1 = data_file.read()
-            loadedData11 = loadedData1.split(',')
-            data_file.close()
-            looper = 1
-            loadedData444 = []
-
-            for items in loadedData11:
-                if len(items) > 0:
-                    loadedData444.append(items)
-            
-            
-            for items in loadedData444[21:41]:
-                looper += 1
-                if "***" in items:
-                        tk.Label(self, text= items, bg= '#f9ee68', font= Large_Font).grid(column= 1, row=looper, sticky=  tk.E + tk.W)
-                else:
-                    tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 1, row=looper, sticky=  tk.E + tk.W)
-        
-            
-            data_file = open("temp6.txt", 'r')
-            loadedData2 = data_file.read()
-            loadedData22 = loadedData2.split(',')
-            data_file.close() 
-
-            looper = 1
-            loadedData222 = []
-            for items in loadedData22:
-                if len(items) > 0:
-                    loadedData222.append(items)
-
-            for items in loadedData222[21:41]:
-                if len(items)  > 0:
-                    looper += 1
-                    if "4465" in items:
-                        tk.Label(self, text= '({})'.format( items.replace('4465', '') ), bg= '#f9ee68', font= Large_Font).grid(column= 3, row=looper, sticky=  tk.E + tk.W)
-                    else:
-                        tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 3, row=looper, sticky=  tk.E + tk.W)
-            
-            
-            data_file = open("temp7.txt", 'r')
-            loadedData3 = data_file.read()
-            loadedData33 = loadedData3.split(',')
-            data_file.close() 
-
-            loadedData333 = []
-            for items in loadedData33:
-                if len(items) > 0:
-                    loadedData333.append(items)
-
-            looper = 1
-            for items in loadedData333[21:41]:
-                if len(items)  > 0:
-                    looper += 1
-                    if "4465" in items:
-                        tk.Label(self, text= '({})'.format( items.replace('4465', '') ), bg= '#f9ee68', font= Large_Font).grid(column= 4, row=looper, sticky=  tk.E + tk.W)
-                    else:
-                        tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 4, row=looper, sticky=  tk.E + tk.W)
-            
-
-            data_file = open("temp8.txt", 'r')
-            loadedData5 = data_file.read()
-            loadedData55 = loadedData5.split(',')
-            data_file.close() 
-
-            loadedData555 = []
-            for items in loadedData55:
-                loadedData555.append(items)
-
-
-            #changed looper to be equal to 2, might fix ghe problem of discriptions being 1 row to high ... 12/24/18
-            looper = 2
-            for items in loadedData555[21:41]:
-                if len(items)  > 0:
-                    looper += 1
-                    tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 2, row=looper, sticky=  tk.E + tk.W)
-        
-
-
-
-            looper = 1
-            numerator = [x.replace(" /", '0') for x in loadedData222[21:41] ]
-                    
-            for num, denom in zip(numerator, loadedData333[21:41]):
-                looper += 1
-                try:
-                    ave = round( (float(num) / float(denom)) * 100, 2 )
-
-
-                    green = 100 # if grade is 100 it will be pure red
-                    yellow = 90 # grades at 90 will be pure yellow
-                    red = 85 #    grades below 85 will show as red
-
-
-                    if (ave < green) and (ave > yellow):
-
-                        redValue = int( str(round( 255 * (100-ave) / 10, 0)).split('.')[0] )
-                        greenValue = 255
-                        blueValue = 0 
-
-                    elif (ave < yellow) and (ave > red):
-
-                        redValue = 255
-                        greenValue = int( str( round(255 - 255 * (90 - ave) / 5, 0)).split('.')[0] )
-                        blueValue = 0
-
-
-                    elif ave == 100:
-                        
-                        redValue = 0
-                        greenValue = 255
-                        blueValue = 0
-                    
-                    elif ave == 90:
-                        
-                        redValue = 255
-                        greenValue = 255
-                        blueValue = 0
-
-                    else:
-
-                        redValue = 255
-                        greenValue = 0
-                        blueValue = 0
-
-                    def rgb_2_hex(red, green, blue):
-                        rgb = []
-                        hexColor = []
-
-                        rgb.append(red)
-                        rgb.append(green)
-                        rgb.append(blue)
-
-                        hex_keys = {10: 'A',
-                                    11: 'B',
-                                    12: 'C',
-                                    13: 'D',
-                                    14: 'E',
-                                    15: 'F'}
-                        
-                        
-
-                        for i in rgb:
-                            x = i // 16
-                            y = i % 16
-
-                            if x > 9:
-                                x = hex_keys[x]
-                            if y > 9:
-                                y = hex_keys[y]
-
-                            value = str(x) + str(y)
-                            hexColor.append(value)
-                            
-                        
-                        return hexColor
-
-                    hexColor = rgb_2_hex(redValue, greenValue, blueValue)
-                    hexColor = "#" + hexColor[0] + hexColor[1] + hexColor[2]
-
-                    
-                    
-                    tk.Label(self, text= "({}%)".format(ave), bg='#696969', fg= hexColor , font= Large_Font).grid(column= 5, row=looper, sticky=  tk.E + tk.W)
-                        
-                except:
-                    tk.Label(self, text= " ", bg= '#696969', font= Large_Font).grid(column= 5, row=looper, sticky=  tk.E + tk.W)
-
-class  DisplayInDepth3(tk.Frame):
-    def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent)   
-        button1 = ttk.Button(self, text='Go back to HOME PAGE',  command= lambda: controller.show_frame(StartPage) )
-        button3 = ttk.Button(self, text= 'Show Avaliable Data', command= lambda: self.shower())
-        button1.grid(row= 1, column= 2)
-        button3.grid(row= 1, column= 3)
-        button4 = ttk.Button(self, text= 'BACK', command= lambda: controller.show_frame(DisplayInDepth2))     
-        button4.grid(row=1, column=4)
-        button4 = ttk.Button(self, text= 'NEXT', command= lambda: controller.show_frame(DisplayInDepth4))     
-        button4.grid(row=1, column=5)
-
-    def shower(self):
-        data_file = open("temp5.txt", 'r')
-        loadedData1 = data_file.read()
-        loadedData11 = loadedData1.split(',')
-        data_file.close()
-        looper = 1
-        loadedData111 = []
-        for items in loadedData11:
-            if len(items) > 0:
-                loadedData111.append(items)
-
-        for items in loadedData111[41:61]:
-            looper += 1
-            if "***" in items:
-                tk.Label(self, text= items, bg= '#f9ee68', font= Large_Font).grid(column= 1, row=looper, sticky=  tk.E + tk.W)
-            else:
-                tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 1, row=looper, sticky=  tk.E + tk.W)
-    
-        data_file = open("temp8.txt", 'r')
-        loadedData4 = data_file.read()
-        loadedData44 = loadedData4.split(',')
-        data_file.close() 
-        looper = 2
-        loadedData444 = []
-        for items in loadedData44:
-            loadedData444.append(items)
-        
-
-        for items in loadedData444[41:61]:
-            looper += 1
-            tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 2, row=looper, sticky=  tk.W)
-
-        
-        data_file = open("temp6.txt", 'r')
-        loadedData2 = data_file.read()
-        loadedData22 = loadedData2.split(',')
-        data_file.close() 
-
-        looper = 1
-        loadedData222 = []
-        for items in loadedData22:
-            if len(items) > 0:
-                loadedData222.append(items)
-
-        for items in loadedData222[41:61]:
-            if len(items)  > 0:
-                looper += 1
-                if "4465" in items:
-                    tk.Label(self, text= '({})'.format( items.replace('4465', '') ), bg= '#f9ee68', font= Large_Font).grid(column= 3, row=looper, sticky=  tk.E + tk.W)
-                else:
-                    tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 3, row=looper, sticky=  tk.E + tk.W)
-        
-        
-        data_file = open("temp7.txt", 'r')
-        loadedData3 = data_file.read()
-        loadedData33 = loadedData3.split(',')
-        data_file.close() 
-
-        loadedData333 = []
-        for items in loadedData33:
-            if len(items) > 0:
-                loadedData333.append(items)
-
-        looper = 1
-        for items in loadedData333[41:61]:
-            if len(items)  > 0:
-                looper += 1
-                if "4465" in items:
-                    tk.Label(self, text= '({})'.format( items.replace('4465', '') ), bg= '#f9ee68', font= Large_Font).grid(column= 4, row=looper, sticky=  tk.E + tk.W)
-                else:
-                    tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 4, row=looper, sticky=  tk.E + tk.W)
-        
-    
-        looper = 1
-        numerator = [x.replace(" /", '0') for x in loadedData222[41:61] ]
-                
-        for num, denom in zip(numerator, loadedData333[41:61]):
-            looper += 1
-            try:
-                ave = round( (float(num) / float(denom)) * 100, 2 )
-
-
-                green = 100 # if grade is 100 it will be pure red
-                yellow = 90 # grades at 90 will be pure yellow
-                red = 85 #    grades below 85 will show as red
-
-
-                if (ave < green) and (ave > yellow):
-
-                    redValue = int( str(round( 255 * (100-ave) / 10, 0)).split('.')[0] )
-                    greenValue = 255
-                    blueValue = 0 
-
-                elif (ave < yellow) and (ave > red):
-
-                    redValue = 255
-                    greenValue = int( str( round(255 - 255 * (90 - ave) / 5, 0)).split('.')[0] )
-                    blueValue = 0
-
-
-                elif ave == 100:
-                    
-                    redValue = 0
-                    greenValue = 255
-                    blueValue = 0
-                
-                elif ave == 90:
-                    
-                    redValue = 255
-                    greenValue = 255
-                    blueValue = 0
-
-                else:
-
-                    redValue = 255
-                    greenValue = 0
-                    blueValue = 0
-
-                def rgb_2_hex(red, green, blue):
-                    rgb = []
-                    hexColor = []
-
-                    rgb.append(red)
-                    rgb.append(green)
-                    rgb.append(blue)
-
-                    hex_keys = {10: 'A',
-                                11: 'B',
-                                12: 'C',
-                                13: 'D',
-                                14: 'E',
-                                15: 'F'}
-                    
-                    
-
-                    for i in rgb:
-                        x = i // 16
-                        y = i % 16
-
-                        if x > 9:
-                            x = hex_keys[x]
-                        if y > 9:
-                            y = hex_keys[y]
-
-                        value = str(x) + str(y)
-                        hexColor.append(value)
-                        
-                    
-                    return hexColor
-
-                hexColor = rgb_2_hex(redValue, greenValue, blueValue)
-                hexColor = "#" + hexColor[0] + hexColor[1] + hexColor[2]
-
-                
-                
-                tk.Label(self, text= "({}%)".format(ave), bg='#696969', fg= hexColor , font= Large_Font).grid(column= 5, row=looper, sticky=  tk.E + tk.W)
-
-            except:
-                tk.Label(self, text= " ", bg= '#696969', font= Large_Font).grid(column= 5, row=looper, sticky=  tk.E + tk.W)
-
-class DisplayInDepth4(tk.Frame):
-    def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent)
-        button1 = ttk.Button(self, text='Go back to HOME PAGE',  command= lambda: controller.show_frame(StartPage) )
-        button3 = ttk.Button(self, text= 'Show Avaliable Data', command= lambda: self.shower())
-        button1.grid(row= 1, column= 2)
-        button3.grid(row= 1, column= 3)
-        button4 = ttk.Button(self, text= 'BACK', command= lambda: controller.show_frame(DisplayInDepth3))     
-        button4.grid(row=1, column=4)
-
-    def shower(self):
-        data_file = open("temp5.txt", 'r')
-        loadedData1 = data_file.read()
-        loadedData11 = loadedData1.split(',')
-        data_file.close()
-        looper = 1
-        loadedData111 = []
-        for items in loadedData11:
-            if len(items) > 0:
-                loadedData111.append(items)
-
-        for items in loadedData111[61:81]:
-            looper += 1
-            if "***" in items:
-                tk.Label(self, text= items, bg= '#f9ee68', font= Large_Font).grid(column= 1, row=looper, sticky=  tk.E + tk.W)
-            else:
-                tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 1, row=looper, sticky=  tk.E + tk.W)
-    
-        data_file = open("temp8.txt", 'r')
-        loadedData4 = data_file.read()
-        loadedData44 = loadedData4.split(',')
-        data_file.close() 
-        looper = 2
-        loadedData444 = []
-        for items in loadedData44:
-            loadedData444.append(items)
-        
-
-        for items in loadedData444[61:81]:
-            looper += 1
-            tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 2, row=looper, sticky=  tk.W)
-
-        
-        data_file = open("temp6.txt", 'r')
-        loadedData2 = data_file.read()
-        loadedData22 = loadedData2.split(',')
-        data_file.close() 
-
-        looper = 1
-        loadedData222 = []
-        for items in loadedData22:
-            if len(items) > 0:
-                loadedData222.append(items)
-
-        for items in loadedData222[61:81]:
-            if len(items)  > 0:
-                looper += 1
-                if "4465" in items:
-                    tk.Label(self, text= '({})'.format( items.replace('4465', '') ), bg= '#f9ee68', font= Large_Font).grid(column= 3, row=looper, sticky=  tk.E + tk.W)
-                else:
-                    tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 3, row=looper, sticky=  tk.E + tk.W)
-        
-        
-        data_file = open("temp7.txt", 'r')
-        loadedData3 = data_file.read()
-        loadedData33 = loadedData3.split(',')
-        data_file.close() 
-
-        loadedData333 = []
-        for items in loadedData33:
-            if len(items) > 0:
-                loadedData333.append(items)
-
-        looper = 1
-        for items in loadedData333[61:81]:
-            if len(items)  > 0:
-                looper += 1
-                if "4465" in items:
-                    tk.Label(self, text= '({})'.format( items.replace('4465', '') ), bg= '#f9ee68', font= Large_Font).grid(column= 4, row=looper, sticky=  tk.E + tk.W)
-                else:
-                    tk.Label(self, text= items, bg= '#95c8f4', font= Large_Font).grid(column= 4, row=looper, sticky=  tk.E + tk.W)
-        
-    
-        looper = 1
-        numerator = [x.replace(" /", '0') for x in loadedData222[61:81] ]
-                
-        for num, denom in zip(numerator, loadedData333[61:81]):
-            looper += 1
-            try:
-                ave = round( (float(num) / float(denom)) * 100, 2 )
-
-
-                green = 100 # if grade is 100 it will be pure red
-                yellow = 90 # grades at 90 will be pure yellow
-                red = 85 #    grades below 85 will show as red
-
-
-                if (ave < green) and (ave > yellow):
-
-                    redValue = int( str(round( 255 * (100-ave) / 10, 0)).split('.')[0] )
-                    greenValue = 255
-                    blueValue = 0 
-
-                elif (ave < yellow) and (ave > red):
-
-                    redValue = 255
-                    greenValue = int( str( round(255 - 255 * (90 - ave) / 5, 0)).split('.')[0] )
-                    blueValue = 0
-
-
-                elif ave == 100:
-                    
-                    redValue = 0
-                    greenValue = 255
-                    blueValue = 0
-                
-                elif ave == 90:
-                    
-                    redValue = 255
-                    greenValue = 255
-                    blueValue = 0
-
-                else:
-
-                    redValue = 255
-                    greenValue = 0
-                    blueValue = 0
-
-                def rgb_2_hex(red, green, blue):
-                    rgb = []
-                    hexColor = []
-
-                    rgb.append(red)
-                    rgb.append(green)
-                    rgb.append(blue)
-
-                    hex_keys = {10: 'A',
-                                11: 'B',
-                                12: 'C',
-                                13: 'D',
-                                14: 'E',
-                                15: 'F'}
-                    
-                    
-
-                    for i in rgb:
-                        x = i // 16
-                        y = i % 16
-
-                        if x > 9:
-                            x = hex_keys[x]
-                        if y > 9:
-                            y = hex_keys[y]
-
-                        value = str(x) + str(y)
-                        hexColor.append(value)
-                        
-                    
-                    return hexColor
-
-                hexColor = rgb_2_hex(redValue, greenValue, blueValue)
-                hexColor = "#" + hexColor[0] + hexColor[1] + hexColor[2]
-
-                
-                
-                tk.Label(self, text= "({}%)".format(ave), bg='#696969', fg= hexColor , font= Large_Font).grid(column= 5, row=looper, sticky=  tk.E + tk.W)  
-            except:
-                tk.Label(self, text= " ", bg= '#696969', font= Large_Font).grid(column= 5, row=looper, sticky=  tk.E + tk.W)
 
 class Homework(tk.Frame):
     def __init__(self, parent, controller):
@@ -3331,10 +2822,10 @@ class Homework(tk.Frame):
     def shower(self):
         try:
             data_file = open("temp9.txt", 'r')
-            loadedData1 = data_file.read()
-            loadedData11 = loadedData1.split('***')
-            dates = loadedData11[0].split(',')
-            hws = loadedData11[1].split('^^')
+            avadat1 = data_file.read()
+            avadat11 = avadat1.split('***')
+            dates = avadat11[0].split(',')
+            hws = avadat11[1].split('^^')
             data_file.close()
 
             looper = 1
