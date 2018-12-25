@@ -79,6 +79,27 @@ unatated = una.add_subplot(111)
 a = f.add_subplot(111)
 baro = bary.add_subplot(111)
 
+class reassign1(object):
+    #This class stores the integer number of the player's value once they abstain at any point
+    #reassign_pv will be used to compare compturn vlue to player value and return a string 
+    def __init__(self, pvalue= 0):
+        self.pvalue = pvalue
+
+    def reassign_user(self):
+        #This class holds the value of the player's value outside of playerturn()
+        return self.pvalue
+
+class reassign2(object):
+    #This class stores the integer number of the player's value once they abstain at any point
+    #reassign_pv will be used to compare compturn vlue to player value and return a string 
+    def __init__(self, pvalue= 0):
+        self.pvalue = pvalue
+
+    def reassign_pass(self):
+        #This class holds the value of the player's value outside of playerturn()
+        return self.pvalue
+
+
 class GradeGetterApp(tk.Tk):
     
     def __init__(self, *args, **kwargs):
@@ -1013,7 +1034,7 @@ class Login(tk.Frame):
                 try:
                     baro.bar(x=class6_name, height= class6_grade, color= "#FF8CEC", lw = 0.35)
                 except:
-                    print("Class {} is not avaliable for bar graph".format('dood'))
+                    print("Class {} is not avaliable for bar graph".format('[7]'))
                 try:
                     baro.bar(x='Average', height= average, lw = 0.35)
                 except:
@@ -1846,6 +1867,7 @@ class PageOne(tk.Frame):
         try:
             self.button9 = ttk.Button(self, text = " ", command= lambda: controller.show_frame(ClassSix))
         except:
+            #some users do not have up to six classes
             pass
         #self.button10 = ttk.Button(self, text = " ", command= lambda: controller.show_frame(ClassSeven))
         self.button11 = ttk.Button(self, text= ' ',command= lambda: controller.show_frame(UnannotatedGraph) )
@@ -1854,6 +1876,8 @@ class PageOne(tk.Frame):
         self.button13 = ttk.Button(self, text= 'Plot', command= lambda: self.refer())
         self.button14 = ttk.Button(self, text= 'AVERAGE', command= lambda: controller.show_frame(Average))
         self.label1 = tk.Label(self, text= 'Plot a referance line', font= smaller_font, bg ='#95c8f4' )
+
+        self.firstTime = 0
         
     def refer(self):
         
@@ -1873,39 +1897,41 @@ class PageOne(tk.Frame):
 
     def refresh(self):
         if tim:
-            self.button4.config(text= '1')
-            self.button4.place(x=0,y=0)
-            self.button5.config(text='2')
-            self.button5.place(x=60,y=0)
-            self.button6.config(text='3')
-            self.button6.place(x=120,y=0)
-            self.button7.config(text='4')
-            self.button7.place(x=180,y=0)
-            self.button8.config(text='5')
-            self.button8.place(x=240,y=0)
-            self.button9.config(text='6')
-            self.button9.place(x=300,y=0)
-            #self.button10.config(text='7')
-            #self.button10.place(x=360,y=0)
-            self.button14.place(x=440, y=0)
-            self.button11.place(x=180,y=50)
-            self.button11.config(text='Show Unannotated Graph')
-            self.button12.place(x=390, y=50)
-            #self.e.place(x=1000,y=30)
-            #self.label1.place(x=1000,y=0)
-            #self.button13.place(x=1150, y= 30)
+            if self.firstTime == 0:
+                self.button4.config(text= '1')
+                self.button4.place(x=0,y=0)
+                self.button5.config(text='2')
+                self.button5.place(x=60,y=0)
+                self.button6.config(text='3')
+                self.button6.place(x=120,y=0)
+                self.button7.config(text='4')
+                self.button7.place(x=180,y=0)
+                self.button8.config(text='5')
+                self.button8.place(x=240,y=0)
+                self.button9.config(text='6')
+                self.button9.place(x=300,y=0)
+                #self.button10.config(text='7')
+                #self.button10.place(x=360,y=0)
+                self.button14.place(x=440, y=0)
+                self.button11.place(x=180,y=50)
+                self.button11.config(text='Show Unannotated Graph')
+                self.button12.place(x=390, y=50)
+                #self.e.place(x=1000,y=30)
+                #self.label1.place(x=1000,y=0)
+                #self.button13.place(x=1150, y= 30)
 
+                
             
-        
-     
-        canvas = FigureCanvasTkAgg(f, self)
-        
-        canvas.draw()
-        canvas.get_tk_widget().pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+            
+                canvas = FigureCanvasTkAgg(f, self)
+                
+                canvas.draw()
+                canvas.get_tk_widget().pack(side= tk.TOP, fill= tk.BOTH, expand= True)
 
-        toolbar = NavigationToolbar2TkAgg(canvas, self)
-        toolbar.update()
-        canvas._tkcanvas.pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+                toolbar = NavigationToolbar2TkAgg(canvas, self)
+                toolbar.update()
+                canvas._tkcanvas.pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+                self.firstTime += 1
 
 class BarGraph(tk.Frame):
     def __init__(self, parent, controller):
@@ -1915,17 +1941,20 @@ class BarGraph(tk.Frame):
         button2 = ttk.Button(self,  text= 'Update Graph',  command= lambda: self.refresh2())
         button1.pack()
         button2.pack()
+        self.firstTime = 0
     
     def refresh2(self):
-        canvas = FigureCanvasTkAgg(bary, self)
-        
-        canvas.draw()
-        canvas.get_tk_widget().pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+        if self.firstTime == 0:
+            canvas = FigureCanvasTkAgg(bary, self)
+            
+            canvas.draw()
+            canvas.get_tk_widget().pack(side= tk.TOP, fill= tk.BOTH, expand= True)
 
-        toolbar = NavigationToolbar2TkAgg(canvas, self)
-        toolbar.update()
-        canvas._tkcanvas.pack(side= tk.TOP, fill= tk.BOTH, expand= True)
-                  
+            toolbar = NavigationToolbar2TkAgg(canvas, self)
+            toolbar.update()
+            canvas._tkcanvas.pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+            self.firstTime += 1
+
 class ClassOne(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)  
@@ -1935,61 +1964,64 @@ class ClassOne(tk.Frame):
         self.label.pack()
         button1.pack()
         button2.pack()
+        self.firstTime = 0
 
     def refresh2(self):
 
+        if self.firstTime == 0:
+            data_file = open("temp10.csv", 'r' )
 
-        data_file = open("temp10.csv", 'r' )
-
-        csv_reader = csv.reader(data_file)
-
-
-        class_names = []
-        for row in csv_reader:
-            for item in row:
-                class_names.append(item)
-
-        graph_title = class_names[0]
-
-        data_file.close()
-
-        self.label.config(text= graph_title)
-        
+            csv_reader = csv.reader(data_file)
 
 
-        try:    
-            data_1 = open("one.txt", "r")
-            data11 = data_1.read().split(',')
-            data_1.close()
+            class_names = []
+            for row in csv_reader:
+                for item in row:
+                    class_names.append(item)
 
-            data11y = []
-            data11x = []
+            graph_title = class_names[0]
 
-            for items in data11:
-                y_valuer = items.split('@')[0]
-                if len(y_valuer) > 1:
-                    y_value = float(y_valuer)
-                    data11y.append(y_value)
-                x_valuer = items.split('@')[-1]
-                if len(x_valuer) > 1:
-                    data11x.append(x_valuer)         
-        except:
-            pass   
+            data_file.close()
 
-        zed1 = zed.add_subplot(111)
-        zed1.plot(data11x,data11y,"#ED1F11", marker= '.' )
+            self.label.config(text= graph_title)
+            
 
-        for xy in zip(data11x, data11y):
-                    zed1.annotate('(%s, %s)' % xy, xy=xy, textcoords='data')
 
-        canvas = FigureCanvasTkAgg(zed, self)
-        
-        canvas.draw()
-        canvas.get_tk_widget().pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+            try:    
+                data_1 = open("one.txt", "r")
+                data11 = data_1.read().split(',')
+                data_1.close()
 
-        toolbar = NavigationToolbar2TkAgg(canvas, self)
-        toolbar.update()
-        canvas._tkcanvas.pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+                data11y = []
+                data11x = []
+
+                for items in data11:
+                    y_valuer = items.split('@')[0]
+                    if len(y_valuer) > 1:
+                        y_value = float(y_valuer)
+                        data11y.append(y_value)
+                    x_valuer = items.split('@')[-1]
+                    if len(x_valuer) > 1:
+                        data11x.append(x_valuer)         
+            except:
+                pass   
+
+            zed1 = zed.add_subplot(111)
+            zed1.plot(data11x,data11y,"#ED1F11", marker= '.' )
+
+            for xy in zip(data11x, data11y):
+                        zed1.annotate('(%s, %s)' % xy, xy=xy, textcoords='data')
+
+            canvas = FigureCanvasTkAgg(zed, self)
+            
+            canvas.draw()
+            canvas.get_tk_widget().pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+
+            toolbar = NavigationToolbar2TkAgg(canvas, self)
+            toolbar.update()
+            canvas._tkcanvas.pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+
+            self.firstTime += 1
 
 class ClassTwo(tk.Frame):
     def __init__(self, parent, controller):
@@ -2001,59 +2033,62 @@ class ClassTwo(tk.Frame):
         self.label.pack()
         button1.pack()
         button2.pack()
+        self.firstTime = 0
 
     def refresh2(self):
-        try:    
-            data_2 = open("two.txt", "r")
-            data22 = data_2.read().split(',')
-            data_2.close()
+        if self.firstTime == 0:
+            try:    
+                data_2 = open("two.txt", "r")
+                data22 = data_2.read().split(',')
+                data_2.close()
 
-            data22y = []
-            data22x = []
+                data22y = []
+                data22x = []
 
-            for items in data22:
-                y_valuer = items.split('@')[0]
-                if len(y_valuer) > 1:
-                    y_value = float(y_valuer)
-                    data22y.append(y_value)
-                x_valuer = items.split('@')[-1]
-                if len(x_valuer) > 1:
-                    data22x.append(x_valuer)         
-        except:
-            pass
+                for items in data22:
+                    y_valuer = items.split('@')[0]
+                    if len(y_valuer) > 1:
+                        y_value = float(y_valuer)
+                        data22y.append(y_value)
+                    x_valuer = items.split('@')[-1]
+                    if len(x_valuer) > 1:
+                        data22x.append(x_valuer)         
+            except:
+                pass
 
-        data_file = open("temp10.csv", 'r' )
+            data_file = open("temp10.csv", 'r' )
 
-        csv_reader = csv.reader(data_file)
+            csv_reader = csv.reader(data_file)
 
 
-        class_names = []
-        for row in csv_reader:
-            for item in row:
-                class_names.append(item)
+            class_names = []
+            for row in csv_reader:
+                for item in row:
+                    class_names.append(item)
 
-        graph_title = class_names[1]
+            graph_title = class_names[1]
 
-        data_file.close()
+            data_file.close()
 
-        self.label.config(text= graph_title)
+            self.label.config(text= graph_title)
 
-        zed22 = Figure(figsize= (10,5), dpi=100)
+            zed22 = Figure(figsize= (10,5), dpi=100)
 
-        zed2 = zed22.add_subplot(111)
-        zed2.plot(data22x,data22y,"#010101", marker='.' )
+            zed2 = zed22.add_subplot(111)
+            zed2.plot(data22x,data22y,"#010101", marker='.' )
 
-        for xy in zip(data22x, data22y):
-                    zed2.annotate('(%s, %s)' % xy, xy=xy, textcoords='data')
+            for xy in zip(data22x, data22y):
+                        zed2.annotate('(%s, %s)' % xy, xy=xy, textcoords='data')
 
-        canvas = FigureCanvasTkAgg(zed22, self)
-        
-        canvas.draw()
-        canvas.get_tk_widget().pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+            canvas = FigureCanvasTkAgg(zed22, self)
+            
+            canvas.draw()
+            canvas.get_tk_widget().pack(side= tk.TOP, fill= tk.BOTH, expand= True)
 
-        toolbar = NavigationToolbar2TkAgg(canvas, self)
-        toolbar.update()
-        canvas._tkcanvas.pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+            toolbar = NavigationToolbar2TkAgg(canvas, self)
+            toolbar.update()
+            canvas._tkcanvas.pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+            self.firstTime += 1
 
 class ClassThree(tk.Frame):
     def __init__(self, parent, controller):
@@ -2065,60 +2100,63 @@ class ClassThree(tk.Frame):
         self.label.pack()
         button1.pack()
         button2.pack()
+        self.firstTime = 0
 
     def refresh2(self):
-        try:    
-            data_3 = open("three.txt", "r")
-            data33 = data_3.read().split(',')
-            data_3.close()
+        if self.firstTime == 0:
+            try:    
+                data_3 = open("three.txt", "r")
+                data33 = data_3.read().split(',')
+                data_3.close()
 
-            data33y = []
-            data33x = []
+                data33y = []
+                data33x = []
 
-            for items in data33:
-                y_valuer = items.split('@')[0]
-                if len(y_valuer) > 1:
-                    y_value = float(y_valuer)
-                    data33y.append(y_value)
-                x_valuer = items.split('@')[-1]
-                if len(x_valuer) > 1:
-                    data33x.append(x_valuer)         
-        except:
-            pass   
+                for items in data33:
+                    y_valuer = items.split('@')[0]
+                    if len(y_valuer) > 1:
+                        y_value = float(y_valuer)
+                        data33y.append(y_value)
+                    x_valuer = items.split('@')[-1]
+                    if len(x_valuer) > 1:
+                        data33x.append(x_valuer)         
+            except:
+                pass   
 
-        data_file = open("temp10.csv", 'r' )
+            data_file = open("temp10.csv", 'r' )
 
-        csv_reader = csv.reader(data_file)
-
-
-        class_names = []
-        for row in csv_reader:
-            for item in row:
-                class_names.append(item)
-
-        graph_title = class_names[2]
-
-        data_file.close()
-
-        self.label.config(text= graph_title)
-
-        zed33 = Figure(figsize= (10,5), dpi=100)
+            csv_reader = csv.reader(data_file)
 
 
-        zed3 = zed33.add_subplot(111)
-        zed3.plot(data33x,data33y, "#25bcb5", marker='.' )
+            class_names = []
+            for row in csv_reader:
+                for item in row:
+                    class_names.append(item)
 
-        for xy in zip(data33x, data33y):
-                    zed3.annotate('(%s, %s)' % xy, xy=xy, textcoords='data')
+            graph_title = class_names[2]
 
-        canvas = FigureCanvasTkAgg(zed33, self)
-        
-        canvas.draw()
-        canvas.get_tk_widget().pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+            data_file.close()
 
-        toolbar = NavigationToolbar2TkAgg(canvas, self)
-        toolbar.update()
-        canvas._tkcanvas.pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+            self.label.config(text= graph_title)
+
+            zed33 = Figure(figsize= (10,5), dpi=100)
+
+
+            zed3 = zed33.add_subplot(111)
+            zed3.plot(data33x,data33y, "#25bcb5", marker='.' )
+
+            for xy in zip(data33x, data33y):
+                        zed3.annotate('(%s, %s)' % xy, xy=xy, textcoords='data')
+
+            canvas = FigureCanvasTkAgg(zed33, self)
+            
+            canvas.draw()
+            canvas.get_tk_widget().pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+
+            toolbar = NavigationToolbar2TkAgg(canvas, self)
+            toolbar.update()
+            canvas._tkcanvas.pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+            self.firstTime += 1
 
 class ClassFour(tk.Frame):
     def __init__(self, parent, controller):
@@ -2130,61 +2168,64 @@ class ClassFour(tk.Frame):
         self.label.pack()
         button1.pack()
         button2.pack()
+        self.firstTime = 0
 
     def refresh2(self):
-        try:    
-            data_4 = open("four.txt", "r")
-            data44 = data_4.read().split(',')
-            data_4.close()
+        if self.firstTime == 0:
+            try:    
+                data_4 = open("four.txt", "r")
+                data44 = data_4.read().split(',')
+                data_4.close()
 
-            data44y = []
-            data44x = []
+                data44y = []
+                data44x = []
 
-            for items in data44:
-                y_valuer = items.split('@')[0]
-                if len(y_valuer) > 1:
-                    y_value = float(y_valuer)
-                    data44y.append(y_value)
-                x_valuer = items.split('@')[-1]
-                if len(x_valuer) > 1:
-                    data44x.append(x_valuer)         
-        except:
-            pass   
-
-
-        data_file = open("temp10.csv", 'r' )
-
-        csv_reader = csv.reader(data_file)
+                for items in data44:
+                    y_valuer = items.split('@')[0]
+                    if len(y_valuer) > 1:
+                        y_value = float(y_valuer)
+                        data44y.append(y_value)
+                    x_valuer = items.split('@')[-1]
+                    if len(x_valuer) > 1:
+                        data44x.append(x_valuer)         
+            except:
+                pass   
 
 
-        class_names = []
-        for row in csv_reader:
-            for item in row:
-                class_names.append(item)
+            data_file = open("temp10.csv", 'r' )
 
-        graph_title = class_names[3]
-
-        data_file.close()
-
-        self.label.config(text= graph_title)
-
-        zed44 = Figure(figsize= (10,5), dpi=100)
+            csv_reader = csv.reader(data_file)
 
 
-        zed4 = zed44.add_subplot(111)
-        zed4.plot(data44x,data44y,"#29A223", marker='.')
+            class_names = []
+            for row in csv_reader:
+                for item in row:
+                    class_names.append(item)
 
-        for xy in zip(data44x, data44y):
-                    zed4.annotate('(%s, %s)' % xy, xy=xy, textcoords='data')
+            graph_title = class_names[3]
 
-        canvas = FigureCanvasTkAgg(zed44, self)
-        
-        canvas.draw()
-        canvas.get_tk_widget().pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+            data_file.close()
 
-        toolbar = NavigationToolbar2TkAgg(canvas, self)
-        toolbar.update()
-        canvas._tkcanvas.pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+            self.label.config(text= graph_title)
+
+            zed44 = Figure(figsize= (10,5), dpi=100)
+
+
+            zed4 = zed44.add_subplot(111)
+            zed4.plot(data44x,data44y,"#29A223", marker='.')
+
+            for xy in zip(data44x, data44y):
+                        zed4.annotate('(%s, %s)' % xy, xy=xy, textcoords='data')
+
+            canvas = FigureCanvasTkAgg(zed44, self)
+            
+            canvas.draw()
+            canvas.get_tk_widget().pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+
+            toolbar = NavigationToolbar2TkAgg(canvas, self)
+            toolbar.update()
+            canvas._tkcanvas.pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+            self.firstTime += 1 
 
 class ClassFive(tk.Frame):
     def __init__(self, parent, controller):
@@ -2196,60 +2237,63 @@ class ClassFive(tk.Frame):
         self.label.pack()
         button1.pack()
         button2.pack()
+        self.firstTime = 0
 
     def refresh2(self):
-        try:    
-            data_5 = open("five.txt", "r")
-            data55 = data_5.read().split(',')
-            data_5.close()
+        if self.firstTime == 0:
+            try:    
+                data_5 = open("five.txt", "r")
+                data55 = data_5.read().split(',')
+                data_5.close()
 
-            data55y = []
-            data55x = []
+                data55y = []
+                data55x = []
 
-            for items in data55:
-                y_valuer = items.split('@')[0]
-                if len(y_valuer) > 1:
-                    y_value = float(y_valuer)
-                    data55y.append(y_value)
-                x_valuer = items.split('@')[-1]
-                if len(x_valuer) > 1:
-                    data55x.append(x_valuer)         
-        except:
-            pass   
+                for items in data55:
+                    y_valuer = items.split('@')[0]
+                    if len(y_valuer) > 1:
+                        y_value = float(y_valuer)
+                        data55y.append(y_value)
+                    x_valuer = items.split('@')[-1]
+                    if len(x_valuer) > 1:
+                        data55x.append(x_valuer)         
+            except:
+                pass   
 
-        data_file = open("temp10.csv", 'r' )
+            data_file = open("temp10.csv", 'r' )
 
-        csv_reader = csv.reader(data_file)
-
-
-        class_names = []
-        for row in csv_reader:
-            for item in row:
-                class_names.append(item)
-
-        graph_title = class_names[4]
-
-        data_file.close()
-
-        self.label.config(text= graph_title)
+            csv_reader = csv.reader(data_file)
 
 
-        zed55 = Figure(figsize= (10,5), dpi=100)
+            class_names = []
+            for row in csv_reader:
+                for item in row:
+                    class_names.append(item)
 
-        zed5 = zed55.add_subplot(111)
-        zed5.plot(data55x,data55y,"#2E3ACA", marker='.')
+            graph_title = class_names[4]
 
-        for xy in zip(data55x, data55y):
-                    zed5.annotate('(%s, %s)' % xy, xy=xy, textcoords='data')
+            data_file.close()
 
-        canvas = FigureCanvasTkAgg(zed55, self)
-        
-        canvas.draw()
-        canvas.get_tk_widget().pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+            self.label.config(text= graph_title)
 
-        toolbar = NavigationToolbar2TkAgg(canvas, self)
-        toolbar.update()
-        canvas._tkcanvas.pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+
+            zed55 = Figure(figsize= (10,5), dpi=100)
+
+            zed5 = zed55.add_subplot(111)
+            zed5.plot(data55x,data55y,"#2E3ACA", marker='.')
+
+            for xy in zip(data55x, data55y):
+                        zed5.annotate('(%s, %s)' % xy, xy=xy, textcoords='data')
+
+            canvas = FigureCanvasTkAgg(zed55, self)
+            
+            canvas.draw()
+            canvas.get_tk_widget().pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+
+            toolbar = NavigationToolbar2TkAgg(canvas, self)
+            toolbar.update()
+            canvas._tkcanvas.pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+            self.firstTime += 1
 
 class ClassSix(tk.Frame):
     def __init__(self, parent, controller):
@@ -2261,60 +2305,64 @@ class ClassSix(tk.Frame):
         self.label.pack()
         button1.pack()
         button2.pack()
+        self.firstTime = 0
 
     def refresh2(self):
-        try:    
-            data_6 = open("six.txt", "r")
-            data66 = data_6.read().split(',')
-            data_6.close()
+        if self.firstTime == 0:
+            try:    
+                data_6 = open("six.txt", "r")
+                data66 = data_6.read().split(',')
+                data_6.close()
 
-            data66y = []
-            data66x = []
+                data66y = []
+                data66x = []
 
-            for items in data66:
-                y_valuer = items.split('@')[0]
-                if len(y_valuer) > 1:
-                    y_value = float(y_valuer)
-                    data66y.append(y_value)
-                x_valuer = items.split('@')[-1]
-                if len(x_valuer) > 1:
-                    data66x.append(x_valuer)         
-        except:
-            pass   
+                for items in data66:
+                    y_valuer = items.split('@')[0]
+                    if len(y_valuer) > 1:
+                        y_value = float(y_valuer)
+                        data66y.append(y_value)
+                    x_valuer = items.split('@')[-1]
+                    if len(x_valuer) > 1:
+                        data66x.append(x_valuer)         
+            except:
+                pass   
 
-        data_file = open("temp10.csv", 'r' )
+            data_file = open("temp10.csv", 'r' )
 
-        csv_reader = csv.reader(data_file)
-
-
-        class_names = []
-        for row in csv_reader:
-            for item in row:
-                class_names.append(item)
-
-        graph_title = class_names[5]
-
-        data_file.close()
-
-        self.label.config(text= graph_title)
-
-        zed66 = Figure(figsize= (10,5), dpi=100)
+            csv_reader = csv.reader(data_file)
 
 
-        zed6 = zed66.add_subplot(111)
-        zed6.plot(data66x,data66y,"#FF8CEC", marker='.')
+            class_names = []
+            for row in csv_reader:
+                for item in row:
+                    class_names.append(item)
 
-        for xy in zip(data66x, data66y):
-                    zed6.annotate('(%s, %s)' % xy, xy=xy, textcoords='data')
+            graph_title = class_names[5]
 
-        canvas = FigureCanvasTkAgg(zed66, self)
-        
-        canvas.draw()
-        canvas.get_tk_widget().pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+            data_file.close()
 
-        toolbar = NavigationToolbar2TkAgg(canvas, self)
-        toolbar.update()
-        canvas._tkcanvas.pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+            self.label.config(text= graph_title)
+
+            zed66 = Figure(figsize= (10,5), dpi=100)
+
+
+            zed6 = zed66.add_subplot(111)
+            zed6.plot(data66x,data66y,"#FF8CEC", marker='.')
+
+            for xy in zip(data66x, data66y):
+                        zed6.annotate('(%s, %s)' % xy, xy=xy, textcoords='data')
+
+            canvas = FigureCanvasTkAgg(zed66, self)
+            
+            canvas.draw()
+            canvas.get_tk_widget().pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+
+            toolbar = NavigationToolbar2TkAgg(canvas, self)
+            toolbar.update()
+            canvas._tkcanvas.pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+            self.firstTime += 1
+
 
 class ClassSeven(tk.Frame):
     def __init__(self, parent, controller):
@@ -2324,43 +2372,46 @@ class ClassSeven(tk.Frame):
         button2 = ttk.Button(self,  text= 'Update Graph',  command= lambda: self.refresh2())
         button1.pack()
         button2.pack()
+        self.firstTime = 0
 
     def refresh2(self):
-        try:    
-            data_7 = open("seven.txt", "r")
-            data77 = data_7.read().split(',')
-            data_7.close()
+        if self.firstTime == 0:
+            try:    
+                data_7 = open("seven.txt", "r")
+                data77 = data_7.read().split(',')
+                data_7.close()
 
-            data77y = []
-            data77x = []
+                data77y = []
+                data77x = []
 
-            for items in data77:
-                y_valuer = items.split('@')[0]
-                if len(y_valuer) > 1:
-                    y_value = float(y_valuer)
-                    data77y.append(y_value)
-                x_valuer = items.split('@')[-1]
-                if len(x_valuer) > 1:
-                    data77x.append(x_valuer)         
-        except:
-            pass   
-        zed77 = Figure(figsize= (10,5), dpi=100)
+                for items in data77:
+                    y_valuer = items.split('@')[0]
+                    if len(y_valuer) > 1:
+                        y_value = float(y_valuer)
+                        data77y.append(y_value)
+                    x_valuer = items.split('@')[-1]
+                    if len(x_valuer) > 1:
+                        data77x.append(x_valuer)         
+            except:
+                pass   
+            zed77 = Figure(figsize= (10,5), dpi=100)
 
 
-        zed7 = zed77.add_subplot(111)
-        zed7.plot(data77x,data77y,"#F5891C", marker='.')
+            zed7 = zed77.add_subplot(111)
+            zed7.plot(data77x,data77y,"#F5891C", marker='.')
 
-        for xy in zip(data77x, data77y):
-                    zed7.annotate('(%s, %s)' % xy, xy=xy, textcoords='data')
+            for xy in zip(data77x, data77y):
+                        zed7.annotate('(%s, %s)' % xy, xy=xy, textcoords='data')
 
-        canvas = FigureCanvasTkAgg(zed77, self)
-        
-        canvas.draw()
-        canvas.get_tk_widget().pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+            canvas = FigureCanvasTkAgg(zed77, self)
+            
+            canvas.draw()
+            canvas.get_tk_widget().pack(side= tk.TOP, fill= tk.BOTH, expand= True)
 
-        toolbar = NavigationToolbar2TkAgg(canvas, self)
-        toolbar.update()
-        canvas._tkcanvas.pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+            toolbar = NavigationToolbar2TkAgg(canvas, self)
+            toolbar.update()
+            canvas._tkcanvas.pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+            self.firstTime += 1
 
 class Average(tk.Frame):
     def __init__(self, parent, controller):
@@ -2370,43 +2421,46 @@ class Average(tk.Frame):
         button2 = ttk.Button(self,  text= 'Update Graph',  command= lambda: self.refresh2())
         button1.pack()
         button2.pack()
+        self.firstTime = 0
 
     def refresh2(self):
-        try:    
-            data_3 = open("avg.txt", "r")
-            data33 = data_3.read().split(',')
-            data_3.close()
+        if self.firstTime == 0:
+            try:    
+                data_3 = open("avg.txt", "r")
+                data33 = data_3.read().split(',')
+                data_3.close()
 
-            data33y = []
-            data33x = []
+                data33y = []
+                data33x = []
 
-            for items in data33:
-                y_valuer = items.split('@')[0]
-                if len(y_valuer) > 1:
-                    y_value = float(y_valuer)
-                    data33y.append(y_value)
-                x_valuer = items.split('@')[-1]
-                if len(x_valuer) > 1:
-                    data33x.append(x_valuer)         
-        except:
-            pass   
-        avg = Figure(figsize= (10,5), dpi=100)
+                for items in data33:
+                    y_valuer = items.split('@')[0]
+                    if len(y_valuer) > 1:
+                        y_value = float(y_valuer)
+                        data33y.append(y_value)
+                    x_valuer = items.split('@')[-1]
+                    if len(x_valuer) > 1:
+                        data33x.append(x_valuer)         
+            except:
+                pass   
+            avg = Figure(figsize= (10,5), dpi=100)
 
 
-        avg1 = avg.add_subplot(111)
-        avg1.plot(data33x,data33y, marker='.', ls='--')
+            avg1 = avg.add_subplot(111)
+            avg1.plot(data33x,data33y, marker='.', ls='--')
 
-        for xy in zip(data33x, data33y):
-                    avg1.annotate('(%s, %s)' % xy, xy=xy, textcoords='data')
+            for xy in zip(data33x, data33y):
+                        avg1.annotate('(%s, %s)' % xy, xy=xy, textcoords='data')
 
-        canvas = FigureCanvasTkAgg(avg, self)
-        
-        canvas.draw()
-        canvas.get_tk_widget().pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+            canvas = FigureCanvasTkAgg(avg, self)
+            
+            canvas.draw()
+            canvas.get_tk_widget().pack(side= tk.TOP, fill= tk.BOTH, expand= True)
 
-        toolbar = NavigationToolbar2TkAgg(canvas, self)
-        toolbar.update()
-        canvas._tkcanvas.pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+            toolbar = NavigationToolbar2TkAgg(canvas, self)
+            toolbar.update()
+            canvas._tkcanvas.pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+            self.firstTime += 1
 
 class PageTwo(tk.Frame):
     def __init__(self, parent, controller):
@@ -2419,19 +2473,22 @@ class PageTwo(tk.Frame):
         button2.pack()
         button3 = ttk.Button(self, text= 'Update Graph', command= lambda: refresh())
         button3.pack()
+        self.firstTime = 0
 
         
         def refresh():
-            canvas = FigureCanvasTkAgg(g, self)
-            
-            canvas.draw()
-            canvas.get_tk_widget().pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+            if self.firstTime == 0:
+                canvas = FigureCanvasTkAgg(g, self)
+                
+                canvas.draw()
+                canvas.get_tk_widget().pack(side= tk.TOP, fill= tk.BOTH, expand= True)
 
-            toolbar = NavigationToolbar2TkAgg(canvas, self)
-            toolbar.update()
-            canvas._tkcanvas.pack(side= tk.TOP, fill= tk.BOTH, expand= True)
-            g.add_subplot(111).pie(denominator, shadow=True, labels=pie_chart_indicator, autopct='%1.1f%%', startangle=90)
-            g.legend()
+                toolbar = NavigationToolbar2TkAgg(canvas, self)
+                toolbar.update()
+                canvas._tkcanvas.pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+                g.add_subplot(111).pie(denominator, shadow=True, labels=pie_chart_indicator, autopct='%1.1f%%', startangle=90)
+                g.legend()
+                self.firstTime += 1
             
 class DisplayInDepth1(tk.Frame):
     def __init__(self, parent, controller):
@@ -2819,6 +2876,7 @@ class Homework(tk.Frame):
         button1 = ttk.Button(self, text='Go back to HOME PAGE',  command= lambda: controller.show_frame(StartPage) )
         button1.grid(row= 1, column= 2)
         
+        
     def shower(self):
         try:
             data_file = open("temp9.txt", 'r')
@@ -2854,16 +2912,20 @@ class UnannotatedGraph(tk.Frame):
         button2.pack()
         button3 = ttk.Button(self, text= 'Update Graph', command= lambda: self.refresh())
         button3.pack()
+        self.firstTime = 0
 
     def refresh(self):
-        canvas = FigureCanvasTkAgg(una, self)
-        
-        canvas.draw()
-        canvas.get_tk_widget().pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+        if self.firstTime == 0:
+            canvas = FigureCanvasTkAgg(una, self)
+            
+            canvas.draw()
+            canvas.get_tk_widget().pack(side= tk.TOP, fill= tk.BOTH, expand= True)
 
-        toolbar = NavigationToolbar2TkAgg(canvas, self)
-        toolbar.update()
-        canvas._tkcanvas.pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+            toolbar = NavigationToolbar2TkAgg(canvas, self)
+            toolbar.update()
+            canvas._tkcanvas.pack(side= tk.TOP, fill= tk.BOTH, expand= True)
+            self.firstTime += 1
+
 
 app = GradeGetterApp()
 app.mainloop()
