@@ -212,7 +212,7 @@ class Login(tk.Frame):
         button2.place(x=460, y=300)
         self.label4.place(x=350, y=370)
         self.label = tk.Label(self)
-        checker = tk.Checkbutton(self, text= 'Do want to see HW due soon from GOOGLE CLASSROM', bg= '#95c8f4', command= lambda: self.show_pbox())
+        checker = tk.Checkbutton(self, text= 'Do you want to see HW due soon from GOOGLE CLASSROM', bg= '#95c8f4', command= lambda: self.show_pbox())
         checker.place(x=630, y=220)
         self.gc_p = ttk.Entry(self)
 
