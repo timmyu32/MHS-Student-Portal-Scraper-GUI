@@ -9,6 +9,7 @@
     Recent Fixes:
                 Fixed the Display in Depth Classess so that the info displayed in column2 is accurate
                 Added winsound fx to alert user that login is complete
+                Fixed the semester to semester data encodig problem
 
     Things to consider:
                 Logging in for other people still writes over my saved data in the .txt files sinceI have yet to find a way to scrape and
@@ -63,11 +64,17 @@ smallest_font = ("Times New Roman", "7")
 style.use("ggplot")
 
 global a
+#subplot a
 global f
+#subplot f
 global g
+#subplot g
 global zed
+#subplot z
 global una
+#subplot u
 global bary
+#subplot for bar graph
 global uname_for_pop_up_trans
 global pass_for_pop_up_trans
 una = Figure(figsize = (10,5), dpi=100)
@@ -288,8 +295,8 @@ class Login(tk.Frame):
                 
                 
                 options.add_argument("-headless")
-                driver = webdriver.Chrome("C:\\Users\\inspiron\\Downloads\\chromedriver_win32\\chromedriver", chrome_options=options)
-                #driver = webdriver.Chrome("C:\\Users\\inspiron\\Downloads\\chromedriver_win32\\chromedriver")
+                #driver = webdriver.Chrome("C:\\Users\\inspiron\\Downloads\\chromedriver_win32\\chromedriver", chrome_options=options)
+                driver = webdriver.Chrome("C:\\Users\\inspiron\\Downloads\\chromedriver_win32\\chromedriver")
                 driver.get('https://medway.crportals.studentinformation.systems/')
                 uname = driver.find_element_by_name('Email')
                 password = driver.find_element_by_name('Password')
@@ -347,43 +354,62 @@ class Login(tk.Frame):
                             class_names.append(str(thingy.text.split('\n')[0]))
                 
                
-                print(class_names)
                 
 
                 for item in class_names:
                     if type(item) == float or type(item) == int or item == 'No Grade':
                         class_names.remove(item)
                         class_grades.append(item)
-                
-                #this segment is still under development and may be needed when there is a transition from term to term... not sure- 11/15/18
-                '''
-                class_name_holder = ''
-                for items in class_names:
-                    print(items+'\n')
-                    print(class_name_holder)
-                    class_name_holder = items
-                    if items == class_name_holder:
-                        class_names.remove(items)
-                
+
+                def numberer(inList):
+                    outList = []
+                    for i in range(len(inList)):
+                        if i < 10:
+                            kernel = "0"  + str(i) + "/" + str(inList[i])
+                            outList.append(kernel)
+                        else:
+                            kernel = str(i) + "/" + str(inList[i])
+                            outList.append(kernel) 
+
+                    return outList
+
+                def denumberer(inList):
+                    outList = []
+                    for i in inList:
+                        outList.append(i[3:])
+
+                    return outList
+
+
+                class_names = numberer(class_names)
+                class_grades = numberer(class_grades)
+
+                listOfNumbersToDelete = []
+
+
+                for item in range(5):
+                    for x in range(len(class_names)):
+                        try:
+                            if class_names[x+1][3:] == class_names[x][3:]:
+                                listOfNumbersToDelete.append(str(class_names[x+1][0:3]))
+                                class_names.remove(class_names[x+1])
+                        except:
+                            pass
+                        
+                print(class_names)
+
+                for i in listOfNumbersToDelete:
+                    for item in class_grades:
+                        if i in item:
+                            class_grades.remove(item)
 
                 print(class_grades)
-                print(class_names)
-                input('sadfad')
 
-                guideLine = len(class_names) + 1
-                appropriateNumberOfGrades = ( len(class_grades) + 1 ) / guideLine
-                counter = 0
-                class_grades2 = []
-                for items in class_grades:
-                    if counter % appropriateNumberOfGrades != 0:
-                        class_grades2.append(items)
-                    
-                    counter += 1
+                class_names = denumberer(class_names)
+                class_grades = denumberer(class_grades)
+                
 
-                print(class_grades2)
-                print(class_names)
-                input('sadfad')
-                '''
+                
                 
                 today = str(date.today())
 
