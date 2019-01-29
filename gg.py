@@ -9,7 +9,6 @@
     Recent Fixes:
                 Fixed the Display in Depth Classess so that the info displayed in column2 is accurate
                 Added winsound fx to alert user that login is complete
-                Fixed the semester to semester data encodig problem
 
     Things to consider:
                 Logging in for other people still writes over my saved data in the .txt files sinceI have yet to find a way to scrape and
@@ -19,7 +18,7 @@
 
 
 
- * Date: 12/24/18
+ * Date: 1/28/19
  * Programmer: TU
  * 
 '''
@@ -60,6 +59,7 @@ import winsound
 Largest_Font = ("Times New Roman", "16")
 Large_Font = ("Times New Roman", "12")
 smaller_font = ("Times New Roman", "9")
+smaller_font_bold = ("Times New Roman", "9", "bold")
 smallest_font = ("Times New Roman", "7")
 style.use("ggplot")
 
@@ -220,8 +220,65 @@ class Login(tk.Frame):
         self.label4.place(x=350, y=370)
         self.label = tk.Label(self)
         checker = tk.Checkbutton(self, text= 'Do you want to see HW due soon from GOOGLE CLASSROM', bg= '#95c8f4', command= lambda: self.show_pbox())
-        checker.place(x=630, y=220)
+        #checker.place(x=630, y=220)
         self.gc_p = ttk.Entry(self)
+
+        self.seekAutoFill = True
+        button4 = ttk.Button(self, text = " ", command= self.checkAutoFill()) 
+        self.rememberBoolean = False
+        rememberMe = tk.Checkbutton(self, text = "Remember me?", bg= "#95c8f4", command= lambda: self.setRemember() )
+        rememberMe.place(x=630, y=220)
+        
+        self.label5 = tk.Label(self, text = "", bg = '#95c8f4', font = smaller_font_bold)
+        self.label5.place(x=560, y=240)
+
+    def checkAutoFill(self):
+        def go():
+            while self.seekAutoFill:
+                print('seeking...')
+                if self.seekAutoFill:
+                    print('still looking...')
+                    dataFile = open("temp11.txt", "r")
+                    saved_users = dataFile.read().split(",")
+                    dataFile.close()
+
+                    for item in saved_users:
+                        uname = item.split("/")[0]
+
+
+                        try:
+                            password = item.split("/")[1]
+                        except:
+                            pass
+
+
+                        if len(self.u1.get()) > 2:
+                            if self.u1.get() in uname:
+                                self.p1.delete(0, tk.END)
+
+                                try:
+                                    self.p1.insert(0,password)
+                                    self.label5.config(text = "("+uname+")")
+                                except:
+                                    pass
+                        else:
+                            self.p1.delete(0, tk.END)
+                            self.label5.config(text="")
+                else:
+                    break
+                
+                time.sleep(0.9)
+        
+        threading.Thread(target = go).start()
+        
+
+
+
+
+
+
+    def setRemember(self):
+        self.rememberBoolean = True
 
 
     def show_pbox(self):
@@ -235,7 +292,10 @@ class Login(tk.Frame):
         uname_for_pop_up = reassign1(self.u1.get())
         #print(uname_for_pop_up.reassign_user())
         uname_for_pop_up_trans = uname_for_pop_up
-        
+
+
+
+
 
         pass_for_pop_up = reassign2(self.p1.get())
         pass_for_pop_up.reassign_pass()
@@ -295,8 +355,8 @@ class Login(tk.Frame):
                 
                 
                 options.add_argument("-headless")
-                #driver = webdriver.Chrome("C:\\Users\\inspiron\\Downloads\\chromedriver_win32\\chromedriver", chrome_options=options)
-                driver = webdriver.Chrome("C:\\Users\\inspiron\\Downloads\\chromedriver_win32\\chromedriver")
+                driver = webdriver.Chrome("C:\\Users\\inspiron\\Downloads\\chromedriver_win32\\chromedriver", chrome_options=options)
+                #driver = webdriver.Chrome("C:\\Users\\inspiron\\Downloads\\chromedriver_win32\\chromedriver")
                 driver.get('https://medway.crportals.studentinformation.systems/')
                 uname = driver.find_element_by_name('Email')
                 password = driver.find_element_by_name('Password')
@@ -341,7 +401,13 @@ class Login(tk.Frame):
 
                 grade_table = driver.find_elements_by_xpath("//tbody[@role='rowgroup']")[0]
 
-                
+                if self.rememberBoolean:
+                        dataFile = open("temp11.txt", "a")
+                        dataFile.write(self.u1.get()+"/"+self.p1.get()+",")
+                        dataFile.close()
+                        
+                self.seekAutoFill = False
+                        
                 class_names = []
                 class_grades = []
 
@@ -396,14 +462,13 @@ class Login(tk.Frame):
                         except:
                             pass
                         
-                print(class_names)
 
                 for i in listOfNumbersToDelete:
                     for item in class_grades:
                         if i in item:
                             class_grades.remove(item)
 
-                print(class_grades)
+
 
                 class_names = denumberer(class_names)
                 class_grades = denumberer(class_grades)
@@ -1033,6 +1098,11 @@ class Login(tk.Frame):
                 try:
                     a.plot(data66x, data66y, "#FF8CEC", label= class6_name, data= class6_name, marker= '.')
                     unatated.plot(data66x, data66y, "#FF8CEC", label= class6_name, data= class6_name, marker= '.')
+                except:
+                    pass
+                try:
+                    a.plot(data77x, data77y, "#FFA500", label= class7_name, data= class7_name, marker= '.')
+                    unatated.plot(data77x, data77y, "#FFA500", label= class7_name, data= class7_name, marker= '.')
                 except:
                     pass
                 a.legend()
